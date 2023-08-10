@@ -1,0 +1,10 @@
+<div id="search-component">
+	<label for="search-box">Hero Search</label>
+	<input #searchBox id="search-box" pInputText class="p-inputtext-sm" (input)="search(searchBox.value)" />
+
+	<p-listbox [options]="heroes" [(ngModel)]="selectedHero">
+		<ng-template let-hero let-i="index" pTemplate="item">
+			<a routerLink="/detail/{{hero.id}}">{{ hero.name }}</a>
+		</ng-template>
+	</p-listbox>
+</div>

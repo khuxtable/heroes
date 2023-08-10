@@ -1,0 +1,35 @@
+﻿<div class="col-md-6 offset-md-3 mt-5">
+	<div class="card">
+		<h2 class="card-header">Login</h2>
+		<div class="card-body">
+			<form #loginForm="ngForm" (ngSubmit)="onSubmit()" (keydown.enter)="onSubmit()">
+				<table>
+					<tr>
+						<td style="text-align: right;"><label>Username:&nbsp;</label></td>
+						<td><input type="text" pInputText class="p-inputtext-sm" id="name" required autofocus [(ngModel)]="authdata.username" name="username"
+								#username="ngModel"/></td>
+					</tr>
+					<tr [hidden]="username.valid || username.pristine">
+						<td colspan="2">Username is required</td>
+					</tr>
+					<tr>
+						<td style="text-align: right;"><label>Password:&nbsp;</label></td>
+						<td><p-password id="password" class="p-inputtext-sm" required [(ngModel)]="authdata.password"
+								name="password" #password="ngModel" [feedback]="false"/></td>
+					</tr>
+					<tr [hidden]="password.valid || password.pristine">
+						<td colspan="2">Password is required</td>
+					</tr>
+					<tr>
+						<td>
+							<p-button styleClass="p-button-sm" (click)="onSubmit()">Login</p-button>
+						</td>
+					</tr>
+					<tr *ngIf="error">
+						<td colspan="2">{{error}}</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
+</div>

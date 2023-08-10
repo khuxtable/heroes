@@ -1,0 +1,47 @@
+<form #heroForm="ngForm">
+	<div *ngIf="hero">
+		<h2>{{hero.name | uppercase}} Details</h2>
+		<div *ngIf="editable">
+			{{ hero | json }}
+			<div>ID: {{hero.id}}</div>
+			<div>
+				<label for="hero-name">Hero Name:</label><br />
+				<input id="hero-name" pInputText reuired class="p-inputtext-sm" [(ngModel)]="hero.name"
+					name="name" #name="ngModel"
+					placeholder="Name" />
+			</div>
+			<div>
+				<label for="ater-ego">Alter Ego:</label><br />
+				<input id="alter-ego" pInputText reuired class="p-inputtext-sm" [(ngModel)]="hero.alterEgo"
+					name="alterEgo" #alterEgo="ngModel"
+					placeholder="Alter Ego" />
+			</div>
+			<div class="form-group">
+				<label for="hero-power">Power:</label><br />
+				<p-dropdown inputId="hero-power" [options]="powers" [editable]="true" [(ngModel)]="hero.power"
+					name="power" #power="ngModel" placeholder="Power"/>
+			</div>
+		</div>
+		<table *ngIf="!editable">
+			<tr>
+				<td style="text-align: right;"><label for="hero-name">ID:&nbsp;</label></td>
+				<td><span id="hero-name" placeholder="name">{{hero.id}}</span></td>
+			</tr>
+			<tr>
+				<td style="text-align: right;"><label for="hero-name">Hero Name:&nbsp;</label></td>
+				<td><span id="hero-name" placeholder="name">{{hero.name}}</span></td>
+			</tr>
+			<tr>
+				<td style="text-align: right;"><label for="hero-name">Alter Ego:&nbsp;</label></td>
+				<td><span id="hero-name" placeholder="name">{{hero.alterEgo}}</span></td>
+			</tr>
+			<tr>
+				<td style="text-align: right;"><label for="hero-name">Power:&nbsp;</label></td>
+				<td><span id="hero-name" placeholder="name">{{hero.power}}</span></td>
+			</tr>
+		</table>
+	</div>
+	<br />
+	<p-button *ngIf="editable" type="button" (click)="save()">save</p-button>&nbsp;
+	<p-button type="button" (click)="goBack()">go back</p-button>
+</form>

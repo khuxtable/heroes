@@ -1,0 +1,23 @@
+<div style="display: flex; justify-content: space-between">
+	<div style="font-size: 2em; font-weight: bold; vertical-align: middle;">{{title}}</div>
+	<div *ngIf="user" style="vertical-align: middle;">
+		<span style="vertical-align: middle;">
+			{{user.firstName}} {{user.lastName}}
+			({{user.privileges!.join(', ')}})
+		</span>
+		<p-button styleClass="p-button-link" (click)="logout()" label="Logout" />
+	</div>
+</div>
+
+<p-toolbar *ngIf="user">
+	<div class="p-toolbar-group-start">
+		<span class="p-buttonset">
+			<p-button routerLink="/dashboard" label="Dashboard"></p-button>
+			<p-button routerLink="/heroes" label="Heroes"></p-button>
+		</span>
+	</div>
+</p-toolbar>
+
+<router-outlet></router-outlet>
+
+<app-messages *ngIf="user"></app-messages>

@@ -1,0 +1,4 @@
+= heroes-resource - a simple spring data derby REST client for Tour of Heroes
+
+This simplified spring boot app provides a simple and not secure client for the Angular Tour
+of Heroes tutorial. It requires 

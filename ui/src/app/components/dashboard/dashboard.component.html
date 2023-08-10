@@ -1,0 +1,10 @@
+<h2>Top Heroes</h2>
+<div class="heroes-menu">
+	<span *ngFor="let hero of heroes">
+	<p-button  styleClass="p-button-sm"
+		(click)="routeMe(hero.id)">{{hero.name}}</p-button>
+		&nbsp;
+	</span>
+</div>
+
+<app-hero-search></app-hero-search>
