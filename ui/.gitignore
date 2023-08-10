@@ -43,3 +43,4 @@ testem.log
 Thumbs.db
 /.editorconfig
 /target/
+/heroes-ui.iml

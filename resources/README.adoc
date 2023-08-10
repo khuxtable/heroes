@@ -1,4 +1,6 @@
 = heroes-resource - a simple spring data derby REST client for Tour of Heroes
 
 This simplified spring boot app provides a simple and not secure client for the Angular Tour
-of Heroes tutorial. It requires 
+of Heroes tutorial. The pom specifies Java 20, but it could be downgraded to Java 17. Spring 6
+requires Java 17, so you can't use an earlier version.
+
