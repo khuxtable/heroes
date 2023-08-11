@@ -50,19 +50,7 @@ public class HeroService {
 	}
 
 	public List<Hero> findTopHeroes() {
-		UIFilter filter = new UIFilter();
-		filter.setFirst(0);
-		filter.setRows(5);
-		filter.setSortFields(new ArrayList<>());
-		UIFilterSort sort = new UIFilterSort();
-		sort.setField("rating");
-		sort.setOrder(-1);
-		filter.getSortFields().add(sort);
-		sort = new UIFilterSort();
-		sort.setField("id");
-		sort.setOrder(1);
-		filter.getSortFields().add(sort);
-		return toHeroes(heroDao.findByFilter(filter));
+		return toHeroes(heroDao.findTopHeroes(5));
 	}
 
 	public List<Hero> search(String name) {

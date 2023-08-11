@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 
 import { Hero } from '@appModel/hero';
 import { HeroService } from '@appServices/hero.service';
-import { UIFilter } from '@appModel/ui.filter';
 
 @Component({
 	selector: 'app-dashboard',

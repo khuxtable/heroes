@@ -1,58 +1,63 @@
 <h2>My Heroes</h2>
 
 <div>
-	<p-table #dt [value]="heroes" [rows]="5" [paginator]="true" [(selection)]="selectedHeroes" dataKey="id"
-		currentPageReportTemplate="Viewing {first}-{last} / {totalRecords}"
-		[showCurrentPageReport]="true" styleClass="p-datatable-striped" [lazy]="true" (onLazyLoad)="loadHeroes($event)"
-		[loading]="loading" [totalRecords]="totalRecords">
-		<ng-template pTemplate="caption">
-			<div class="flex align-items-center justify-content-between">
-				<h5 class="m-0">Filter</h5>
-				<span class="p-input-icon-left">
+    <p-table #dt [value]="heroes" [rows]="5" [paginator]="true" [(selection)]="selectedHeroes" dataKey="id"
+             currentPageReportTemplate="Viewing {first}-{last} / {totalRecords}"
+             [showCurrentPageReport]="true" styleClass="p-datatable-striped" [lazy]="true"
+             (onLazyLoad)="loadHeroes($event)"
+             [loading]="loading" [totalRecords]="totalRecords">
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+                <span>
+                    <p-button *ngIf="canAdd" styleClass="p-button-sm" (click)="add()">New Hero</p-button>
+                </span>
+                <span class="p-input-icon-left">
 					<i class="pi pi-search"></i>
 					<input pInputText type="text" (input)="applyFilterGlobal($event, 'contains')"
-						placeholder="Filter..." />
-				</span>
-			</div>
-		</ng-template>
-		<ng-template pTemplate="header">
-			<tr>
-				<th style="width: 3rem">
-					<p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-				</th>
-				<th pSortableColumn="id">ID <p-sortIcon field="name"></p-sortIcon></th>
-				<th pSortableColumn="name">Name <p-sortIcon field="price"></p-sortIcon></th>
-				<th pSortableColumn="alterEgo">Alter Ego <p-sortIcon field="category"></p-sortIcon></th>
-				<th pSortableColumn="power">Power <p-sortIcon field="rating"></p-sortIcon></th>
-				<ht pSortableColumn="rating">Rating <p-sortIcon field="rating"></p-sortIcon></ht>
-				<th *ngIf="canAdd"></th>
-			</tr>
-		</ng-template>
-		<ng-template pTemplate="body" let-hero>
-			<tr>
-				<td>
-					<p-tableCheckbox [value]="hero"></p-tableCheckbox>
-				</td>
-				<td>{{ hero.id }}</td>
-				<td><a routerLink="/detail/{{hero.id}}">{{ hero.name }}</a></td>
-				<td>{{ hero.alterEgo }}</td>
-				<td>{{ hero.power }}</td>
-				<td><p-rating [ngModel]="hero.rating" [readonly]="true" [cancel]="false" [stars]="5	"/></td>
-				<td *ngIf="canAdd">
-					<p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-warning p-button-sm"
-						title="delete hero" (click)="delete(hero)" />
-				</td>
-			</tr>
-		</ng-template>
-	</p-table>
-</div>
-<br/>
-<div *ngIf="canAdd">
-	<label for="new-hero">Hero name: </label>
-	<input id="new-hero" pInputText class="p-inputtext-sm" #heroName /><br/>
-
-	<!-- (click) passes input value to add() and then clears the input -->
-	<p-button type="button" class="add-button" (click)="add(heroName.value); heroName.value=''">
-		Add hero
-	</p-button>
+                           placeholder="Filter..."/>
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 3rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th pSortableColumn="id">ID
+                    <p-sortIcon field="name"></p-sortIcon>
+                </th>
+                <th pSortableColumn="name">Name
+                    <p-sortIcon field="price"></p-sortIcon>
+                </th>
+                <th pSortableColumn="alterEgo">Alter Ego
+                    <p-sortIcon field="category"></p-sortIcon>
+                </th>
+                <th pSortableColumn="power">Power
+                    <p-sortIcon field="rating"></p-sortIcon>
+                </th>
+                <ht pSortableColumn="rating">Rating
+                    <p-sortIcon field="rating"></p-sortIcon>
+                </ht>
+                <th *ngIf="canAdd"></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-hero>
+            <tr>
+                <td>
+                    <p-tableCheckbox [value]="hero"></p-tableCheckbox>
+                </td>
+                <td>{{ hero.id }}</td>
+                <td><a routerLink="/detail/{{hero.id}}">{{ hero.name }}</a></td>
+                <td>{{ hero.alterEgo }}</td>
+                <td>{{ hero.power }}</td>
+                <td>
+                    <p-rating [ngModel]="hero.rating" [readonly]="true" [cancel]="false" [stars]="5	"/>
+                </td>
+                <td *ngIf="canAdd">
+                    <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-warning p-button-sm"
+                              title="delete hero" (click)="delete(hero)"/>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
 </div>

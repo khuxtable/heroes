@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ListboxModule } from 'primeng/listbox';
-
 import { Observable, Subject, of, ReplaySubject } from 'rxjs';
 
 import {

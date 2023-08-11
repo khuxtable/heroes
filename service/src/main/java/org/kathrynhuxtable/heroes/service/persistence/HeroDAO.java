@@ -30,6 +30,7 @@ import org.springframework.stereotype.Component;
 
 import org.kathrynhuxtable.heroes.service.bean.UIFilter;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterSort;
+import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterMetadata;
 import org.kathrynhuxtable.heroes.service.persistence.domain.HeroDO;
 
 @Component
@@ -59,6 +60,14 @@ public interface HeroDAO extends JpaRepository<HeroDO, Long>, JpaSpecificationEx
             Page<HeroDO> pageable = findAll(process, PageRequest.of(page, rows, sort));
             return pageable.getContent();
         }
+    }
+
+    default List<HeroDO> findTopHeroes(int count) {
+        RatingNotNull goodRating = new RatingNotNull();
+        Sort sort= Sort.by(Sort.Direction.DESC, "rating");
+
+        Page<HeroDO> pageable = findAll(goodRating, PageRequest.of(0, count, sort));
+        return pageable.getContent();
     }
 
     default long countByFilter(UIFilter filter) {

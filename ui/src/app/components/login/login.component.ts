@@ -2,10 +2,6 @@
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { PasswordModule } from 'primeng/password';
-
 import { AuthService } from '@appServices/auth.service';
 import { Authdata } from '@appModel/authdata';
 

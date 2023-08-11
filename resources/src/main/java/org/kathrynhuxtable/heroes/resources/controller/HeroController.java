@@ -60,6 +60,9 @@ public class HeroController {
 		Hero hero;
 		if (newHero.getId() == null) {
 			hero = heroService.save(newHero);
+		} else if (newHero.getId() == 0L) {
+			newHero.setId(null);
+			hero = heroService.save(newHero);
 		} else {
 			hero = heroService.find(newHero.getId());
 			if (hero != null) {
@@ -68,8 +71,6 @@ public class HeroController {
 				hero.setAlterEgo(newHero.getAlterEgo());
 				hero.setRating(newHero.getRating());
 				hero = heroService.update(hero);
-			} else {
-				hero = null;
 			}
 		}
 		return hero;

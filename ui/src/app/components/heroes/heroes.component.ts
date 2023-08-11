@@ -1,9 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { ButtonModule } from 'primeng/button';
-import { DataViewModule, DataViewLayoutOptions } from 'primeng/dataview';
-import { TableModule } from 'primeng/table';
 import { Table } from 'primeng/table';
 import { TableLazyLoadEvent } from 'primeng/table';
+import { Router } from '@angular/router';
 
 import { Hero } from '@appModel/hero';
 import { UIFilter, UIFilterSort, UIFilterMetadata, UIFilterResult } from '@appModel/ui.filter';
@@ -26,7 +24,9 @@ export class HeroesComponent {
 	@ViewChild('dt')
 	dt: Table | undefined;
 
-	constructor(private heroService: HeroService, private authService: AuthService) { }
+	constructor(private router: Router,
+				private heroService: HeroService,
+				private authService: AuthService) { }
 
 	ngOnInit(): void {
 		this.getUser();
@@ -57,13 +57,8 @@ export class HeroesComponent {
 		}
 	}
 
-	add(name: string): void {
-		name = name.trim();
-		if (!name) { return; }
-		this.heroService.addHero({ name } as Hero)
-			.subscribe(hero => {
-				this.heroes.push(hero);
-			});
+	add(): void {
+		this.router.navigate(['/detail/new']);
 	}
 
 	delete(hero: Hero): void {
