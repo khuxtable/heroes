@@ -4,6 +4,33 @@ This is a very basic Angular/PrimeNG project based on the Angular Tour of Heroes
 It is paired with a Spring Boot REST/JPA resources project which provides a backend data
 source for the heroes, backed by an Apache Derby database.
 
+I plan to add Spring Security and an OAUTH authentication server to make this more secure,
+but my focus with this application is testing separation of front-end and back-end concerns,
+and exploring PrimeNG.
+
+Because this is so basic, I have hard-coded only two users, an admin and a non-admin user.
+You can look in the `AuthService` class in the service module to see the username and password
+for each.
+
+== Modules
+
+This application consists of four modules
+
+ui::
+The Angular web application, based on the Angular Tour of Heroes tutorial application.
+It uses PrimeNG for fancy rendering, lazy loading tables, etc.
+
+resources::
+A Spring Boot REST service providing data to the ui application.
+
+services::
+A service jar, providing persistence via Spring Data JPA using an Apache Derby database.
+This is used by the resources and the createdb modules.
+
+createdb::
+A simple Spring Boot application to create the Apache Derby database and insert some
+initial values.
+
 == Build the project
 
 To build the project run maven in the top-level folder:
@@ -13,4 +40,4 @@ To build the project run maven in the top-level folder:
 mvn package
 ----
 
-See the README in the ui and resources folders for more information.
+See the `README.adoc` in each of the module folders for more information.

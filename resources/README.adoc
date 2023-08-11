@@ -9,7 +9,7 @@ in the `.heroes/db` folder.
 
 == Create the database
 
-
+See the `README.adoc` file in the createdb module.
 
 == Run the application
 
