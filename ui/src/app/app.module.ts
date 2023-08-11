@@ -13,7 +13,7 @@ import { PasswordModule } from 'primeng/password';
 import { DataViewModule, DataViewLayoutOptions } from 'primeng/dataview';
 import { TableModule } from 'primeng/table';
 import {ListboxModule} from 'primeng/listbox';
-
+import { RatingModule } from 'primeng/rating';
 
 import { AppComponent } from '@app/app.component';
 import { AppRoutingModule } from '@app/app-routing.module';
@@ -49,7 +49,8 @@ import { HeroSearchComponent } from '@appComponents/hero-search/hero-search.comp
 		TableModule,
 		InputTextModule,
 		PasswordModule,
-		ListboxModule
+		ListboxModule,
+		RatingModule
 	],
 	providers: [
 		{ provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },

@@ -31,4 +31,5 @@ public class Hero {
 	private String name;
 	private String power;
 	private String alterEgo;
+	private Integer rating;
 }

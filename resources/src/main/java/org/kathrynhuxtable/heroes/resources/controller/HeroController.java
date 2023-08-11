@@ -66,6 +66,7 @@ public class HeroController {
 				hero.setName(newHero.getName());
 				hero.setPower(newHero.getPower());
 				hero.setAlterEgo(newHero.getAlterEgo());
+				hero.setRating(newHero.getRating());
 				hero = heroService.update(hero);
 			} else {
 				hero = null;

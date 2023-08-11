@@ -27,6 +27,7 @@ import org.kathrynhuxtable.heroes.service.bean.HeroFilterResult;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterMatchMode;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterMetadata;
+import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterSort;
 import org.kathrynhuxtable.heroes.service.persistence.HeroDAO;
 import org.kathrynhuxtable.heroes.service.persistence.domain.HeroDO;
 
@@ -50,8 +51,17 @@ public class HeroService {
 
 	public List<Hero> findTopHeroes() {
 		UIFilter filter = new UIFilter();
-		filter.setFirst(1);
+		filter.setFirst(0);
 		filter.setRows(5);
+		filter.setSortFields(new ArrayList<>());
+		UIFilterSort sort = new UIFilterSort();
+		sort.setField("rating");
+		sort.setOrder(-1);
+		filter.getSortFields().add(sort);
+		sort = new UIFilterSort();
+		sort.setField("id");
+		sort.setOrder(1);
+		filter.getSortFields().add(sort);
 		return toHeroes(heroDao.findByFilter(filter));
 	}
 
@@ -102,7 +112,7 @@ public class HeroService {
 			return null;
 		} else {
 			return Hero.builder().id(heroDO.getId()).name(heroDO.getName()).power(heroDO.getPower())
-					.alterEgo(heroDO.getAlterEgo()).build();
+					.alterEgo(heroDO.getAlterEgo()).rating(heroDO.getRating()).build();
 		}
 	}
 
@@ -115,6 +125,7 @@ public class HeroService {
 			heroDO.setName(hero.getName());
 			heroDO.setPower(hero.getPower());
 			heroDO.setAlterEgo(hero.getAlterEgo());
+			heroDO.setRating(hero.getRating());
 			return heroDO;
 		}
 	}

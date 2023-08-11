@@ -40,4 +40,7 @@ public class HeroDO {
 
     @Column(name = "ALTER_EGO")
     private String alterEgo;
+
+    @Column(name = "RATING")
+    private Integer rating;
 }

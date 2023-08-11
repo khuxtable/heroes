@@ -24,6 +24,7 @@
 				<th pSortableColumn="name">Name <p-sortIcon field="price"></p-sortIcon></th>
 				<th pSortableColumn="alterEgo">Alter Ego <p-sortIcon field="category"></p-sortIcon></th>
 				<th pSortableColumn="power">Power <p-sortIcon field="rating"></p-sortIcon></th>
+				<ht pSortableColumn="rating">Rating <p-sortIcon field="rating"></p-sortIcon></ht>
 				<th *ngIf="canAdd"></th>
 			</tr>
 		</ng-template>
@@ -36,6 +37,7 @@
 				<td><a routerLink="/detail/{{hero.id}}">{{ hero.name }}</a></td>
 				<td>{{ hero.alterEgo }}</td>
 				<td>{{ hero.power }}</td>
+				<td><p-rating [ngModel]="hero.rating" [readonly]="true" [cancel]="false" [stars]="5	"/></td>
 				<td *ngIf="canAdd">
 					<p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-warning p-button-sm"
 						title="delete hero" (click)="delete(hero)" />
@@ -44,10 +46,10 @@
 		</ng-template>
 	</p-table>
 </div>
-
+<br/>
 <div *ngIf="canAdd">
 	<label for="new-hero">Hero name: </label>
-	<input id="new-hero" pInputText class="p-inputtext-sm" #heroName />
+	<input id="new-hero" pInputText class="p-inputtext-sm" #heroName /><br/>
 
 	<!-- (click) passes input value to add() and then clears the input -->
 	<p-button type="button" class="add-button" (click)="add(heroName.value); heroName.value=''">
