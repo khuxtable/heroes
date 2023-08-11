@@ -4,7 +4,7 @@ import { TableLazyLoadEvent } from 'primeng/table';
 import { Router } from '@angular/router';
 
 import { Hero } from '@appModel/hero';
-import { UIFilter, UIFilterSort, UIFilterMetadata, UIFilterResult } from '@appModel/ui.filter';
+import { UIFilter } from '@appModel/ui.filter';
 import { HeroService } from '@appServices/hero.service';
 import { AuthService } from '@appServices/auth.service';
 

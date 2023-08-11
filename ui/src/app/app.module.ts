@@ -10,7 +10,7 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
-import { DataViewModule, DataViewLayoutOptions } from 'primeng/dataview';
+import { DataViewModule } from 'primeng/dataview';
 import { TableModule } from 'primeng/table';
 import {ListboxModule} from 'primeng/listbox';
 import { RatingModule } from 'primeng/rating';

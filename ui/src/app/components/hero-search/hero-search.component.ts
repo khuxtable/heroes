@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Observable, Subject, of, ReplaySubject } from 'rxjs';
+import { Subject, ReplaySubject } from 'rxjs';
 
 import {
 	debounceTime, distinctUntilChanged, switchMap
