@@ -1,0 +1,18 @@
+= heroes-createdb - a simple spring boot initializer for Tour of Heroes
+
+This module can be run to create and initialize the Derby database.
+If the database already exists, the data will be restored to the initial configuration.
+The pom specifies Java 20, but it could be downgraded to Java 17. Spring 6
+requires Java 17, so you can't use an earlier version.
+
+The application uses an Apache Derby database, which it expects to find in your home directory
+in the `.heroes/db` folder.
+
+== Run the application
+
+Enter the command:
+
+[command]
+----
+mvn spring-boot:run
+----
