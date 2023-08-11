@@ -21,7 +21,7 @@
 	<modules>
 		<module>resources</module>
 		<module>ui</module>
-        <module>createDb</module>
+        <module>createdb</module>
 		<module>service</module>
 	</modules>
 </project>
