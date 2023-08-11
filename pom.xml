@@ -19,9 +19,9 @@
 	</properties>
 
 	<modules>
+		<module>service</module>
+        <module>createdb</module>
 		<module>resources</module>
 		<module>ui</module>
-        <module>createdb</module>
-		<module>service</module>
 	</modules>
 </project>
