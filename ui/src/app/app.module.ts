@@ -14,6 +14,7 @@ import { DataViewModule } from 'primeng/dataview';
 import { TableModule } from 'primeng/table';
 import {ListboxModule} from 'primeng/listbox';
 import { RatingModule } from 'primeng/rating';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 import { AppComponent } from '@app/app.component';
 import { AppRoutingModule } from '@app/app-routing.module';
@@ -50,7 +51,8 @@ import { HeroSearchComponent } from '@appComponents/hero-search/hero-search.comp
 		InputTextModule,
 		PasswordModule,
 		ListboxModule,
-		RatingModule
+		RatingModule,
+		SelectButtonModule
 	],
 	providers: [
 		{ provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },

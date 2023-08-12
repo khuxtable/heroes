@@ -1,37 +1,49 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 
-import { AuthService } from '@appServices/auth.service';
-import { User } from '@appModel/user';
+import {AuthService} from '@appServices/auth.service';
+import {ThemeService} from "@appServices/theme-service";
+import {User} from '@appModel/user';
 
 @Component({
-	selector: 'app-root',
-	templateUrl: './app.component.html',
-	styleUrls: ['./app.component.css']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-	title = 'Tour of Heroes';
+    title = 'Tour of Heroes';
 
-	user: User | null = null;
-	
+    themeOptions: any[] = [
+        {label: 'Light', value: 'viva-light'},
+        {label: 'Dark', value: 'viva-dark'}
+    ];
 
-	constructor(private authService: AuthService) {
-		authService.getLoggedInName.subscribe(user => this.user = user);
-	}
+    user: User | null = null;
 
-	ngOnInit(): void {
-		this.getUser();
-	}
+    value: string = 'viva-light';
 
-	getUser(): void {
-		const curUser = this.authService.userValue;
-		if (curUser == null) {
-			this.user = null;
-		} else {
-			this.user = curUser;
-		}
-	}
+    constructor(private authService: AuthService,
+                private themeService: ThemeService) {
+        authService.getLoggedInName.subscribe(user => this.user = user);
+    }
 
-	logout() : void {
-		this.authService.logout();
-	}
+    ngOnInit(): void {
+        this.getUser();
+    }
+
+    getUser(): void {
+        const curUser = this.authService.userValue;
+        if (curUser == null) {
+            this.user = null;
+        } else {
+            this.user = curUser;
+        }
+    }
+
+    logout(): void {
+        this.authService.logout();
+    }
+
+    changeTheme(theme: string) {
+        this.themeService.switchTheme(theme);
+    }
 }
