@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2018 the original author or authors.
+ * Copyright 2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,18 +15,17 @@
  */
 package org.kathrynhuxtable.heroes.service.persistence.domain;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Indexed;
 
+/**
+ * The user object in the database. Has a unidirectional mapping
+ * to the user's associated privileges.
+ */
 @Entity
 @Table(name = "USER_INFO", schema = "APP")
 @Indexed

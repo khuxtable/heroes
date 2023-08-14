@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2018 the original author or authors.
+ * Copyright 2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,9 +15,6 @@
  */
 package org.kathrynhuxtable.heroes.service.persistence.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +22,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Indexed;
 
+/**
+ * The login_info object in the database.
+ */
 @Entity
 @Table(name = "LOGIN_INFO", schema = "APP")
 @Indexed
@@ -46,6 +46,8 @@ public class LoginInfoDO {
     @Column(name = "PASSWORD")
     private String password;
 
+    // This is not a foreign key because I don't want a tight linkage.
+    // The authentication should be an external service.
     @Column(name = "USER_ID")
     private Long userId;
 }

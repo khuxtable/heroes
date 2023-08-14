@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2018 the original author or authors.
+ * Copyright 2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,6 +21,9 @@ import org.springframework.stereotype.Repository;
 
 import org.kathrynhuxtable.heroes.service.persistence.domain.UserDO;
 
+/**
+ * The User DAO.
+ */
 @Repository
 public interface UserDAO extends JpaRepository<UserDO, Long>, JpaSpecificationExecutor<UserDO> {
 }

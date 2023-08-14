@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2018 the original author or authors.
+ * Copyright 2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,13 +15,11 @@
  */
 package org.kathrynhuxtable.heroes.service.persistence.domain;
 
-import java.io.Serial;
 import java.io.Serializable;
 
-import jakarta.persistence.*;
-import lombok.Data;
-import org.springframework.stereotype.Indexed;
-
+/**
+ * The privilege key object for JPA tracking.
+ */
 public class PrivilegeKey implements Serializable {
 
     protected Long userId;

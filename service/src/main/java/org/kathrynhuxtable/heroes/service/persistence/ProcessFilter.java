@@ -1,12 +1,12 @@
 /*
- * Copyright 2002-2018 the original author or authors.
- * 
+ * Copyright 2023 the original author or authors.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,6 +26,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
 import org.kathrynhuxtable.heroes.service.bean.UIFilter;
@@ -34,11 +35,17 @@ import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterData;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterOperator;
 import org.kathrynhuxtable.heroes.service.persistence.domain.HeroDO;
 
+/**
+ * Specification class to process the UIFilter object an produce a JPA predicate.
+ */
+@AllArgsConstructor
 public class ProcessFilter implements Specification<HeroDO> {
 
 	@Serial
 	private static final long serialVersionUID = 1L;
 
+	// Map transfer object fields to domain object fields.
+	// There is no good reason these should ever vary, but let's be paranoid.
 	private final Map<String, String> nameMap = new HashMap<>() {
 		@Serial
 		private static final long serialVersionUID = 1L;
@@ -52,10 +59,7 @@ public class ProcessFilter implements Specification<HeroDO> {
 
 	private final UIFilter filter;
 
-	ProcessFilter(UIFilter filter) {
-		this.filter = filter;
-	}
-
+	// This implementation is very incomplete, but does match String values using contains.
 	@Override
 	public Predicate toPredicate(Root<HeroDO> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
 		List<Predicate> outer = new ArrayList<>();

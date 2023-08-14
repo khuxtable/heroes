@@ -4,6 +4,5 @@ This is a very simple Spring Data JPA jar providing persistence via an Apache De
 The location of the database is specified in both the `resources` and the `createdb` applications.
 It should probably be externalized.
 
-Because this is so basic, I have hard-coded only two users, an admin and a non-admin user.
-You can look in the `AuthService` class in the service module to see the username and password
-for each.
+The initial data is populated in the `createdb` module via the `application.yml` file. See that
+file for the initial users and passwords, and the initial heroes.

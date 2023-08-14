@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2018 the original author or authors.
+ * Copyright 2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,8 +20,11 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import org.kathrynhuxtable.heroes.service.persistence.domain.PrivilegeDO;
-import org.kathrynhuxtable.heroes.service.persistence.domain.UserDO;
 
+/**
+ * The Privilege DAO. Only used to delete existing privileges when creating the database.
+ * Needed because the mapping from UserDO is unidirectional.
+ */
 @Repository
 public interface PrivilegeDAO extends JpaRepository<PrivilegeDO, Long>, JpaSpecificationExecutor<PrivilegeDO> {
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2018 the original author or authors.
+ * Copyright 2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,6 +23,10 @@ import org.kathrynhuxtable.heroes.service.bean.User;
 import org.kathrynhuxtable.heroes.service.persistence.LoginInfoDAO;
 import org.kathrynhuxtable.heroes.service.persistence.domain.LoginInfoDO;
 
+/**
+ * The authentication service. Matches the credentials against the auth_info data
+ * and then returns the User object. Should probably just return the userId.
+ */
 @Slf4j
 @Component
 @AllArgsConstructor
