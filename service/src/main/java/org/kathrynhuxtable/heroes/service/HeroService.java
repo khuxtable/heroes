@@ -20,14 +20,13 @@ import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import org.kathrynhuxtable.heroes.service.bean.Hero;
 import org.kathrynhuxtable.heroes.service.bean.HeroFilterResult;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterMatchMode;
-import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterMetadata;
+import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterData;
 import org.kathrynhuxtable.heroes.service.persistence.HeroDAO;
 import org.kathrynhuxtable.heroes.service.persistence.domain.HeroDO;
 
@@ -55,10 +54,10 @@ public class HeroService {
 
 	public List<Hero> search(String name) {
 		UIFilter filter = new UIFilter();
-		UIFilterMetadata md = new UIFilterMetadata();
+		UIFilterData md = new UIFilterData();
 		md.setValue(name);
 		md.setMatchMode(UIFilterMatchMode.contains);
-		Map<String, List<UIFilterMetadata>> filterMap = new HashMap<>();
+		Map<String, List<UIFilterData>> filterMap = new HashMap<>();
 		filterMap.put("name", Collections.singletonList(md));
 		filter.setFilters(filterMap);
 		return toHeroes(heroDao.findByFilter(filter));

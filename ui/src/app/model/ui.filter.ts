@@ -10,11 +10,6 @@ export class UIFilter {
     first?: number;
 
     /**
-     * The index of the last record to be loaded.
-     */
-    last?: number;
-
-    /**
      * The number of rows to load.
      */
     rows?: number;
@@ -29,7 +24,7 @@ export class UIFilter {
      * The keys represent the field names, and the values represent the corresponding filter metadata.
      */
     filters?: {
-        [s: string]: UIFilterMetadata[];
+        [s: string]: UIFilterData[];
     };
 
 	/** 
@@ -37,10 +32,13 @@ export class UIFilter {
 	 */
     constructor(event: TableLazyLoadEvent) {
         this.first = event.first;
-        this.last = event.last;
- 
+
         if (event.rows) {
             this.rows = event.rows;
+        } else if (event.last && event.first) {
+            this.rows = event.last - event.first;
+        } else if (event.last) {
+            this.rows = event.last;
         }
  
         if (event.multiSortMeta) {
@@ -49,19 +47,15 @@ export class UIFilter {
                 this.sortFields.push({ field: msm.field, order: msm.order });
             }
         } else if (event.sortField && event.sortOrder) {
-            const f = typeof event.sortField === 'string' ? [event.sortField] : event.sortField;
-            const o = typeof event.sortOrder === 'number' ? [event.sortOrder] : event.sortOrder;
- 
+            const f = typeof event.sortField === 'string' ? event.sortField : event.sortField[0];
+
             this.sortFields = [];
-            for (var i = 0; i < f.length; i++) {
-                // Need to handle non-matchingg lengths
-                this.sortFields.push({ field: f[i], order: o[i] });
-            }
+            this.sortFields.push({ field: f, order: event.sortOrder});
         }
  
         if (event.filters) {
             var mf: {
-                [s: string]: UIFilterMetadata[];
+                [s: string]: UIFilterData[];
             } = {};
 
             for (var key in event.filters) {
@@ -89,7 +83,7 @@ export interface UIFilterSort {
  * Represents metadata for filtering a data set.
  * @group Interface
  */
-export interface UIFilterMetadata {
+export interface UIFilterData {
     /**
      * The value used for filtering.
      */

@@ -29,11 +29,6 @@ public class UIFilter {
 	Integer first;
 
 	/**
-	 * The index of the last record to be loaded.
-	 */
-	Integer last;
-
-	/**
 	 * The number of rows to load.
 	 */
 	Integer rows;
@@ -48,7 +43,7 @@ public class UIFilter {
 	 * represent the field names, and the values represent the corresponding filter
 	 * metadata.
 	 */
-	Map<String, List<UIFilterMetadata>> filters;
+	Map<String, List<UIFilterData>> filters;
 
 	@Data
 	public static class UIFilterSort {
@@ -57,7 +52,7 @@ public class UIFilter {
 	}
 
 	@Data
-	public static class UIFilterMetadata {
+	public static class UIFilterData {
 		/**
 		 * The value used for filtering.
 		 */

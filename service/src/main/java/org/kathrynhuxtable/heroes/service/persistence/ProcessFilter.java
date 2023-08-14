@@ -30,7 +30,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import org.kathrynhuxtable.heroes.service.bean.UIFilter;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterMatchMode;
-import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterMetadata;
+import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterData;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterOperator;
 import org.kathrynhuxtable.heroes.service.persistence.domain.HeroDO;
 
@@ -60,7 +60,7 @@ public class ProcessFilter implements Specification<HeroDO> {
 	public Predicate toPredicate(Root<HeroDO> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
 		List<Predicate> outer = new ArrayList<>();
 		if (filter.getFilters() != null && !filter.getFilters().isEmpty()) {
-			for (Entry<String, List<UIFilterMetadata>> entry : filter.getFilters().entrySet()) {
+			for (Entry<String, List<UIFilterData>> entry : filter.getFilters().entrySet()) {
 				String key;
 				if ("global".equals(entry.getKey())) {
 					key = "name";
@@ -71,7 +71,7 @@ public class ProcessFilter implements Specification<HeroDO> {
 				if (key != null) {
 					List<Predicate> inner = new ArrayList<>();
 					UIFilterOperator operator = null;
-					for (UIFilterMetadata md : entry.getValue()) {
+					for (UIFilterData md : entry.getValue()) {
 						if (md.getOperator() != null) {
 							operator = md.getOperator();
 						}
