@@ -8,6 +8,8 @@ requires Java 17, so you can't use an earlier version.
 The application uses an Apache Derby database, which it expects to find in your home directory
 in the `.heroes/db` folder.
 
+The initial data is configured via the `application.yml` file in the resources folder.
+
 == Run the application
 
 Enter the command:

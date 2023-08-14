@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2018 the original author or authors.
+ * Copyright 2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,6 +30,9 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+/**
+ * Configure the database.
+ */
 @Slf4j
 @Configuration
 @ComponentScan(basePackages = {"org.kathrynhuxtable.heroes.createdb", "org.kathrynhuxtable.heroes.service"})
@@ -37,41 +40,41 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class ServiceConfig {
 
-    public static final String PERSISTENCE_PACKAGE = "org.kathrynhuxtable.heroes.service.persistence";
-    public static final String DRIVER_CLASS = "org.apache.derby.jdbc.EmbeddedDriver";
+	public static final String PERSISTENCE_PACKAGE = "org.kathrynhuxtable.heroes.service.persistence";
+	public static final String DRIVER_CLASS = "org.apache.derby.jdbc.EmbeddedDriver";
 
-    public ServiceConfig() {
-        log.info("Initializing ServiceConfig");
-    }
+	public ServiceConfig() {
+		log.info("Initializing ServiceConfig");
+	}
 
-    @Bean
-    public DataSource dataSource() {
-        String homeDirectory = System.getProperty("user.home");
-        final DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(DRIVER_CLASS);
-        dataSource.setUrl("jdbc:derby:" + homeDirectory + "/.heroes/db;create=true");
-        dataSource.setUsername("");
-        dataSource.setPassword("");
-        return dataSource;
-    }
+	@Bean
+	public DataSource dataSource() {
+		String homeDirectory = System.getProperty("user.home");
+		final DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClassName(DRIVER_CLASS);
+		dataSource.setUrl("jdbc:derby:" + homeDirectory + "/.heroes/db;create=true");
+		dataSource.setUsername("");
+		dataSource.setPassword("");
+		return dataSource;
+	}
 
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        vendorAdapter.setGenerateDdl(true);
-		vendorAdapter.setShowSql(true);
+	@Bean
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+		HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+//		vendorAdapter.setGenerateDdl(true);
+//		vendorAdapter.setShowSql(true);
 
-        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
-        factory.setJpaVendorAdapter(vendorAdapter);
-        factory.setPackagesToScan(PERSISTENCE_PACKAGE);
-        factory.setDataSource(dataSource());
-        return factory;
-    }
+		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+		factory.setJpaVendorAdapter(vendorAdapter);
+		factory.setPackagesToScan(PERSISTENCE_PACKAGE);
+		factory.setDataSource(dataSource());
+		return factory;
+	}
 
-    @Bean
-    public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
-        JpaTransactionManager txManager = new JpaTransactionManager();
-        txManager.setEntityManagerFactory(entityManagerFactory);
-        return txManager;
-    }
+	@Bean
+	public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+		JpaTransactionManager txManager = new JpaTransactionManager();
+		txManager.setEntityManagerFactory(entityManagerFactory);
+		return txManager;
+	}
 }
