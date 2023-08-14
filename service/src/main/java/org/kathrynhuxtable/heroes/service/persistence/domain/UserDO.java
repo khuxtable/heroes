@@ -15,6 +15,11 @@
  */
 package org.kathrynhuxtable.heroes.service.persistence.domain;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,29 +28,27 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Indexed;
 
 @Entity
-@Table(name = "HERO", schema = "APP")
+@Table(name = "USER_INFO", schema = "APP")
 @Indexed
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class HeroDO {
+public class UserDO {
 
-    @SequenceGenerator(name = "Hero_Gen", sequenceName = "HERO_SEQ", allocationSize = 1, initialValue = 1)
+    @SequenceGenerator(name = "User_Gen", sequenceName = "USER_SEQ", allocationSize = 1, initialValue = 1)
     @Id
-    @GeneratedValue(generator = "Hero_Gen")
-    @Column(name = "ID")
-    private Long id;
+    @GeneratedValue(generator = "User_Gen")
+    @Column(name = "USER_ID")
+    private Long userId;
 
-    @Column(name = "NAME")
-    private String name;
+    @Column(name = "LAST_NAME")
+    private String lastName;
 
-    @Column(name = "POWER")
-    private String power;
+    @Column(name = "FIRST_NAME")
+    private String firstName;
 
-    @Column(name = "ALTER_EGO")
-    private String alterEgo;
+    @Column(name = "PREFERRED_THEME")
+    private String preferredTheme;
 
-    @Column(name = "RATING")
-    private Integer rating;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID")
+    private Set<PrivilegeDO> privileges = new HashSet<>();
 }

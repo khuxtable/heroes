@@ -18,7 +18,6 @@ package org.kathrynhuxtable.heroes.service.persistence;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -26,14 +25,13 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import org.kathrynhuxtable.heroes.service.bean.UIFilter;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterSort;
-import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterMetadata;
 import org.kathrynhuxtable.heroes.service.persistence.domain.HeroDO;
 
-@Component
+@Repository
 public interface HeroDAO extends JpaRepository<HeroDO, Long>, JpaSpecificationExecutor<HeroDO> {
 
     default List<HeroDO> findByFilter(UIFilter filter) {
@@ -73,31 +71,5 @@ public interface HeroDAO extends JpaRepository<HeroDO, Long>, JpaSpecificationEx
     default long countByFilter(UIFilter filter) {
         ProcessFilter process = new ProcessFilter(filter);
         return count(process);
-    }
-
-    @Transactional
-    default void initHeroes() {
-        for (HeroDO hero : findAll()) {
-            delete(hero);
-        }
-
-        String[] initialHeroes = new String[]{"Dr. Nice", "Bombasto", "Celeritas", "Magneta", "RubberMan", "Dynama",
-                "Dr. IQ", "Magma", "Tornado"};
-
-        for (String name : initialHeroes) {
-            HeroDO hero = new HeroDO();
-            hero.setName(name);
-            hero.setPower("");
-            if ("Bombasto".equals(name)) {
-                hero.setRating(4);
-            } else if ("Tornado".equals(name)) {
-                hero.setRating(3);
-            } else if ("Celeritas".equals(name) || "Magneta".equals(name) || "RubberMan".equals(name) || "Dynama".equals(name)) {
-                hero.setRating(5);
-            } else {
-                hero.setRating(0);
-            }
-            save(hero);
-        }
     }
 }

@@ -1,7 +1,8 @@
 import {Component} from '@angular/core';
 
 import {AuthService} from '@appServices/auth.service';
-import {ThemeService} from "@appServices/theme-service";
+import {ThemeService} from "@appServices/theme.service";
+import {UserService} from "@appServices/user.service";
 import {User} from '@appModel/user';
 
 @Component({
@@ -22,7 +23,8 @@ export class AppComponent {
     value: string = 'viva-light';
 
     constructor(private authService: AuthService,
-                private themeService: ThemeService) {
+                private themeService: ThemeService,
+                private userService: UserService) {
         authService.getLoggedInName.subscribe(user => this.user = user);
     }
 
@@ -36,6 +38,9 @@ export class AppComponent {
             this.user = null;
         } else {
             this.user = curUser;
+            if (curUser.preferredTheme) {
+                this.themeService.switchTheme(curUser.preferredTheme);
+            }
         }
     }
 
@@ -45,5 +50,8 @@ export class AppComponent {
 
     changeTheme(theme: string) {
         this.themeService.switchTheme(theme);
+        if (this.user) {
+            this.userService.updateTheme(this.user.id, theme);
+        }
     }
 }

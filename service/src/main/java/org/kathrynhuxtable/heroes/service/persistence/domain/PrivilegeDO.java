@@ -23,29 +23,20 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Indexed;
 
 @Entity
-@Table(name = "HERO", schema = "APP")
+@Table(name = "PRIVILEGE", schema = "APP")
 @Indexed
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HeroDO {
+@IdClass(value = PrivilegeKey.class)
+public class PrivilegeDO {
 
-    @SequenceGenerator(name = "Hero_Gen", sequenceName = "HERO_SEQ", allocationSize = 1, initialValue = 1)
     @Id
-    @GeneratedValue(generator = "Hero_Gen")
-    @Column(name = "ID")
-    private Long id;
+    @Column(name = "USER_ID")
+    private Long userId;
 
-    @Column(name = "NAME")
-    private String name;
-
-    @Column(name = "POWER")
-    private String power;
-
-    @Column(name = "ALTER_EGO")
-    private String alterEgo;
-
-    @Column(name = "RATING")
-    private Integer rating;
+    @Id
+    @Column(name = "PRIVILEGE")
+    private String privilege;
 }

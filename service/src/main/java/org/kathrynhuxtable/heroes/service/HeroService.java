@@ -18,6 +18,7 @@ package org.kathrynhuxtable.heroes.service;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,16 +28,15 @@ import org.kathrynhuxtable.heroes.service.bean.HeroFilterResult;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterMatchMode;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterMetadata;
-import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterSort;
 import org.kathrynhuxtable.heroes.service.persistence.HeroDAO;
 import org.kathrynhuxtable.heroes.service.persistence.domain.HeroDO;
 
 @Slf4j
 @Component
+@AllArgsConstructor
 public class HeroService {
 
-	@Autowired
-	private HeroDAO heroDao;
+	private final HeroDAO heroDao;
 
 	public HeroFilterResult find(UIFilter filter) {
 		log.info("Filter: " + filter.toString());
@@ -67,7 +67,7 @@ public class HeroService {
 	public Hero find(long id) {
 		log.info("Searching for hero " + id);
 		Optional<HeroDO> heroDO = heroDao.findById(id);
-		return heroDO.isEmpty() ? null : toHero(heroDO.get());
+		return heroDO.map(this::toHero).orElse(null);
 	}
 
 	public Hero update(Hero hero) {
@@ -80,19 +80,12 @@ public class HeroService {
 
 	public Hero delete(long id) {
 		Optional<HeroDO> found = heroDao.findById(id);
-		if (found.isPresent()) {
-			heroDao.delete(found.get());
-		}
-		return found.isEmpty() ? null : toHero(found.get());
-	}
-
-	public boolean initHeroes() {
-		heroDao.initHeroes();
-		return true;
+        found.ifPresent(heroDO -> heroDao.delete(heroDO));
+		return found.map(this::toHero).orElse(null);
 	}
 
 	private List<Hero> toHeroes(List<HeroDO> heroDOs) {
-		return heroDOs.stream().map(heroDO -> toHero(heroDO)).collect(Collectors.toList());
+		return heroDOs.stream().map(this::toHero).collect(Collectors.toList());
 	}
 
 	private Hero toHero(HeroDO heroDO) {

@@ -15,6 +15,9 @@
  */
 package org.kathrynhuxtable.heroes.service.persistence.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,29 +26,26 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Indexed;
 
 @Entity
-@Table(name = "HERO", schema = "APP")
+@Table(name = "LOGIN_INFO", schema = "APP")
 @Indexed
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HeroDO {
+public class LoginInfoDO {
 
-    @SequenceGenerator(name = "Hero_Gen", sequenceName = "HERO_SEQ", allocationSize = 1, initialValue = 1)
+    @SequenceGenerator(name = "LoginInfo_Gen", sequenceName = "LOGIN_INFO_SEQ", allocationSize = 1, initialValue = 1)
     @Id
-    @GeneratedValue(generator = "Hero_Gen")
+    @GeneratedValue(generator = "LoginInfo_Gen")
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "NAME")
-    private String name;
+    @Column(name = "USERNAME")
+    private String username;
 
-    @Column(name = "POWER")
-    private String power;
+    @Column(name = "PASSWORD")
+    private String password;
 
-    @Column(name = "ALTER_EGO")
-    private String alterEgo;
-
-    @Column(name = "RATING")
-    private Integer rating;
+    @Column(name = "USER_ID")
+    private Long userId;
 }

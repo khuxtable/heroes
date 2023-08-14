@@ -1,0 +1,36 @@
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type: TRACE
+---
+createdb:
+  users:
+    - username: admin
+      password: secret1
+      firstName: Felonius
+      lastName: Gru
+      privileges:
+        - VIEW
+        - ADMIN
+    - username: user
+      password: pass1
+      firstName: Reed
+      lastName: Richards
+      privileges:
+        - VIEW
+  heroes:
+    - name: Dr. Nice
+    - name: Bombasto
+      rating: 4
+    - name: Celeritas
+      rating: 5
+    - name: Magneta
+      rating: 5
+    - name: RubberMan
+      rating: 5
+    - name: Dynama
+      rating: 5
+    - name: Dr. IQ
+    - name: Magma
+    - name: Tornado
+      rating: 3

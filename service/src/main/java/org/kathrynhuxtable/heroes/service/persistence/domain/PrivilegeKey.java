@@ -15,37 +15,15 @@
  */
 package org.kathrynhuxtable.heroes.service.persistence.domain;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Indexed;
 
-@Entity
-@Table(name = "HERO", schema = "APP")
-@Indexed
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class HeroDO {
+public class PrivilegeKey implements Serializable {
 
-    @SequenceGenerator(name = "Hero_Gen", sequenceName = "HERO_SEQ", allocationSize = 1, initialValue = 1)
-    @Id
-    @GeneratedValue(generator = "Hero_Gen")
-    @Column(name = "ID")
-    private Long id;
-
-    @Column(name = "NAME")
-    private String name;
-
-    @Column(name = "POWER")
-    private String power;
-
-    @Column(name = "ALTER_EGO")
-    private String alterEgo;
-
-    @Column(name = "RATING")
-    private Integer rating;
+    protected Long userId;
+    protected String privilege;
 }

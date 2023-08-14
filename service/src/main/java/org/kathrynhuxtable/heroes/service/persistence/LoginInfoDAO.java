@@ -13,16 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.kathrynhuxtable.heroes.service.service.data;
+package org.kathrynhuxtable.heroes.service.persistence;
 
-import lombok.Builder;
-import lombok.Data;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.stereotype.Repository;
 
-@Data
-@Builder
-public class AuthData {
+import org.kathrynhuxtable.heroes.service.persistence.domain.LoginInfoDO;
 
-    private long id;
-    private String username;
-    private String password;
+@Repository
+public interface LoginInfoDAO extends JpaRepository<LoginInfoDO, Long>, JpaSpecificationExecutor<LoginInfoDO> {
+
+    LoginInfoDO findLoginInfoDOByUsernameAndPassword(String username, String password);
 }

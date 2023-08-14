@@ -18,25 +18,24 @@ package org.kathrynhuxtable.heroes.resources.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import org.kathrynhuxtable.heroes.service.AuthService;
+import org.kathrynhuxtable.heroes.service.UserService;
 import org.kathrynhuxtable.heroes.service.bean.AuthInfo;
 import org.kathrynhuxtable.heroes.service.bean.User;
 
 @Slf4j
 @Controller
-@RequestMapping("auth")
+@RequestMapping("user")
 @AllArgsConstructor
-public class AuthController {
+public class UserController {
 
-    private final AuthService authService;
+    private final UserService userService;
 
-    @PutMapping(path = "login")
-    public @ResponseBody User login(@RequestBody AuthInfo authInfo) {
-        return authService.authenticate(authInfo.getUsername(), authInfo.getPassword());
+    @GetMapping(path = "/updateTheme/{id}", produces = "application/json")
+    public @ResponseBody User login(@PathVariable int id,
+                                    @RequestParam(name = "theme") String theme) {
+        return userService.updateTheme(id, theme);
     }
 }

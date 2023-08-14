@@ -20,19 +20,24 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import org.kathrynhuxtable.heroes.service.HeroService;
+import org.kathrynhuxtable.heroes.service.persistence.util.DerbySlf4jBridge;
 
 @SpringBootApplication
 public class Application {
     ConfigurableApplicationContext applicationContext;
 
     public static void main(String[] args) {
-        System.setProperty("derby.stream.error.method",
-                "org.kathrynhuxtable.heroes.service.persistence.util.DerbySlf4jBridge.bridge");
+        System.setProperty("derby.stream.error.method", DerbySlf4jBridge.getMethodName());
+
         ApplicationContext context = SpringApplication.run(Application.class, args);
-        HeroService heroService = (HeroService) context.getBean("heroService");
-        heroService.initHeroes();
-        System.out.println("Initialized Heroes");
-        System.exit(0);
+
+        InitializeData initialData = (InitializeData) context.getBean("initializeData");
+        try {
+            initialData.initialize();
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+        } finally {
+            System.exit(0);
+        }
     }
 }
