@@ -22,9 +22,9 @@ export class UserService {
 	updateTheme(id: number, theme: string): Observable<User> {
 		// For now, assume that a hero with the specified `id` always exists.
 		// Error handling will be added in the next step of the tutorial.
-		const url = `${this.serviceUrl}/${id}?theme=${theme}`;
+		const url = `${this.serviceUrl}/updateTheme/${id}?theme=${theme}`;
 		return this.http.get<User>(url).pipe(
-			tap(_ => this.log(`fetched user id=${id}`)),
+			tap(_ => this.log(`updated theme for id=${id} to ${theme}`)),
 			catchError(this.handleError<User>(`updateTheme id=${id}`))
 		);
 	}
@@ -49,6 +49,7 @@ export class UserService {
 			return of(result as T);
 		};
 	}
+
 	/** Log a HeroService message with the MessageService */
 	private log(message: string) {
 		this.messageService.add(`UserService: ${message}`);

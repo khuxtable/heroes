@@ -25,7 +25,13 @@ export class AppComponent {
     constructor(private authService: AuthService,
                 private themeService: ThemeService,
                 private userService: UserService) {
-        authService.getLoggedInName.subscribe(user => this.user = user);
+        authService.getLoggedInName.subscribe(user => {
+            this.user = user;
+            if (this.user?.preferredTheme) {
+                this.value = this.user.preferredTheme;
+                this.themeService.switchTheme(this.value);
+            }
+        });
     }
 
     ngOnInit(): void {
@@ -38,9 +44,6 @@ export class AppComponent {
             this.user = null;
         } else {
             this.user = curUser;
-            if (curUser.preferredTheme) {
-                this.themeService.switchTheme(curUser.preferredTheme);
-            }
         }
     }
 
@@ -49,9 +52,15 @@ export class AppComponent {
     }
 
     changeTheme(theme: string) {
-        this.themeService.switchTheme(theme);
         if (this.user) {
-            this.userService.updateTheme(this.user.id, theme);
+            this.userService.updateTheme(this.user.id, theme).subscribe(
+                user => {
+                    if (user) {
+                        this.user = user;
+                        this.themeService.switchTheme(user.preferredTheme);
+                    }
+                }
+            );
         }
     }
 }

@@ -9,6 +9,7 @@
 		<span style="vertical-align: middle;">
 			{{user.firstName}} {{user.lastName}}
 			({{user.privileges!.join(', ')}})
+			[{{user.preferredTheme}}]
 		</span>
 		<p-button styleClass="p-button-link" (click)="logout()" label="Logout" />
 	</div>
