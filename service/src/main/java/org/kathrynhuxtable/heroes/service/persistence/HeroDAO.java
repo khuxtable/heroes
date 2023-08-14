@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2018 the original author or authors.
+ * Copyright 2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,12 +31,21 @@ import org.kathrynhuxtable.heroes.service.bean.UIFilter;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterSort;
 import org.kathrynhuxtable.heroes.service.persistence.domain.HeroDO;
 
+/**
+ * The Hero DAO. Provides some convenience methods using custom predicates generated
+ * by Specification classes.
+ */
 @Repository
 public interface HeroDAO extends JpaRepository<HeroDO, Long>, JpaSpecificationExecutor<HeroDO> {
 
+    /**
+     * Find by filter. Supports pagination, sorting, and filtering on values.
+     *
+     * @param filter the UIFilter object.
+     * @return a List of matching HeroDO records.
+     */
     default List<HeroDO> findByFilter(UIFilter filter) {
-        ProcessFilter process = new ProcessFilter(filter);
-
+        // Create JPA sort criteria. Sort on id by default.
         Sort sort;
         if (filter.getSortFields() == null || filter.getSortFields().isEmpty()) {
             sort = Sort.by(Sort.Direction.ASC, "id");
@@ -49,6 +58,10 @@ public interface HeroDAO extends JpaRepository<HeroDO, Long>, JpaSpecificationEx
             sort = Sort.by(orders);
         }
 
+        // Create the filter predicate.
+        ProcessFilter process = new ProcessFilter(filter);
+
+        // Find the rows, paginating if requested.
         if (filter.getRows() == null || filter.getRows() == 0) {
             return findAll(process, sort);
         } else {
@@ -60,6 +73,12 @@ public interface HeroDAO extends JpaRepository<HeroDO, Long>, JpaSpecificationEx
         }
     }
 
+    /**
+     * Return the top rated Heroes.
+     *
+     * @param count the number of Heroes to return.
+     * @return a List of HeroDO objects
+     */
     default List<HeroDO> findTopHeroes(int count) {
         RatingNotNull goodRating = new RatingNotNull();
         Sort sort= Sort.by(Sort.Direction.DESC, "rating");
@@ -68,6 +87,13 @@ public interface HeroDAO extends JpaRepository<HeroDO, Long>, JpaSpecificationEx
         return pageable.getContent();
     }
 
+    /**
+     * Return the number of rows matched by filter criteria without paginating.
+     * This is needed for a UI to know how many pages are available.
+     *
+     * @param filter the UIFilter object.
+     * @return the number of rows matched by the filter criteria.
+     */
     default long countByFilter(UIFilter filter) {
         ProcessFilter process = new ProcessFilter(filter);
         return count(process);

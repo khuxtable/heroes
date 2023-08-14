@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2018 the original author or authors.
+ * Copyright 2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,8 +21,18 @@ import org.springframework.stereotype.Repository;
 
 import org.kathrynhuxtable.heroes.service.persistence.domain.LoginInfoDO;
 
+/**
+ * The LoginInfo DAO.
+ */
 @Repository
 public interface LoginInfoDAO extends JpaRepository<LoginInfoDO, Long>, JpaSpecificationExecutor<LoginInfoDO> {
 
-    LoginInfoDO findLoginInfoDOByUsernameAndPassword(String username, String password);
+	/**
+	 * Find the matching authentication credentials.
+	 *
+	 * @param username the username to match.
+	 * @param password the password to match.
+	 * @return the LoginInfoDO, or {@9ode null} if the username and psasword do not match a record.
+	 */
+	LoginInfoDO findLoginInfoDOByUsernameAndPassword(String username, String password);
 }
