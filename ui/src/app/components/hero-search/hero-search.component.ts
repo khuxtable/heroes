@@ -25,6 +25,12 @@ import {
 import {Hero} from '@appModel/hero';
 import {HeroService} from '@appServices/hero.service';
 
+/**
+ * The hero search component. Displays a text search box and displays a list of
+ * heroes whose names match the text, ignoring case. If the search box is empty,
+ * the results are empty. The hero names are clickable and will route to the details
+ * page for that hero.
+ */
 @Component({
 	selector: 'app-hero-search',
 	templateUrl: './hero-search.component.html',

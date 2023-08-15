@@ -21,6 +21,11 @@ import {ThemeService} from "@appServices/theme.service";
 import {UserService} from "@appServices/user.service";
 import {User} from '@appModel/user';
 
+/**
+ * The main app component. Displays a theme selection and the logged in user,
+ * allows switching between the Dashboard and Heroes components, and
+ * displays the Message component.
+ */
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',

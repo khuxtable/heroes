@@ -24,6 +24,10 @@ import {UIFilter} from '@appModel/ui.filter';
 import {HeroService} from '@appServices/hero.service';
 import {AuthService} from '@appServices/auth.service';
 
+/**
+ * The heroes component. Displays a paginated table of heroes, supporting sorting and filtering.
+ * Has a button to add a new hero, and the ability to edit and delete heroes.
+ */
 @Component({
 	selector: 'app-heroes',
 	templateUrl: './heroes.component.html',
@@ -50,10 +54,20 @@ export class HeroesComponent {
 		this.loading = true;
 	}
 
+	/**
+	 * Convert HTML element to its value.
+	 * @param $event the event driving the filtering.
+	 * @param stringVal the value of the global filter text.
+	 */
 	applyFilterGlobal($event: any, stringVal: any) {
 		this.dt!.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
 	}
 
+	/**
+	 * Respond to a sort, paginate, or filter event by "lazy loading" the heroes.
+	 *
+	 * @param event the event containing the selection data.
+	 */
 	loadHeroes(event: TableLazyLoadEvent) {
 		this.loading = true;
 
@@ -66,6 +80,9 @@ export class HeroesComponent {
 		}, 1000);
 	}
 
+	/**
+	 * Get the current user and set whether they can make changes.
+	 */
 	getUser(): void {
 		if (this.authService.userValue) {
 			this.canAdd = this.authService.userValue.privileges.includes('ADMIN');
@@ -74,10 +91,18 @@ export class HeroesComponent {
 		}
 	}
 
+	/**
+	 * Add a hero. Routes to the "detail" page with a blank hero loaded.
+	 */
 	add(): void {
 		this.router.navigate(['/detail/new']);
 	}
 
+	/**
+	 * Delete a hero.
+	 *
+	 * @param hero the hero to delete.
+	 */
 	delete(hero: Hero): void {
 		this.heroes = this.heroes.filter(h => h !== hero);
 		this.heroService.deleteHero(hero.id).subscribe();

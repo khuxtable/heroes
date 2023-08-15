@@ -18,6 +18,9 @@ import {Component} from '@angular/core';
 
 import {MessageService} from '@appServices/message.service';
 
+/**
+ * The message component. Displays messages from the message service.
+ */
 @Component({
 	selector: 'app-messages',
 	templateUrl: './messages.component.html',

@@ -20,6 +20,9 @@ import {FormGroup} from '@angular/forms';
 
 import {AuthService} from '@appServices/auth.service';
 
+/**
+ * The login component. Displays the login request and handles the user login.
+ */
 @Component({
 	selector: 'login-component',
 	templateUrl: './login.component.html',
@@ -46,6 +49,9 @@ export class LoginComponent implements OnInit {
 	ngOnInit() {
 	}
 
+	/**
+	 * Validate the credentials with the authentication service.
+	 */
 	onSubmit() {
 		this.error = 'Invalid login';
 		this.authService.login(this.authData.username, this.authData.password)

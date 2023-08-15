@@ -20,6 +20,10 @@ import {Router} from '@angular/router';
 import {Hero} from '@appModel/hero';
 import {HeroService} from '@appServices/hero.service';
 
+/**
+ * The "dashboard" page, which is the logged in home screen.
+ * Displays the top five rated heroes, and allows searching by name.
+ */
 @Component({
 	selector: 'app-dashboard',
 	templateUrl: './dashboard.component.html',
@@ -38,11 +42,19 @@ export class DashboardComponent {
 		this.getHeroes();
 	}
 
+	/**
+	 * Load the top-rated heroes.
+	 */
 	getHeroes(): void {
 		this.heroService.getTopHeroes()
 			.subscribe(result => this.heroes = result);
 	}
 
+	/**
+	 * Display the details for a hero.
+	 *
+	 * @param id the id of the hero to display.
+	 */
 	routeMe(id: number): void {
 		this.router.navigate(['/detail/' + id]);
 	}
