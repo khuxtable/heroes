@@ -22,10 +22,18 @@ import {Injectable} from '@angular/core';
 export class MessageService {
 	messages: string[] = [];
 
+	/**
+	 * Add a message to the message log.
+	 *
+	 * @param message the message to add.
+	 */
 	add(message: string) {
 		this.messages.push(message);
 	}
 
+	/**
+	 * Clear the message log.
+	 */
 	clear() {
 		this.messages = [];
 	}

@@ -36,6 +36,12 @@ export class UserService {
 	constructor(private http: HttpClient, private messageService: MessageService) {
 	}
 
+	/**
+	 * Load the user's profile by username.
+	 *
+	 * @param username the username being requested.
+	 * @return an Observable<User> for the username requested.
+	 */
 	findByUsername(username: string): Observable<User> {
 		// For now, assume that a hero with the specified `id` always exists.
 		// Error handling will be added in the next step of the tutorial.
@@ -46,6 +52,13 @@ export class UserService {
 		);
 	}
 
+	/**
+	 * Update the user's theme in their profile.
+	 *
+	 * @param id the userId for the user to update.
+	 * @param theme the theme name, which is currently a PrimeNG theme name.
+	 * @return an Observable<User> for the updated user profile.
+	 */
 	updateTheme(id: number, theme: string): Observable<User> {
 		// For now, assume that a hero with the specified `id` always exists.
 		// Error handling will be added in the next step of the tutorial.

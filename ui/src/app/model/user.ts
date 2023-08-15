@@ -14,6 +14,9 @@
  * the License.
  */
 
+/**
+ * User profile information. Stored in the server.
+ */
 export interface User {
 	id: number;
 	firstName: string;

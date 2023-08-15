@@ -29,18 +29,22 @@ import {User} from '@appModel/user';
 export class AppComponent {
 	title = 'Tour of Heroes';
 
+	// Theme button options
 	themeOptions: any[] = [
 		{label: 'Light', value: 'viva-light'},
 		{label: 'Dark', value: 'viva-dark'}
 	];
 
+	// Current user
 	user: User | null = null;
 
+	// Current theme
 	value: string = 'viva-light';
 
 	constructor(private authService: AuthService,
 	            private themeService: ThemeService,
 	            private userService: UserService) {
+		// Ask for the currently logged in user. Load user and theme
 		authService.getLoggedInName.subscribe(user => {
 			this.user = user;
 			var theme : string;
@@ -70,12 +74,21 @@ export class AppComponent {
 		}
 	}
 
+	/**
+	 * Perform logout action.
+	 */
 	logout(): void {
+		// Switch to login theme and clear user.
 		this.themeService.switchTheme('lara-light-teal');
 		this.user = null;
 		this.authService.logout();
 	}
 
+	/**
+	 * Perform theme change action. Saves the selection in the user's profile.
+	 *
+	 * @param theme the theme selected, currently an actual PrimeNG theme name.
+	 */
 	changeTheme(theme: string) {
 		if (this.user) {
 			this.userService.updateTheme(this.user.id, theme).subscribe(

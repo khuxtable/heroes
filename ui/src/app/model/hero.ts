@@ -14,6 +14,9 @@
  * the License.
  */
 
+/**
+ * The Hero object, stored on the server, but managed by the UI.
+ */
 export class Hero {
 
 	constructor(

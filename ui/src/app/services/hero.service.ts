@@ -37,6 +37,13 @@ export class HeroService {
 	constructor(private http: HttpClient, private messageService: MessageService) {
 	}
 
+	/**
+	 * A "lazy loader" for the Heroes, returning the requested page, filtered as requested
+	 * in sorted order.
+	 *
+	 * @param filter the filter, containing the filter, pagination, and sorting information.
+	 * @return an Observable<UIFilterResult>, which contains the Heroes, and a total count.
+	 */
 	getHeroesLazy(filter: UIFilter): Observable<UIFilterResult> {
 		return this.http.post<UIFilterResult>(this.serviceUrl + "/filter", filter, this.httpOptions).pipe(
 			tap(_ => this.log('fetched heroes')),
@@ -44,6 +51,11 @@ export class HeroService {
 		);
 	}
 
+	/**
+	 * Retrieve the 5 top-rated heroes.
+	 *
+	 * @return an Observable<Hero[]> containing the requested Heroes.
+	 */
 	getTopHeroes(): Observable<Hero[]> {
 		return this.http.get<Hero[]>(this.serviceUrl + "/top").pipe(
 			tap(_ => this.log('fetched top heroes')),
@@ -51,6 +63,12 @@ export class HeroService {
 		);
 	}
 
+	/**
+	 * Retrieve a particular Hero by id
+	 *
+	 * @param id the id of the Hero
+	 * @return an Observable<Hero> for the hero requested.
+	 */
 	getHero(id: number): Observable<Hero> {
 		// For now, assume that a hero with the specified `id` always exists.
 		// Error handling will be added in the next step of the tutorial.
@@ -61,7 +79,11 @@ export class HeroService {
 		);
 	}
 
-	/** PUT: update the hero on the server */
+	/**
+	 * Update the Hero on the server.
+	 *
+	 * @param hero the Hero to update.
+	 */
 	updateHero(hero: Hero): Observable<any> {
 		return this.http.put(this.serviceUrl, hero, this.httpOptions).pipe(
 			tap(_ => this.log(`updated hero id=${hero.id}`)),
@@ -69,7 +91,12 @@ export class HeroService {
 		);
 	}
 
-	/** POST: add a new hero to the server */
+	/**
+	 * Add a new Hero on the server.
+	 *
+	 * @param hero the Hero to add.
+	 * @return an Observable<Hero> for the new Hero.
+	 */
 	addHero(hero: Hero): Observable<Hero> {
 		return this.http.put<Hero>(this.serviceUrl, hero, this.httpOptions).pipe(
 			tap((newHero: Hero) => this.log(`added hero w/ id=${newHero.id}`)),
@@ -77,7 +104,12 @@ export class HeroService {
 		);
 	}
 
-	/** DELETE: delete the hero from the server */
+	/**
+	 * Delete a Hero from the server.
+	 *
+	 * @param id the id of the Hero to delete.
+	 * @return an Observable<Hero> for the Hero deleted.
+	 */
 	deleteHero(id: number): Observable<Hero> {
 		const url = `${this.serviceUrl}/${id}`;
 
@@ -87,7 +119,12 @@ export class HeroService {
 		);
 	}
 
-	/* GET heroes whose name contains search term */
+	/**
+	 * Search for heroes by name. Searches ignoring case, looking for names containing the term.
+	 *
+	 * @param term the name text to be searched
+	 * @return an Observable<Hero[]> containing the matched Heroes.
+	 */
 	searchHeroes(term: string): Observable<Hero[]> {
 		if (!term.trim()) {
 			// if not search term, return empty hero array.

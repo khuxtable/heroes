@@ -19,6 +19,9 @@ import {Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot} from '
 
 import {AuthService} from '@appServices/auth.service';
 
+/**
+ * A guard to check for login, and redirect to the login page if not logged in.
+ */
 @Injectable({providedIn: 'root'})
 export class AuthGuard implements CanActivate {
 

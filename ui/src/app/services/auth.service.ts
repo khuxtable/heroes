@@ -14,12 +14,11 @@
  * the License.
  */
 
-import {Injectable} from '@angular/core';
+import {EventEmitter, Injectable, Output} from '@angular/core';
 import {BehaviorSubject, Observable, of, switchMap} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {catchError, tap} from 'rxjs/operators';
-import {Output, EventEmitter} from '@angular/core';
 
 import {MessageService} from '@appServices/message.service';
 import {UserService} from "@appServices/user.service";
@@ -48,14 +47,28 @@ export class AuthService {
 	            private http: HttpClient,
 	            private messageService: MessageService,
 	            private userService: UserService) {
+		// Load the currently saved logged in user. Should really use a session cookie for this.
 		this.userSubject = new BehaviorSubject(JSON.parse(sessionStorage.getItem('user')!));
 		this.user = this.userSubject.asObservable();
 	}
 
+	/**
+	 * Return the logged in user.
+	 */
 	public get userValue() {
 		return this.userSubject.value;
 	}
 
+	/**
+	 * Present the login credentials to the authentication service on the server.
+	 * It will return the username if the credentials match a user, or {@code null} if not.
+	 * Then request the user profile from the user service.
+	 *
+	 * @param username the username.
+	 * @param password the password.
+	 * @return an <Observable<User | null> for the User profile logged in, or {@code null} if the
+	 *         login failed.
+	 */
 	login(username: string, password: string) {
 		const user$ = this.http.post<string>(`${this.serviceUrl}/login`,
 			`username=${username}&password=${password}`, this.httpOptions)
@@ -65,7 +78,8 @@ export class AuthService {
 				}));
 
 		user$.subscribe(user => {
-			// store user details and basic auth credentials in local storage to keep user logged in between page refreshes
+			// store user details and basic auth credentials in local storage to keep
+			// user logged in between page refreshes
 			sessionStorage.setItem('user', JSON.stringify(user));
 			this.userSubject.next(user);
 			this.getLoggedInName.emit(user);
@@ -75,21 +89,14 @@ export class AuthService {
 		return this.user;
 	}
 
+	/**
+	 * Log the user out. Return to the login screen.
+	 */
 	logout() {
 		// remove user from local storage to log user out
 		sessionStorage.removeItem('user');
 		this.userSubject.next(null);
 		this.router.navigate(['/login']);
-	}
-
-	getAuth(): Observable<User> {
-		// For now, assume that a hero with the specified `id` always exists.
-		// Error handling will be added in the next step of the tutorial.
-		const url = `${this.serviceUrl}/user`;
-		return this.http.get<User>(url).pipe(
-			tap(_ => this.log(`fetched auth`)),
-			catchError(this.handleError<User>('getAuth'))
-		);
 	}
 
 	/**

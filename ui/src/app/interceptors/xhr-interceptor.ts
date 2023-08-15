@@ -17,6 +17,9 @@
 import {HttpEvent, HttpInterceptor, HttpHandler, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
+/**
+ * An initial attempt at CORS handling. Not currently used.
+ */
 export class XhrHeaderInterceptor implements HttpInterceptor {
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

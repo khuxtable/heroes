@@ -20,6 +20,9 @@ import {Observable} from 'rxjs';
 
 import {AuthService} from '@appServices/auth.service';
 
+/**
+ * Intercept access attempts and check login. Doesn't seem to be used.
+ */
 @Injectable()
 export class BasicAuthInterceptor implements HttpInterceptor {
 	constructor(private authService: AuthService) {

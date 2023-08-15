@@ -18,7 +18,9 @@ import {TableLazyLoadEvent} from 'primeng/table';
 
 import {Hero} from '@appModel/hero';
 
-
+/**
+ * Simplified data from the PrimeNG filtering.
+ */
 export class UIFilter {
 	/**
 	 * The index of the first record to be loaded.
@@ -87,7 +89,7 @@ export class UIFilter {
 }
 
 /**
- * Represents metadata for sorting.
+ * Represents data for sorting.
  * @group Interface
  */
 export interface UIFilterSort {
@@ -96,7 +98,7 @@ export interface UIFilterSort {
 }
 
 /**
- * Represents metadata for filtering a data set.
+ * Represents data for filtering a data set.
  * @group Interface
  */
 export interface UIFilterData {
@@ -104,10 +106,12 @@ export interface UIFilterData {
 	 * The value used for filtering.
 	 */
 	value?: any;
+
 	/**
 	 * The match mode for filtering.
 	 */
 	matchMode?: string;
+
 	/**
 	 * The operator for filtering.
 	 */

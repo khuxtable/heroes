@@ -22,6 +22,8 @@ import {HeroDetailComponent} from '@appComponents/hero-detail/hero-detail.compon
 import {LoginComponent} from '@appComponents/login/login.component';
 import {AuthGuard} from '@appGuards/auth.guard';
 
+// Routes are protected by the AuthGuard to make sure the user is logged in.
+// Further role-type checking is done on the pages themselves, which is a bit lame.
 const routes: Routes = [
 	{path: '', redirectTo: '/dashboard', pathMatch: 'full'},
 	{path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},

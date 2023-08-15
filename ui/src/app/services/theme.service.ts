@@ -28,6 +28,11 @@ export class ThemeService {
 	            private messageService: MessageService) {
 	}
 
+	/**
+	 * Switch the page them to the requested them.
+	 *
+	 * @param theme the new theme, which is currently a PrimeNG theme name.
+	 */
 	switchTheme(theme: string) {
 		let themeLink = this.document.getElementById('app-theme') as HTMLLinkElement;
 
