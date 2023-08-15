@@ -19,13 +19,12 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import org.kathrynhuxtable.heroes.service.bean.User;
 import org.kathrynhuxtable.heroes.service.persistence.LoginInfoDAO;
 import org.kathrynhuxtable.heroes.service.persistence.domain.LoginInfoDO;
 
 /**
  * The authentication service. Matches the credentials against the auth_info data
- * and then returns the User object. Should probably just return the userId.
+ * and then returns the LoginInfoDO.
  */
 @Slf4j
 @Component
@@ -33,14 +32,8 @@ import org.kathrynhuxtable.heroes.service.persistence.domain.LoginInfoDO;
 public class AuthService {
 
     private final LoginInfoDAO loginInfoDao;
-    private final UserService userService;
 
-    public User authenticate(String username, String password) {
-        LoginInfoDO loginInfo = loginInfoDao.findLoginInfoDOByUsernameAndPassword(username, password);
-        if (loginInfo != null) {
-            return userService.findUser(loginInfo.getUserId());
-        } else {
-            return null;
-        }
+    public LoginInfoDO authenticate(String username, String password) {
+        return loginInfoDao.findLoginInfoDOByUsernameAndPassword(username, password);
     }
 }

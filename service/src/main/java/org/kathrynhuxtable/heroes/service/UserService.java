@@ -49,6 +49,17 @@ public class UserService {
     }
 
     /**
+     * Find a User by username.
+     *
+     * @param username the username to match.
+     * @return the User matching the id, or {@code null} if no match.
+     */
+    public User findUserByUsername(String username) {
+        UserDO user = userDao.findByUsername(username);
+        return user == null ? null : toUser(user);
+    }
+
+    /**
      * Update the user's preferred theme in the database.
      *
      * @param id the id to match.
@@ -75,6 +86,7 @@ public class UserService {
     private User toUser(UserDO user) {
         return User.builder()
                 .id(user.getUserId())
+                .username(user.getUsername())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .preferredTheme(user.getPreferredTheme())

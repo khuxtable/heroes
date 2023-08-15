@@ -26,4 +26,6 @@ import org.kathrynhuxtable.heroes.service.persistence.domain.UserDO;
  */
 @Repository
 public interface UserDAO extends JpaRepository<UserDO, Long>, JpaSpecificationExecutor<UserDO> {
+
+	UserDO findByUsername(String username);
 }

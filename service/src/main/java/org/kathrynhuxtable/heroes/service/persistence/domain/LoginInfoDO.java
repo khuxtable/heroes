@@ -40,14 +40,9 @@ public class LoginInfoDO {
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "USERNAME")
+    @Column(name = "USERNAME", unique = true)
     private String username;
 
     @Column(name = "PASSWORD")
     private String password;
-
-    // This is not a foreign key because I don't want a tight linkage.
-    // The authentication should be an external service.
-    @Column(name = "USER_ID")
-    private Long userId;
 }

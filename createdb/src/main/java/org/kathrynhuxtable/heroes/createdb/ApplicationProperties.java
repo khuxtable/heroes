@@ -31,13 +31,19 @@ import org.springframework.context.annotation.Configuration;
 @Data
 public class ApplicationProperties {
 
+	private List<LoginData> logins;
 	private List<UserData> users;
 	private List<HeroData> heroes;
 
 	@Data
-	public static class UserData {
+	public static class LoginData {
 		private String username;
 		private String password;
+	}
+
+	@Data
+	public static class UserData {
+		private String username;
 		private String firstName;
 		private String lastName;
 		private String preferredTheme;

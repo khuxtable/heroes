@@ -61,6 +61,10 @@ public class Application implements CommandLineRunner {
 		deleteAllData();
 		log.info("Old data deleted");
 
+		log.info("Initializing Logins");
+		initializeLogins();
+		log.info("Initialized Logins");
+
 		log.info("Initializing Users");
 		initializeUsers();
 		log.info("Initialized Users");
@@ -78,9 +82,20 @@ public class Application implements CommandLineRunner {
 		heroDao.deleteAll();
 	}
 
+	private void initializeLogins() {
+		for (ApplicationProperties.LoginData loginData : applicationProperties.getLogins()) {
+			LoginInfoDO loginInfo = LoginInfoDO.builder()
+					.username(loginData.getUsername())
+					.password(loginData.getPassword())
+					.build();
+			loginInfoDao.save(loginInfo);
+		}
+	}
+
 	private void initializeUsers() {
 		for (ApplicationProperties.UserData userData : applicationProperties.getUsers()) {
 			UserDO user = new UserDO();
+			user.setUsername(userData.getUsername());
 			user.setLastName(userData.getLastName());
 			user.setFirstName(userData.getFirstName());
 			user.setPreferredTheme(userData.getPreferredTheme());
@@ -96,13 +111,6 @@ public class Application implements CommandLineRunner {
 				}
 				user = userDao.save(user);
 			}
-
-			LoginInfoDO loginInfo = LoginInfoDO.builder()
-					.username(userData.getUsername())
-					.password(userData.getPassword())
-					.userId(user.getUserId())
-					.build();
-			loginInfoDao.save(loginInfo);
 		}
 	}
 

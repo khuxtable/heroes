@@ -14,20 +14,19 @@
  * the License.
  */
 
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { FormGroup } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {Router, ActivatedRoute} from '@angular/router';
+import {FormGroup} from '@angular/forms';
 
-import { AuthService } from '@appServices/auth.service';
-import { Authdata } from '@appModel/authdata';
+import {AuthService} from '@appServices/auth.service';
 
 @Component({
-	selector: 'login-component',
-	templateUrl: './login.component.html',
-	styleUrls: ['./login.component.css']
+    selector: 'login-component',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-	authdata = new Authdata('', '');
+    authData = { username: '', password: ''};
     loginForm!: FormGroup;
     error = '';
 
@@ -40,8 +39,8 @@ export class LoginComponent implements OnInit {
         if (this.authService.userValue) {
             this.router.navigate(['/']);
         } else {
-			this.authService.getLoggedInName.emit(null);
-		}
+            this.authService.getLoggedInName.emit(null);
+        }
     }
 
     ngOnInit() {
@@ -49,12 +48,14 @@ export class LoginComponent implements OnInit {
 
     onSubmit() {
         this.error = 'Invalid login';
-        this.authService.login(this.authdata.username, this.authdata.password)
+        this.authService.login(this.authData.username, this.authData.password)
             .subscribe(() => {
-					this.error = '';
+                if (this.authService.userValue) {
+                    this.error = "";
                     // get return url from route parameters or default to '/'
                     const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '';
                     this.router.navigate([returnUrl]);
-                });
+                }
+            });
     }
 }

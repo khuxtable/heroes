@@ -32,11 +32,21 @@ import org.kathrynhuxtable.heroes.service.bean.User;
 @AllArgsConstructor
 public class UserController {
 
-    private final UserService userService;
+	private final UserService userService;
 
-    @GetMapping(path = "/updateTheme/{id}", produces = "application/json")
-    public @ResponseBody User login(@PathVariable int id,
-                                    @RequestParam(name = "theme") String theme) {
-        return userService.updateTheme(id, theme);
-    }
+	@GetMapping(path = "/{id}", produces = "application/json")
+	public @ResponseBody User find(@PathVariable int id) {
+		return userService.findUser(id);
+	}
+
+	@GetMapping(path = "/username/{username}", produces = "application/json")
+	public @ResponseBody User findByUsername(@PathVariable String username) {
+		return userService.findUserByUsername(username);
+	}
+
+	@GetMapping(path = "/updateTheme/{id}", produces = "application/json")
+	public @ResponseBody User login(@PathVariable int id,
+	                                @RequestParam(name = "theme") String theme) {
+		return userService.updateTheme(id, theme);
+	}
 }

@@ -38,6 +38,9 @@ public class UserDO {
     @Column(name = "USER_ID")
     private Long userId;
 
+    @Column(name = "USERNAME", unique = true)
+    private String username;
+
     @Column(name = "LAST_NAME")
     private String lastName;
 

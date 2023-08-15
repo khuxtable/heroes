@@ -22,15 +22,15 @@
 				<table>
 					<tr>
 						<td style="text-align: right;"><label>Username:&nbsp;</label></td>
-						<td><input type="text" pInputText class="p-inputtext-sm" id="name" required autofocus [(ngModel)]="authdata.username" name="username"
-								#username="ngModel"/></td>
+						<td><input type="text" pInputText class="p-inputtext-sm" id="name" required autofocus [(ngModel)]="authData.username" name="username"
+								   #username="ngModel"/></td>
 					</tr>
 					<tr [hidden]="username.valid || username.pristine">
 						<td colspan="2">Username is required</td>
 					</tr>
 					<tr>
 						<td style="text-align: right;"><label>Password:&nbsp;</label></td>
-						<td><p-password id="password" class="p-inputtext-sm" required [(ngModel)]="authdata.password"
+						<td><p-password id="password" class="p-inputtext-sm" required [(ngModel)]="authData.password"
 								name="password" #password="ngModel" [feedback]="false"/></td>
 					</tr>
 					<tr [hidden]="password.valid || password.pristine">

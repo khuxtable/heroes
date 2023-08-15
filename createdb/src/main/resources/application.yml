@@ -4,16 +4,19 @@ logging:
     org.hibernate.type: TRACE
 ---
 createdb:
-  users:
+  logins:
     - username: admin
       password: secret1
+    - username: user
+      password: pass1
+  users:
+    - username: admin
       firstName: Felonius
       lastName: Gru
       privileges:
         - VIEW
         - ADMIN
     - username: user
-      password: pass1
       firstName: Reed
       lastName: Richards
       privileges:
