@@ -71,8 +71,8 @@
 			<tr>
 				<td style="text-align: right;"><label>Rating:&nbsp;</label></td>
 				<td>
-					<p-rating pInputText [(ngModel)]="hero.rating" [stars]="5"
-					          name="rating" #rating="ngModel"/>
+					<p-rating [readonly]="true" [cancel]="false" [ngModel]="hero.rating" [stars]="5"
+					          name="rating"/>
 				</td>
 			</tr>
 		</table>
