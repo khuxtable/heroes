@@ -26,93 +26,93 @@ import {UserService} from "@appServices/user.service";
 import {User} from '@appModel/user';
 
 @Injectable({
-    providedIn: 'root',
+	providedIn: 'root',
 })
 export class AuthService {
 
-    private serviceUrl = '/api/auth';  // URL to web api
+	private serviceUrl = '/api/auth';  // URL to web api
 
-    public username: any;
-    private userSubject: BehaviorSubject<User | null>;
-    public user: Observable<User | null>;
-    @Output() getLoggedInName: EventEmitter<any> = new EventEmitter();
+	public username: any;
+	private userSubject: BehaviorSubject<User | null>;
+	public user: Observable<User | null>;
+	@Output() getLoggedInName: EventEmitter<any> = new EventEmitter();
 
-    httpOptions = {
-        headers: new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json'
-        })
-    };
+	httpOptions = {
+		headers: new HttpHeaders({
+			'Content-Type': 'application/x-www-form-urlencoded',
+			'Accept': 'application/json'
+		})
+	};
 
-    constructor(private router: Router,
-                private http: HttpClient,
-                private messageService: MessageService,
-                private userService: UserService) {
-        this.userSubject = new BehaviorSubject(JSON.parse(sessionStorage.getItem('user')!));
-        this.user = this.userSubject.asObservable();
-    }
+	constructor(private router: Router,
+	            private http: HttpClient,
+	            private messageService: MessageService,
+	            private userService: UserService) {
+		this.userSubject = new BehaviorSubject(JSON.parse(sessionStorage.getItem('user')!));
+		this.user = this.userSubject.asObservable();
+	}
 
-    public get userValue() {
-        return this.userSubject.value;
-    }
+	public get userValue() {
+		return this.userSubject.value;
+	}
 
-    login(username: string, password: string) {
-        const user$ = this.http.post<string>(`${this.serviceUrl}/login`,
-            `username=${username}&password=${password}`, this.httpOptions)
-            .pipe(tap(username => this.username = username),
-                switchMap(username => {
-                    return this.userService.findByUsername(username);
-                }));
+	login(username: string, password: string) {
+		const user$ = this.http.post<string>(`${this.serviceUrl}/login`,
+			`username=${username}&password=${password}`, this.httpOptions)
+			.pipe(tap(username => this.username = username),
+				switchMap(username => {
+					return this.userService.findByUsername(username);
+				}));
 
-        user$.subscribe(user => {
-            // store user details and basic auth credentials in local storage to keep user logged in between page refreshes
-            sessionStorage.setItem('user', JSON.stringify(user));
-            this.userSubject.next(user);
-            this.getLoggedInName.emit(user);
-            return user;
-        });
+		user$.subscribe(user => {
+			// store user details and basic auth credentials in local storage to keep user logged in between page refreshes
+			sessionStorage.setItem('user', JSON.stringify(user));
+			this.userSubject.next(user);
+			this.getLoggedInName.emit(user);
+			return user;
+		});
 
-        return this.user;
-    }
+		return this.user;
+	}
 
-    logout() {
-        // remove user from local storage to log user out
-        sessionStorage.removeItem('user');
-        this.userSubject.next(null);
-        this.router.navigate(['/login']);
-    }
+	logout() {
+		// remove user from local storage to log user out
+		sessionStorage.removeItem('user');
+		this.userSubject.next(null);
+		this.router.navigate(['/login']);
+	}
 
-    getAuth(): Observable<User> {
-        // For now, assume that a hero with the specified `id` always exists.
-        // Error handling will be added in the next step of the tutorial.
-        const url = `${this.serviceUrl}/user`;
-        return this.http.get<User>(url).pipe(
-            tap(_ => this.log(`fetched auth`)),
-            catchError(this.handleError<User>('getAuth'))
-        );
-    }
+	getAuth(): Observable<User> {
+		// For now, assume that a hero with the specified `id` always exists.
+		// Error handling will be added in the next step of the tutorial.
+		const url = `${this.serviceUrl}/user`;
+		return this.http.get<User>(url).pipe(
+			tap(_ => this.log(`fetched auth`)),
+			catchError(this.handleError<User>('getAuth'))
+		);
+	}
 
-    /**
-     * Handle Http operation that failed.
-     * Let the app continue.
-     *
-     * @param operation - name of the operation that failed
-     * @param result - optional value to return as the observable result
-     */
-    private handleError<T>(operation = 'operation', result?: T) {
-        return (error: any): Observable<T> => {
+	/**
+	 * Handle Http operation that failed.
+	 * Let the app continue.
+	 *
+	 * @param operation - name of the operation that failed
+	 * @param result - optional value to return as the observable result
+	 */
+	private handleError<T>(operation = 'operation', result?: T) {
+		return (error: any): Observable<T> => {
 
-            console.error(error); // log to console instead
+			console.error(error); // log to console instead
 
-            this.log(`${operation} failed: ${error.message}`);
+			this.log(`${operation} failed: ${error.message}`);
 
-            // Let the app keep running by returning an empty result.
-            return of(result as T);
-        };
-    }
+			// Let the app keep running by returning an empty result.
+			return of(result as T);
+		};
+	}
 
-    /** Log a HeroService message with the MessageService */
-    private log(message: string) {
-        this.messageService.add(`AuthService: ${message}`);
-    }
+	/** Log a HeroService message with the MessageService */
+	private log(message: string) {
+		this.messageService.add(`AuthService: ${message}`);
+	}
 }

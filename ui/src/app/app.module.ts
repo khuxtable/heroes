@@ -14,33 +14,33 @@
  * the License.
  */
 
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 
-import { ToolbarModule } from 'primeng/toolbar';
-import { ButtonModule } from 'primeng/button';
-import { DropdownModule } from 'primeng/dropdown';
-import { InputTextModule } from 'primeng/inputtext';
-import { PasswordModule } from 'primeng/password';
-import { DataViewModule } from 'primeng/dataview';
-import { TableModule } from 'primeng/table';
+import {ToolbarModule} from 'primeng/toolbar';
+import {ButtonModule} from 'primeng/button';
+import {DropdownModule} from 'primeng/dropdown';
+import {InputTextModule} from 'primeng/inputtext';
+import {PasswordModule} from 'primeng/password';
+import {DataViewModule} from 'primeng/dataview';
+import {TableModule} from 'primeng/table';
 import {ListboxModule} from 'primeng/listbox';
-import { RatingModule } from 'primeng/rating';
-import { SelectButtonModule } from 'primeng/selectbutton';
+import {RatingModule} from 'primeng/rating';
+import {SelectButtonModule} from 'primeng/selectbutton';
 
-import { AppComponent } from '@app/app.component';
-import { AppRoutingModule } from '@app/app-routing.module';
-import { BasicAuthInterceptor } from '@appInterceptors/basic-auth.interceptor';
-import { HeroesComponent } from '@appComponents/heroes/heroes.component';
-import { HeroDetailComponent } from '@appComponents/hero-detail/hero-detail.component';
-import { LoginComponent } from '@appComponents/login/login.component';
-import { MessagesComponent } from '@appComponents/messages/messages.component';
-import { DashboardComponent } from '@appComponents/dashboard/dashboard.component';
-import { HeroSearchComponent } from '@appComponents/hero-search/hero-search.component';
+import {AppComponent} from '@app/app.component';
+import {AppRoutingModule} from '@app/app-routing.module';
+import {BasicAuthInterceptor} from '@appInterceptors/basic-auth.interceptor';
+import {HeroesComponent} from '@appComponents/heroes/heroes.component';
+import {HeroDetailComponent} from '@appComponents/hero-detail/hero-detail.component';
+import {LoginComponent} from '@appComponents/login/login.component';
+import {MessagesComponent} from '@appComponents/messages/messages.component';
+import {DashboardComponent} from '@appComponents/dashboard/dashboard.component';
+import {HeroSearchComponent} from '@appComponents/hero-search/hero-search.component';
 
 @NgModule({
 	declarations: [
@@ -71,11 +71,12 @@ import { HeroSearchComponent } from '@appComponents/hero-search/hero-search.comp
 		SelectButtonModule
 	],
 	providers: [
-		{ provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
+		{provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true},
 //		[
 //			{ provide: HTTP_INTERCEPTORS, useClass: XhrHeaderInterceptor, multi:true }
 //		]
 	],
 	bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

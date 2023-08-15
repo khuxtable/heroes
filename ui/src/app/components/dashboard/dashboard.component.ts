@@ -14,11 +14,11 @@
  * the License.
  */
 
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import {Component} from '@angular/core';
+import {Router} from '@angular/router';
 
-import { Hero } from '@appModel/hero';
-import { HeroService } from '@appServices/hero.service';
+import {Hero} from '@appModel/hero';
+import {HeroService} from '@appServices/hero.service';
 
 @Component({
 	selector: 'app-dashboard',
@@ -30,9 +30,10 @@ export class DashboardComponent {
 	heroes: Hero[] = [];
 
 	constructor(
-        private router: Router,
-        private heroService: HeroService) { }
-	
+		private router: Router,
+		private heroService: HeroService) {
+	}
+
 	ngOnInit(): void {
 		this.getHeroes();
 	}
@@ -41,8 +42,8 @@ export class DashboardComponent {
 		this.heroService.getTopHeroes()
 			.subscribe(result => this.heroes = result);
 	}
-	
-	routeMe(id : number) : void {
+
+	routeMe(id: number): void {
 		this.router.navigate(['/detail/' + id]);
 	}
 }

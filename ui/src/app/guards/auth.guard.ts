@@ -14,19 +14,19 @@
  * the License.
  */
 
-import { Injectable } from '@angular/core';
-import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import {Injectable} from '@angular/core';
+import {Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 
-import { AuthService } from '@appServices/auth.service';
+import {AuthService} from '@appServices/auth.service';
 
-
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class AuthGuard implements CanActivate {
 
 	constructor(
 		private router: Router,
 		private authService: AuthService,
-	) { }
+	) {
+	}
 
 	canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
 		const user = this.authService.userValue;
@@ -35,7 +35,7 @@ export class AuthGuard implements CanActivate {
 			return true;
 		} else {
 			// not logged in so redirect to login page with the return url
-			this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+			this.router.navigate(['/login'], {queryParams: {returnUrl: state.url}});
 			return false;
 		}
 	}

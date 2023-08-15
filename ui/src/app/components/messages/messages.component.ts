@@ -14,9 +14,9 @@
  * the License.
  */
 
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 
-import { MessageService } from '@appServices/message.service';
+import {MessageService} from '@appServices/message.service';
 
 @Component({
 	selector: 'app-messages',
@@ -25,5 +25,6 @@ import { MessageService } from '@appServices/message.service';
 })
 export class MessagesComponent {
 
-	constructor(public messageService: MessageService) { }
+	constructor(public messageService: MessageService) {
+	}
 }

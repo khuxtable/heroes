@@ -14,14 +14,14 @@
  * the License.
  */
 
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, tap } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {Observable, of} from 'rxjs';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {catchError, tap} from 'rxjs/operators';
 
-import { Hero } from '@appModel/hero';
-import { UIFilter, UIFilterResult } from '@appModel/ui.filter';
-import { MessageService } from '@appServices/message.service';
+import {Hero} from '@appModel/hero';
+import {UIFilter, UIFilterResult} from '@appModel/ui.filter';
+import {MessageService} from '@appServices/message.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -31,15 +31,16 @@ export class HeroService {
 	private serviceUrl = '/api/hero';  // URL to web api
 
 	httpOptions = {
-		headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+		headers: new HttpHeaders({'Content-Type': 'application/json'})
 	};
 
-	constructor(private http: HttpClient, private messageService: MessageService) { }
+	constructor(private http: HttpClient, private messageService: MessageService) {
+	}
 
 	getHeroesLazy(filter: UIFilter): Observable<UIFilterResult> {
 		return this.http.post<UIFilterResult>(this.serviceUrl + "/filter", filter, this.httpOptions).pipe(
 			tap(_ => this.log('fetched heroes')),
-			catchError(this.handleError<UIFilterResult>('getHeroes', { heroes: [], totalRecords: 0}))
+			catchError(this.handleError<UIFilterResult>('getHeroes', {heroes: [], totalRecords: 0}))
 		);
 	}
 
@@ -121,6 +122,7 @@ export class HeroService {
 			return of(result as T);
 		};
 	}
+
 	/** Log a HeroService message with the MessageService */
 	private log(message: string) {
 		this.messageService.add(`HeroService: ${message}`);

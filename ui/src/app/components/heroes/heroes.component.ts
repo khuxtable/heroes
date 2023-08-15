@@ -14,15 +14,15 @@
  * the License.
  */
 
-import { Component, ViewChild } from '@angular/core';
-import { Table } from 'primeng/table';
-import { TableLazyLoadEvent } from 'primeng/table';
-import { Router } from '@angular/router';
+import {Component, ViewChild} from '@angular/core';
+import {Table} from 'primeng/table';
+import {TableLazyLoadEvent} from 'primeng/table';
+import {Router} from '@angular/router';
 
-import { Hero } from '@appModel/hero';
-import { UIFilter } from '@appModel/ui.filter';
-import { HeroService } from '@appServices/hero.service';
-import { AuthService } from '@appServices/auth.service';
+import {Hero} from '@appModel/hero';
+import {UIFilter} from '@appModel/ui.filter';
+import {HeroService} from '@appServices/hero.service';
+import {AuthService} from '@appServices/auth.service';
 
 @Component({
 	selector: 'app-heroes',
@@ -41,8 +41,9 @@ export class HeroesComponent {
 	dt: Table | undefined;
 
 	constructor(private router: Router,
-				private heroService: HeroService,
-				private authService: AuthService) { }
+	            private heroService: HeroService,
+	            private authService: AuthService) {
+	}
 
 	ngOnInit(): void {
 		this.getUser();
