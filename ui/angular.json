@@ -31,6 +31,11 @@
 							"node_modules/primeflex/primeflex.css",
 							"src/styles.scss",
 							{
+								"input": "src/theme-lara-light-teal.scss",
+								"bundleName": "lara-light-teal",
+								"inject": false
+							},
+							{
 								"input": "src/theme-viva-light.scss",
 								"bundleName": "viva-light",
 								"inject": false

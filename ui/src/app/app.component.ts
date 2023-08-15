@@ -43,10 +43,17 @@ export class AppComponent {
 	            private userService: UserService) {
 		authService.getLoggedInName.subscribe(user => {
 			this.user = user;
+			var theme : string;
+			if (this.user) {
+				theme = this.user.preferredTheme ? this.user.preferredTheme : 'viva-light';
+				this.value = theme;
+			} else {
+				theme = 'lara-light-teal';
+			}
 			if (this.user?.preferredTheme) {
 				this.value = this.user.preferredTheme;
-				this.themeService.switchTheme(this.value);
 			}
+			this.themeService.switchTheme(theme);
 		});
 	}
 
@@ -64,6 +71,8 @@ export class AppComponent {
 	}
 
 	logout(): void {
+		this.themeService.switchTheme('lara-light-teal');
+		this.user = null;
 		this.authService.logout();
 	}
 

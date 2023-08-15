@@ -16,7 +16,7 @@
 <div style="display: flex; justify-content: space-between">
 	<div style="font-size: 2em; font-weight: bold; vertical-align: middle;">{{title}}</div>
 
-	<p-selectButton [options]="themeOptions" [(ngModel)]="value"
+	<p-selectButton *ngIf="user" [options]="themeOptions" [(ngModel)]="value"
 	                optionLabel="label" optionValue="value"
 	                (onOptionClick)="changeTheme(value)"/>
 
