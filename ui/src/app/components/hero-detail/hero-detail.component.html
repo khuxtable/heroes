@@ -14,70 +14,70 @@
   ~ the License.
   -->
 <form #heroForm="ngForm">
-    <div *ngIf="hero">
-        <h2>{{hero.name | uppercase}} Details</h2>
-        <table *ngIf="editable">
-            <tr>
-                <div>ID: {{hero.id}}</div>
-            <tr>
-            <tr>
-                <td style="text-align:right"><label for="hero-name">Hero Name:</label></td>
-                <td>
-                    <input id="hero-name" pInputText required class="p-inputtext-sm" [(ngModel)]="hero.name"
-                           name="name" #name="ngModel"
-                           placeholder="Name"/>
-                </td>
-            </tr>
-            <tr>
-                <td style="text-align:right"><label for="alter-ego">Alter Ego:</label></td>
-                <td>
-                    <input id="alter-ego" pInputText class="p-inputtext-sm" [(ngModel)]="hero.alterEgo"
-                           name="alterEgo" #alterEgo="ngModel"
-                           placeholder="Alter Ego"/>
-                </td>
-            <tr>
-                <td style="text-align:right"><label for="hero-power">Power:</label></td>
-                <td>
-                    <p-dropdown id="hero-power" [options]="powers" [editable]="true" [(ngModel)]="hero.power"
-                                name="power" #power="ngModel" placeholder="Power"/>
-                </td>
-            </tr>
-            <tr>
-                <td style="text-align:right"><label for="rating">Rating:</label></td>
-                <td>
-                    <p-rating id="rating" pInputText [(ngModel)]="hero.rating" [stars]="5"
-                              name="rating" #rating="ngModel"
-                              placeholder="Rating"/>
-                </td>
-            </tr>
-        </table>
-        <table *ngIf="!editable">
-            <tr>
-                <td style="text-align: right;"><label>ID:&nbsp;</label></td>
-                <td><span>{{hero.id}}</span></td>
-            </tr>
-            <tr>
-                <td style="text-align: right;"><label>Hero Name:&nbsp;</label></td>
-                <td><span>{{hero.name}}</span></td>
-            </tr>
-            <tr>
-                <td style="text-align: right;"><label>Alter Ego:&nbsp;</label></td>
-                <td><span>{{hero.alterEgo}}</span></td>
-            </tr>
-            <tr>
-                <td style="text-align: right;"><label>Power:&nbsp;</label></td>
-                <td><span>{{hero.power}}</span></td>
-            </tr>
-            <tr>
-                <td style="text-align: right;"><label>Rating:&nbsp;</label></td>
-                <td>
-                    <p-rating pInputText [(ngModel)]="hero.rating" [stars]="5"
-                              name="rating" #rating="ngModel"/>
-                </td>
-            </tr>
-        </table>
-        <br/>
-        <p-button *ngIf="editable" type="button" (click)="save()">save</p-button>&nbsp;
-        <p-button type="button" (click)="goBack()">go back</p-button>
-    </div>
+	<div *ngIf="hero">
+		<h2>{{hero.name | uppercase}} Details</h2>
+		<table *ngIf="editable">
+			<tr>
+				<div>ID: {{hero.id}}</div>
+			<tr>
+			<tr>
+				<td style="text-align:right"><label for="hero-name">Hero Name:</label></td>
+				<td>
+					<input id="hero-name" pInputText required class="p-inputtext-sm" [(ngModel)]="hero.name"
+					       name="name" #name="ngModel"
+					       placeholder="Name"/>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align:right"><label for="alter-ego">Alter Ego:</label></td>
+				<td>
+					<input id="alter-ego" pInputText class="p-inputtext-sm" [(ngModel)]="hero.alterEgo"
+					       name="alterEgo" #alterEgo="ngModel"
+					       placeholder="Alter Ego"/>
+				</td>
+			<tr>
+				<td style="text-align:right"><label for="hero-power">Power:</label></td>
+				<td>
+					<p-dropdown id="hero-power" [options]="powers" [editable]="true" [(ngModel)]="hero.power"
+					            name="power" #power="ngModel" placeholder="Power"/>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align:right"><label for="rating">Rating:</label></td>
+				<td>
+					<p-rating id="rating" pInputText [(ngModel)]="hero.rating" [stars]="5"
+					          name="rating" #rating="ngModel"
+					          placeholder="Rating"/>
+				</td>
+			</tr>
+		</table>
+		<table *ngIf="!editable">
+			<tr>
+				<td style="text-align: right;"><label>ID:&nbsp;</label></td>
+				<td><span>{{hero.id}}</span></td>
+			</tr>
+			<tr>
+				<td style="text-align: right;"><label>Hero Name:&nbsp;</label></td>
+				<td><span>{{hero.name}}</span></td>
+			</tr>
+			<tr>
+				<td style="text-align: right;"><label>Alter Ego:&nbsp;</label></td>
+				<td><span>{{hero.alterEgo}}</span></td>
+			</tr>
+			<tr>
+				<td style="text-align: right;"><label>Power:&nbsp;</label></td>
+				<td><span>{{hero.power}}</span></td>
+			</tr>
+			<tr>
+				<td style="text-align: right;"><label>Rating:&nbsp;</label></td>
+				<td>
+					<p-rating pInputText [(ngModel)]="hero.rating" [stars]="5"
+					          name="rating" #rating="ngModel"/>
+				</td>
+			</tr>
+		</table>
+		<br/>
+		<p-button *ngIf="editable" type="button" (click)="save()">save</p-button>&nbsp;
+		<p-button type="button" (click)="goBack()">go back</p-button>
+	</div>
 </form>

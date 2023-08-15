@@ -17,8 +17,8 @@
 	<div style="font-size: 2em; font-weight: bold; vertical-align: middle;">{{title}}</div>
 
 	<p-selectButton [options]="themeOptions" [(ngModel)]="value"
-					optionLabel="label" optionValue="value"
-					(onOptionClick)="changeTheme(value)"/>
+	                optionLabel="label" optionValue="value"
+	                (onOptionClick)="changeTheme(value)"/>
 
 	<div *ngIf="user" style="vertical-align: middle;">
 		<span style="vertical-align: middle;">
@@ -26,7 +26,7 @@
 			({{user.privileges!.join(', ')}})
 			[{{user.preferredTheme}}]
 		</span>
-		<p-button styleClass="p-button-link" (click)="logout()" label="Logout" />
+		<p-button styleClass="p-button-link" (click)="logout()" label="Logout"/>
 	</div>
 </div>
 
