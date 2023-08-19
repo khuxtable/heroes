@@ -38,16 +38,16 @@ public class UserDO {
     @Column(name = "USER_ID")
     private Long userId;
 
-    @Column(name = "USERNAME", unique = true)
+    @Column(name = "USERNAME", unique = true, columnDefinition = "VARCHAR(32)")
     private String username;
 
-    @Column(name = "LAST_NAME")
+    @Column(name = "LAST_NAME", columnDefinition = "VARCHAR(128)")
     private String lastName;
 
-    @Column(name = "FIRST_NAME")
+    @Column(name = "FIRST_NAME", columnDefinition = "VARCHAR(128)")
     private String firstName;
 
-    @Column(name = "PREFERRED_THEME")
+    @Column(name = "PREFERRED_THEME", columnDefinition = "VARCHAR(128)")
     private String preferredTheme;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

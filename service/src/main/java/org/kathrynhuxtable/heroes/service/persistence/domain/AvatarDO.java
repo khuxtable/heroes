@@ -23,26 +23,30 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Indexed;
 
 /**
- * The login_info object in the database.
+ * The user object in the database. Has a unidirectional mapping
+ * to the user's associated privileges.
  */
 @Entity
-@Table(name = "LOGIN_INFO", schema = "APP")
+@Table(name = "AVATAR", schema = "APP")
 @Indexed
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginInfoDO {
+public class AvatarDO {
 
-    @SequenceGenerator(name = "LoginInfo_Gen", sequenceName = "LOGIN_INFO_SEQ", allocationSize = 1, initialValue = 1)
+    @SequenceGenerator(name = "Avatar_Gen", sequenceName = "AVATAR_SEQ", allocationSize = 1, initialValue = 1)
     @Id
-    @GeneratedValue(generator = "LoginInfo_Gen")
-    @Column(name = "ID")
+    @GeneratedValue(generator = "Avatar_Gen")
     private Long id;
 
-    @Column(name = "USERNAME", unique = true, columnDefinition = "VARCHAR(32)")
-    private String username;
+    @Column(name = "USER_ID", unique = true)
+    private Long userId;
 
-    @Column(name = "PASSWORD", columnDefinition = "VARCHAR(128)")
-    private String password;
+    @Column(name = "MIME_TYPE", columnDefinition = "VARCHAR(64)")
+    private String mimeType;
+
+    @Lob
+    @Column(name = "AVATAR", columnDefinition = "BLOB")
+    private byte[] avatar;
 }

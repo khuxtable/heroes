@@ -15,20 +15,18 @@
  */
 package org.kathrynhuxtable.heroes.createdb;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import org.kathrynhuxtable.heroes.service.persistence.HeroDAO;
-import org.kathrynhuxtable.heroes.service.persistence.LoginInfoDAO;
-import org.kathrynhuxtable.heroes.service.persistence.PrivilegeDAO;
-import org.kathrynhuxtable.heroes.service.persistence.UserDAO;
-import org.kathrynhuxtable.heroes.service.persistence.domain.HeroDO;
-import org.kathrynhuxtable.heroes.service.persistence.domain.LoginInfoDO;
-import org.kathrynhuxtable.heroes.service.persistence.domain.PrivilegeDO;
-import org.kathrynhuxtable.heroes.service.persistence.domain.UserDO;
+import org.kathrynhuxtable.heroes.service.persistence.*;
+import org.kathrynhuxtable.heroes.service.persistence.domain.*;
 import org.kathrynhuxtable.heroes.service.persistence.util.DerbySlf4jBridge;
 
 @Slf4j
@@ -39,6 +37,7 @@ public class Application implements CommandLineRunner {
 	private final ApplicationProperties applicationProperties;
 	private final LoginInfoDAO loginInfoDao;
 	private final PrivilegeDAO privilegeDao;
+	private final AvatarDAO avatarDAO;
 	private final UserDAO userDao;
 	private final HeroDAO heroDao;
 
@@ -78,6 +77,7 @@ public class Application implements CommandLineRunner {
 	private void deleteAllData() {
 		loginInfoDao.deleteAll();
 		privilegeDao.deleteAll();
+		avatarDAO.deleteAll();
 		userDao.deleteAll();
 		heroDao.deleteAll();
 	}
@@ -110,6 +110,23 @@ public class Application implements CommandLineRunner {
 					user.getPrivileges().add(privilegeDO);
 				}
 				user = userDao.save(user);
+			}
+
+			if (userData.getAvatarFile() != null) {
+				try (InputStream inputStream = this.getClass()
+						.getClassLoader()
+						.getResourceAsStream(userData.getAvatarFile())) {
+					if (inputStream != null) {
+						AvatarDO avatarDO = AvatarDO.builder()
+								.userId(user.getUserId())
+								.avatar(IOUtils.toByteArray(inputStream))
+								.mimeType(userData.getAvatarMimeType())
+								.build();
+						avatarDAO.save(avatarDO);
+					}
+				} catch (IOException e) {
+					log.error("Unable to load avatar file " + userData.getAvatarFile(), e);
+				}
 			}
 		}
 	}

@@ -35,62 +35,62 @@ import org.kathrynhuxtable.heroes.service.persistence.domain.UserDO;
 @AllArgsConstructor
 public class UserService {
 
-    private final UserDAO userDao;
+	private final UserDAO userDao;
 
-    /**
-     * Find a User by id.
-     *
-     * @param id the id to match.
-     * @return the User matching the id, or {@code null} if no match.
-     */
-    public User findUser(long id) {
-        Optional<UserDO> user = userDao.findById(id);
-        return user.map(this::toUser).orElse(null);
-    }
+	/**
+	 * Find a User by id.
+	 *
+	 * @param id the id to match.
+	 * @return the User matching the id, or {@code null} if no match.
+	 */
+	public User findUser(long id) {
+		Optional<UserDO> user = userDao.findById(id);
+		return user.map(this::toUser).orElse(null);
+	}
 
-    /**
-     * Find a User by username.
-     *
-     * @param username the username to match.
-     * @return the User matching the id, or {@code null} if no match.
-     */
-    public User findUserByUsername(String username) {
-        UserDO user = userDao.findByUsername(username);
-        return user == null ? null : toUser(user);
-    }
+	/**
+	 * Find a User by username.
+	 *
+	 * @param username the username to match.
+	 * @return the User matching the id, or {@code null} if no match.
+	 */
+	public User findUserByUsername(String username) {
+		UserDO user = userDao.findByUsername(username);
+		return user == null ? null : toUser(user);
+	}
 
-    /**
-     * Update the user's preferred theme in the database.
-     *
-     * @param id the id to match.
-     * @param theme the new preferred theme.
-     * @return the saved User, or {@code null} if no match.
-     */
-    public User updateTheme(long id, String theme) {
-        Optional<UserDO> optUser = userDao.findById(id);
-        if (optUser.isEmpty()) {
-            return null;
-        } else {
-            UserDO user = optUser.get();
-            user.setPreferredTheme(theme);
-            return toUser(userDao.save(user));
-        }
-    }
+	/**
+	 * Update the user's preferred theme in the database.
+	 *
+	 * @param id    the id to match.
+	 * @param theme the new preferred theme.
+	 * @return the saved User, or {@code null} if no match.
+	 */
+	public User updateTheme(long id, String theme) {
+		Optional<UserDO> optUser = userDao.findById(id);
+		if (optUser.isEmpty()) {
+			return null;
+		} else {
+			UserDO user = optUser.get();
+			user.setPreferredTheme(theme);
+			return toUser(userDao.save(user));
+		}
+	}
 
-    /**
-     * Convert a domain object to a transfer object.
-     *
-     * @param user a UserDO object.
-     * @return a User object.
-     */
-    private User toUser(UserDO user) {
-        return User.builder()
-                .id(user.getUserId())
-                .username(user.getUsername())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .preferredTheme(user.getPreferredTheme())
-                .privileges(user.getPrivileges().stream().map(PrivilegeDO::getPrivilege).toList())
-                .build();
-    }
+	/**
+	 * Convert a domain object to a transfer object.
+	 *
+	 * @param user a UserDO object.
+	 * @return a User object.
+	 */
+	private User toUser(UserDO user) {
+		return User.builder()
+				.id(user.getUserId())
+				.username(user.getUsername())
+				.firstName(user.getFirstName())
+				.lastName(user.getLastName())
+				.preferredTheme(user.getPreferredTheme())
+				.privileges(user.getPrivileges().stream().map(PrivilegeDO::getPrivilege).toList())
+				.build();
+	}
 }

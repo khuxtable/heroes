@@ -13,33 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.kathrynhuxtable.heroes.service.persistence.domain;
+package org.kathrynhuxtable.heroes.service.bean;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Indexed;
 
 /**
- * The privilege object in the database.
+ * The User transfer object for the REST services.
  */
-@Entity
-@Table(name = "PRIVILEGE", schema = "APP")
-@Indexed
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@IdClass(value = PrivilegeKey.class)
-public class PrivilegeDO {
+public class Avatar {
 
-    @Id
-    @Column(name = "USER_ID")
-    private Long userId;
+	private long id;
+	private long userId;
 
-    @Id
-    @Column(name = "PRIVILEGE", columnDefinition = "VARCHAR(64)")
-    private String privilege;
+	private String avatar;
+	private String mimeType;
 }

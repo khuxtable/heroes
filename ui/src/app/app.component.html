@@ -25,6 +25,7 @@
 			{{user.firstName}} {{user.lastName}}
 			({{user.privileges!.join(', ')}})
 			[{{user.preferredTheme}}]
+			<p-avatar [image]="avatar"  size="xlarge" shape="square" styleClass="mr-2"/>
 		</span>
 		<p-button styleClass="p-button-link" (click)="logout()" label="Logout"/>
 	</div>

@@ -31,6 +31,7 @@ import {TableModule} from 'primeng/table';
 import {ListboxModule} from 'primeng/listbox';
 import {RatingModule} from 'primeng/rating';
 import {SelectButtonModule} from 'primeng/selectbutton';
+import {AvatarModule} from "primeng/avatar";
 
 import {AppComponent} from '@app/app.component';
 import {AppRoutingModule} from '@app/app-routing.module';
@@ -68,7 +69,8 @@ import {HeroSearchComponent} from '@appComponents/hero-search/hero-search.compon
 		PasswordModule,
 		ListboxModule,
 		RatingModule,
-		SelectButtonModule
+		SelectButtonModule,
+		AvatarModule,
 	],
 	providers: [
 		{provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true},

@@ -16,11 +16,15 @@ createdb:
       privileges:
         - VIEW
         - ADMIN
+      avatarFile: images/Gru.png
+      avatarMimeType: image/png
     - username: user
       firstName: Reed
       lastName: Richards
       privileges:
         - VIEW
+      avatarFile: images/Reed.png
+      avatarMimeType: image/png
   heroes:
     - name: Dr. Nice
     - name: Bombasto

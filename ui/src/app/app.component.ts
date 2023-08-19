@@ -79,6 +79,10 @@ export class AppComponent {
 		}
 	}
 
+	get avatar() : string {
+		return `/api/avatar/image/${this.user?.id}`;
+	}
+
 	/**
 	 * Perform logout action.
 	 */

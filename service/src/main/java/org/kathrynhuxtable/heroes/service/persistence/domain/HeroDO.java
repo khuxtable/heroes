@@ -40,13 +40,13 @@ public class HeroDO {
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "NAME")
+    @Column(name = "NAME", columnDefinition = "VARCHAR(128)")
     private String name;
 
-    @Column(name = "POWER")
+    @Column(name = "POWER", columnDefinition = "VARCHAR(128)")
     private String power;
 
-    @Column(name = "ALTER_EGO")
+    @Column(name = "ALTER_EGO", columnDefinition = "VARCHAR(128)")
     private String alterEgo;
 
     @Column(name = "RATING")

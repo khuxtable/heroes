@@ -48,6 +48,8 @@ public class ApplicationProperties {
 		private String lastName;
 		private String preferredTheme;
 		private List<String> privileges;
+		private String avatarFile;
+		private String avatarMimeType;
 	}
 
 	@Data
