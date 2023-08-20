@@ -36,15 +36,15 @@ export class AppComponent implements OnInit {
 
 	// Theme button options
 	themeOptions: any[] = [
-		{label: 'Light', value: 'viva-light'},
-		{label: 'Dark', value: 'viva-dark'}
+		{label: 'Light', value: this.themeService.lightTheme},
+		{label: 'Dark', value: this.themeService.darkTheme}
 	];
 
 	// Current user
 	user: User | null = null;
 
 	// Current theme
-	value: string = 'viva-light';
+	value: string = this.themeService.lightTheme;
 
 	constructor(private authService: AuthService,
 	            private themeService: ThemeService,
@@ -54,10 +54,10 @@ export class AppComponent implements OnInit {
 			this.user = user;
 			var theme: string;
 			if (this.user) {
-				theme = this.user.preferredTheme ? this.user.preferredTheme : 'viva-light';
+				theme = this.user.preferredTheme ? this.user.preferredTheme : this.themeService.lightTheme;
 				this.value = theme;
 			} else {
-				theme = 'lara-light-teal';
+				theme = this.themeService.loginTheme;
 			}
 			if (this.user?.preferredTheme) {
 				this.value = this.user.preferredTheme;
@@ -92,7 +92,7 @@ export class AppComponent implements OnInit {
 	 */
 	logout(): void {
 		// Switch to login theme and clear user.
-		this.themeService.switchTheme('lara-light-teal');
+		this.themeService.switchTheme(this.themeService.loginTheme);
 		this.user = null;
 		this.authService.logout();
 	}

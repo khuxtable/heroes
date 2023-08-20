@@ -24,6 +24,10 @@ import { MessageService } from '@appServices/message.service';
 })
 export class ThemeService {
 
+	public readonly loginTheme: string = 'lara-light-teal';
+	public readonly lightTheme: string = 'viva-light';
+	public readonly darkTheme: string = 'viva-dark';
+
 	constructor(@Inject(DOCUMENT) private document: Document,
 	            private messageService: MessageService) {
 	}
