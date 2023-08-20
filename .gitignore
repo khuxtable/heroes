@@ -1,6 +1,7 @@
 /.project
 /.settings/
 .factorypath
+derby.log
 heroes.iml
 /.idea/
 
