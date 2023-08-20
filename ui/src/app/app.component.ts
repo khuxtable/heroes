@@ -14,12 +14,12 @@
  * the License.
  */
 
-import {Component} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import {AuthService} from '@appServices/auth.service';
-import {ThemeService} from "@appServices/theme.service";
-import {UserService} from "@appServices/user.service";
-import {User} from '@appModel/user';
+import { AuthService } from '@appServices/auth.service';
+import { ThemeService } from "@appServices/theme.service";
+import { UserService } from "@appServices/user.service";
+import { User } from '@appModel/user';
 
 /**
  * The main app component. Displays a theme selection and the logged in user,
@@ -31,7 +31,7 @@ import {User} from '@appModel/user';
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 	title = 'Tour of Heroes';
 
 	// Theme button options
@@ -52,7 +52,7 @@ export class AppComponent {
 		// Ask for the currently logged in user. Load user and theme
 		authService.getLoggedInName.subscribe(user => {
 			this.user = user;
-			var theme : string;
+			var theme: string;
 			if (this.user) {
 				theme = this.user.preferredTheme ? this.user.preferredTheme : 'viva-light';
 				this.value = theme;
@@ -76,10 +76,14 @@ export class AppComponent {
 			this.user = null;
 		} else {
 			this.user = curUser;
+			if (this.user?.preferredTheme) {
+				this.value = this.user.preferredTheme;
+			}
+			this.themeService.switchTheme(this.value);
 		}
 	}
 
-	get avatar() : string {
+	get avatar(): string {
 		return `/api/avatar/image/${this.user?.id}`;
 	}
 
