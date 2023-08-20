@@ -14,13 +14,13 @@
  * the License.
  */
 
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {DashboardComponent} from '@appComponents/dashboard/dashboard.component';
-import {HeroesComponent} from '@appComponents/heroes/heroes.component';
-import {HeroDetailComponent} from '@appComponents/hero-detail/hero-detail.component';
-import {LoginComponent} from '@appComponents/login/login.component';
-import {AuthGuard} from '@appGuards/auth.guard';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { DashboardComponent } from '@appComponents/dashboard/dashboard.component';
+import { HeroesComponent } from '@appComponents/heroes/heroes.component';
+import { HeroDetailComponent } from '@appComponents/hero-detail/hero-detail.component';
+import { LoginComponent } from '@appComponents/login/login.component';
+import { AuthGuard } from '@appGuards/auth.guard';
 
 // Routes are protected by the AuthGuard to make sure the user is logged in.
 // Further role-type checking is done on the pages themselves, which is a bit lame.

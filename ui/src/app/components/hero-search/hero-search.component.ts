@@ -14,16 +14,16 @@
  * the License.
  */
 
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import {Subject, ReplaySubject} from 'rxjs';
+import { Subject, ReplaySubject } from 'rxjs';
 
 import {
 	debounceTime, distinctUntilChanged, switchMap
 } from 'rxjs/operators';
 
-import {Hero} from '@appModel/hero';
-import {HeroService} from '@appServices/hero.service';
+import { Hero } from '@appModel/hero';
+import { HeroService } from '@appServices/hero.service';
 
 /**
  * The hero search component. Displays a text search box and displays a list of

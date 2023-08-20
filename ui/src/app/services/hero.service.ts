@@ -14,14 +14,14 @@
  * the License.
  */
 
-import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {catchError, tap} from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { catchError, tap } from 'rxjs/operators';
 
-import {Hero} from '@appModel/hero';
-import {UIFilter, UIFilterResult} from '@appModel/ui.filter';
-import {MessageService} from '@appServices/message.service';
+import { Hero } from '@appModel/hero';
+import { UIFilter, UIFilterResult } from '@appModel/ui.filter';
+import { MessageService } from '@appServices/message.service';
 
 @Injectable({
 	providedIn: 'root',

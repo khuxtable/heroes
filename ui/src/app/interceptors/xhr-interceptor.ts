@@ -14,8 +14,8 @@
  * the License.
  */
 
-import {HttpEvent, HttpInterceptor, HttpHandler, HttpRequest} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 /**
  * An initial attempt at CORS handling. Not currently used.

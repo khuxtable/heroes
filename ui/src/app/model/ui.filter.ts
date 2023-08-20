@@ -14,9 +14,9 @@
  * the License.
  */
 
-import {TableLazyLoadEvent} from 'primeng/table';
+import { TableLazyLoadEvent } from 'primeng/table';
 
-import {Hero} from '@appModel/hero';
+import { Hero } from '@appModel/hero';
 
 /**
  * Simplified data from the PrimeNG filtering.

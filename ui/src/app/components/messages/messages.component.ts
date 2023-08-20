@@ -14,9 +14,9 @@
  * the License.
  */
 
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
 
-import {MessageService} from '@appServices/message.service';
+import { MessageService } from '@appServices/message.service';
 
 /**
  * The message component. Displays messages from the message service.

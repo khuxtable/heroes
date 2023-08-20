@@ -14,15 +14,15 @@
  * the License.
  */
 
-import {EventEmitter, Injectable, Output} from '@angular/core';
-import {BehaviorSubject, Observable, of, switchMap} from 'rxjs';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Router} from '@angular/router';
-import {catchError, tap} from 'rxjs/operators';
+import { EventEmitter, Injectable, Output } from '@angular/core';
+import { BehaviorSubject, Observable, switchMap } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { tap } from 'rxjs/operators';
 
-import {MessageService} from '@appServices/message.service';
-import {UserService} from "@appServices/user.service";
-import {User} from '@appModel/user';
+import { MessageService } from '@appServices/message.service';
+import { UserService } from "@appServices/user.service";
+import { User } from '@appModel/user';
 
 @Injectable({
 	providedIn: 'root',
@@ -99,27 +99,27 @@ export class AuthService {
 		this.router.navigate(['/login']);
 	}
 
-	/**
-	 * Handle Http operation that failed.
-	 * Let the app continue.
-	 *
-	 * @param operation - name of the operation that failed
-	 * @param result - optional value to return as the observable result
-	 */
-	private handleError<T>(operation = 'operation', result?: T) {
-		return (error: any): Observable<T> => {
+	// /**
+	//  * Handle Http operation that failed.
+	//  * Let the app continue.
+	//  *
+	//  * @param operation - name of the operation that failed
+	//  * @param result - optional value to return as the observable result
+	//  */
+	// private handleError<T>(operation = 'operation', result?: T) {
+	// 	return (error: any): Observable<T> => {
+	//
+	// 		console.error(error); // log to console instead
+	//
+	// 		this.log(`${operation} failed: ${error.message}`);
+	//
+	// 		// Let the app keep running by returning an empty result.
+	// 		return of(result as T);
+	// 	};
+	// }
 
-			console.error(error); // log to console instead
-
-			this.log(`${operation} failed: ${error.message}`);
-
-			// Let the app keep running by returning an empty result.
-			return of(result as T);
-		};
-	}
-
-	/** Log a HeroService message with the MessageService */
-	private log(message: string) {
-		this.messageService.add(`AuthService: ${message}`);
-	}
+	// /** Log a HeroService message with the MessageService */
+	// private log(message: string) {
+	// 	this.messageService.add(`AuthService: ${message}`);
+	// }
 }

@@ -14,10 +14,10 @@
  * the License.
  */
 
-import {Injectable} from '@angular/core';
-import {Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
+import { Injectable } from '@angular/core';
+import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
-import {AuthService} from '@appServices/auth.service';
+import { AuthService } from '@appServices/auth.service';
 
 /**
  * A guard to check for login, and redirect to the login page if not logged in.

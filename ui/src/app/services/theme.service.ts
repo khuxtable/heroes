@@ -14,10 +14,10 @@
  * the License.
  */
 
-import {Inject, Injectable} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
+import { Inject, Injectable } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 
-import {MessageService} from '@appServices/message.service';
+import { MessageService } from '@appServices/message.service';
 
 @Injectable({
 	providedIn: 'root',

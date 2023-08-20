@@ -14,11 +14,11 @@
  * the License.
  */
 
-import {Component} from '@angular/core';
-import {Router} from '@angular/router';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
-import {Hero} from '@appModel/hero';
-import {HeroService} from '@appServices/hero.service';
+import { Hero } from '@appModel/hero';
+import { HeroService } from '@appServices/hero.service';
 
 /**
  * The "dashboard" page, which is the logged in home screen.

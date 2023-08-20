@@ -14,13 +14,13 @@
  * the License.
  */
 
-import {Component} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {Location} from '@angular/common';
+import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 
-import {Hero} from '@appModel/hero';
-import {HeroService} from '@appServices/hero.service';
-import {AuthService} from '@appServices/auth.service';
+import { Hero } from '@appModel/hero';
+import { HeroService } from '@appServices/hero.service';
+import { AuthService } from '@appServices/auth.service';
 
 /**
  * Display the details for a particular hero. Conditionally allows editing,

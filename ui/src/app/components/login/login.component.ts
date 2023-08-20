@@ -14,11 +14,11 @@
  * the License.
  */
 
-import {Component, OnInit} from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
-import {FormGroup} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormGroup } from '@angular/forms';
 
-import {AuthService} from '@appServices/auth.service';
+import { AuthService } from '@appServices/auth.service';
 
 /**
  * The login component. Displays the login request and handles the user login.
