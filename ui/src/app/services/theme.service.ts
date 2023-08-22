@@ -23,7 +23,6 @@ import { MessageService } from '@appServices/message.service';
 	providedIn: 'root',
 })
 export class ThemeService {
-
 	private themeMap: { [key: string]: string } = {
 		"Login": 'lara-light-teal',
 		"Light": 'viva-light',

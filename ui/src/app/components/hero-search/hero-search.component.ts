@@ -34,7 +34,7 @@ import { HeroService } from '@appServices/hero.service';
 @Component({
 	selector: 'app-hero-search',
 	templateUrl: './hero-search.component.html',
-	styleUrls: ['./hero-search.component.css']
+	styleUrls: ['./hero-search.component.scss']
 })
 export class HeroSearchComponent implements OnInit {
 	heroes$: ReplaySubject<Hero[]> = new ReplaySubject(1);

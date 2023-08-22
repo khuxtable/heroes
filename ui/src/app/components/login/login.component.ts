@@ -26,7 +26,7 @@ import { AuthService } from '@appServices/auth.service';
 @Component({
 	selector: 'login-component',
 	templateUrl: './login.component.html',
-	styleUrls: ['./login.component.css']
+	styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
 	authData = {username: '', password: ''};
