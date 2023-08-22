@@ -9,8 +9,8 @@ import { UserService } from "@appServices/user.service";
 	styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent {
-	@Input() user: User | null;
-	@Input() currentTheme!: WritableSignal<string>;
+	@Input({required: true}) user: User | null;
+	@Input({required: true}) currentTheme!: WritableSignal<string>;
 	@Output() logoutEvent = new EventEmitter<string>();
 
 	// Theme button options
