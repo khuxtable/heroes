@@ -24,7 +24,7 @@ import { AuthService } from '@appServices/auth.service';
  * The login component. Displays the login request and handles the user login.
  */
 @Component({
-	selector: 'login-component',
+	selector: 'app-login',
 	templateUrl: './login.component.html',
 	styleUrls: ['./login.component.scss']
 })
