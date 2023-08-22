@@ -15,11 +15,10 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-
+import { User } from '@appModel/user';
 import { AuthService } from '@appServices/auth.service';
 import { ThemeService } from "@appServices/theme.service";
 import { UserService } from "@appServices/user.service";
-import { User } from '@appModel/user';
 
 /**
  * The main app component. Displays a theme selection and the logged in user,
@@ -35,16 +34,13 @@ export class AppComponent implements OnInit {
 	title = 'Tour of Heroes';
 
 	// Theme button options
-	themeOptions: any[] = [
-		{label: 'Light', value: this.themeService.lightTheme},
-		{label: 'Dark', value: this.themeService.darkTheme}
-	];
+	themeOptions: string[] = ['Light', 'Dark'];
 
 	// Current user
 	user: User | null = null;
 
 	// Current theme
-	value: string = this.themeService.lightTheme;
+	value: string = 'Light';
 
 	constructor(private authService: AuthService,
 	            private themeService: ThemeService,
@@ -54,10 +50,10 @@ export class AppComponent implements OnInit {
 			this.user = user;
 			var theme: string;
 			if (this.user) {
-				theme = this.user.preferredTheme ? this.user.preferredTheme : this.themeService.lightTheme;
+				theme = this.user.preferredTheme ? this.user.preferredTheme : "Light";
 				this.value = theme;
 			} else {
-				theme = this.themeService.loginTheme;
+				theme = "Login";
 			}
 			if (this.user?.preferredTheme) {
 				this.value = this.user.preferredTheme;
@@ -92,7 +88,7 @@ export class AppComponent implements OnInit {
 	 */
 	logout(): void {
 		// Switch to login theme and clear user.
-		this.themeService.switchTheme(this.themeService.loginTheme);
+		this.themeService.switchTheme("Login");
 		this.user = null;
 		this.authService.logout();
 	}

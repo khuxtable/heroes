@@ -14,33 +14,32 @@
  * the License.
  */
 
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-
-import { ToolbarModule } from 'primeng/toolbar';
-import { ButtonModule } from 'primeng/button';
-import { DropdownModule } from 'primeng/dropdown';
-import { InputTextModule } from 'primeng/inputtext';
-import { PasswordModule } from 'primeng/password';
-import { DataViewModule } from 'primeng/dataview';
-import { TableModule } from 'primeng/table';
-import { ListboxModule } from 'primeng/listbox';
-import { RatingModule } from 'primeng/rating';
-import { SelectButtonModule } from 'primeng/selectbutton';
-import { AvatarModule } from "primeng/avatar";
-
-import { AppComponent } from '@app/app.component';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from '@app/app-routing.module';
-import { HeroesComponent } from '@appComponents/heroes/heroes.component';
+import { AppComponent } from '@app/app.component';
+import { DashboardComponent } from '@appComponents/dashboard/dashboard.component';
 import { HeroDetailComponent } from '@appComponents/hero-detail/hero-detail.component';
+import { HeroSearchComponent } from '@appComponents/hero-search/hero-search.component';
+import { HeroesComponent } from '@appComponents/heroes/heroes.component';
 import { LoginComponent } from '@appComponents/login/login.component';
 import { MessagesComponent } from '@appComponents/messages/messages.component';
-import { DashboardComponent } from '@appComponents/dashboard/dashboard.component';
-import { HeroSearchComponent } from '@appComponents/hero-search/hero-search.component';
+import { AvatarModule } from "primeng/avatar";
+import { ButtonModule } from 'primeng/button';
+import { DataViewModule } from 'primeng/dataview';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { ListboxModule } from 'primeng/listbox';
+import { OverlayPanelModule } from "primeng/overlaypanel";
+import { PasswordModule } from 'primeng/password';
+import { RatingModule } from 'primeng/rating';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { TableModule } from 'primeng/table';
+import { ToolbarModule } from 'primeng/toolbar';
 
 @NgModule({
 	declarations: [
@@ -70,6 +69,7 @@ import { HeroSearchComponent } from '@appComponents/hero-search/hero-search.comp
 		RatingModule,
 		SelectButtonModule,
 		AvatarModule,
+		OverlayPanelModule,
 	],
 	providers: [
 //		[

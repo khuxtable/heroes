@@ -14,8 +14,8 @@
  * the License.
  */
 
-import { Inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { Inject, Injectable } from '@angular/core';
 
 import { MessageService } from '@appServices/message.service';
 
@@ -24,9 +24,11 @@ import { MessageService } from '@appServices/message.service';
 })
 export class ThemeService {
 
-	public readonly loginTheme: string = 'lara-light-teal';
-	public readonly lightTheme: string = 'viva-light';
-	public readonly darkTheme: string = 'viva-dark';
+	private themeMap: { [key: string]: string } = {
+		"Login": 'lara-light-teal',
+		"Light": 'viva-light',
+		"Dark": 'viva-dark',
+	};
 
 	constructor(@Inject(DOCUMENT) private document: Document,
 	            private messageService: MessageService) {
@@ -41,7 +43,7 @@ export class ThemeService {
 		let themeLink = this.document.getElementById('app-theme') as HTMLLinkElement;
 
 		if (themeLink) {
-			themeLink.href = theme + '.css';
+			themeLink.href = this.themeMap[theme] + '.css';
 		}
 		this.log(`Set theme to ${theme}`);
 	}

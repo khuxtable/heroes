@@ -14,15 +14,13 @@
  * the License.
  */
 
-import { EventEmitter, Injectable, Output } from '@angular/core';
-import { BehaviorSubject, Observable, switchMap } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { EventEmitter, Injectable, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs/operators';
-
-import { MessageService } from '@appServices/message.service';
-import { UserService } from "@appServices/user.service";
 import { User } from '@appModel/user';
+import { UserService } from "@appServices/user.service";
+import { BehaviorSubject, Observable, switchMap } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
 	providedIn: 'root',
@@ -45,7 +43,6 @@ export class AuthService {
 
 	constructor(private router: Router,
 	            private http: HttpClient,
-	            private messageService: MessageService,
 	            private userService: UserService) {
 		// Load the currently saved logged in user. Should really use a session cookie for this.
 		this.userSubject = new BehaviorSubject(JSON.parse(sessionStorage.getItem('user')!));
@@ -98,28 +95,4 @@ export class AuthService {
 		this.userSubject.next(null);
 		this.router.navigate(['/login']);
 	}
-
-	// /**
-	//  * Handle Http operation that failed.
-	//  * Let the app continue.
-	//  *
-	//  * @param operation - name of the operation that failed
-	//  * @param result - optional value to return as the observable result
-	//  */
-	// private handleError<T>(operation = 'operation', result?: T) {
-	// 	return (error: any): Observable<T> => {
-	//
-	// 		console.error(error); // log to console instead
-	//
-	// 		this.log(`${operation} failed: ${error.message}`);
-	//
-	// 		// Let the app keep running by returning an empty result.
-	// 		return of(result as T);
-	// 	};
-	// }
-
-	// /** Log a HeroService message with the MessageService */
-	// private log(message: string) {
-	// 	this.messageService.add(`AuthService: ${message}`);
-	// }
 }
