@@ -22,6 +22,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from '@app/app-routing.module';
 import { AppComponent } from '@app/app.component';
+import { ProfileComponent } from '@appComponents//profile/profile.component';
 import { DashboardComponent } from '@appComponents/dashboard/dashboard.component';
 import { HeroDetailComponent } from '@appComponents/hero-detail/hero-detail.component';
 import { HeroSearchComponent } from '@appComponents/hero-search/hero-search.component';
@@ -50,6 +51,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 		DashboardComponent,
 		HeroSearchComponent,
 		LoginComponent,
+		ProfileComponent,
 	],
 	imports: [
 		BrowserAnimationsModule,

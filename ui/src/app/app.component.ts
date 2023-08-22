@@ -14,11 +14,10 @@
  * the License.
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { User } from '@appModel/user';
 import { AuthService } from '@appServices/auth.service';
 import { ThemeService } from "@appServices/theme.service";
-import { UserService } from "@appServices/user.service";
 
 /**
  * The main app component. Displays a theme selection and the logged in user,
@@ -33,30 +32,26 @@ import { UserService } from "@appServices/user.service";
 export class AppComponent implements OnInit {
 	title = 'Tour of Heroes';
 
-	// Theme button options
-	themeOptions: string[] = ['Light', 'Dark'];
-
 	// Current user
 	user: User | null = null;
 
 	// Current theme
-	value: string = 'Light';
+	currentTheme: WritableSignal<string> = signal('Light');
 
 	constructor(private authService: AuthService,
-	            private themeService: ThemeService,
-	            private userService: UserService) {
+	            private themeService: ThemeService) {
 		// Ask for the currently logged in user. Load user and theme
 		authService.getLoggedInName.subscribe(user => {
 			this.user = user;
 			var theme: string;
 			if (this.user) {
 				theme = this.user.preferredTheme ? this.user.preferredTheme : "Light";
-				this.value = theme;
+				this.currentTheme.set(theme);
 			} else {
 				theme = "Login";
 			}
 			if (this.user?.preferredTheme) {
-				this.value = this.user.preferredTheme;
+				this.currentTheme.set(this.user.preferredTheme);
 			}
 			this.themeService.switchTheme(theme);
 		});
@@ -73,14 +68,10 @@ export class AppComponent implements OnInit {
 		} else {
 			this.user = curUser;
 			if (this.user?.preferredTheme) {
-				this.value = this.user.preferredTheme;
+				this.currentTheme.set(this.user.preferredTheme);
 			}
-			this.themeService.switchTheme(this.value);
+			this.themeService.switchTheme(this.currentTheme());
 		}
-	}
-
-	get avatar(): string {
-		return `/api/avatar/image/${this.user?.id}`;
 	}
 
 	/**
@@ -91,23 +82,5 @@ export class AppComponent implements OnInit {
 		this.themeService.switchTheme("Login");
 		this.user = null;
 		this.authService.logout();
-	}
-
-	/**
-	 * Perform theme change action. Saves the selection in the user's profile.
-	 *
-	 * @param theme the theme selected, currently an actual PrimeNG theme name.
-	 */
-	changeTheme(theme: string) {
-		if (this.user) {
-			this.userService.updateTheme(this.user.id, theme).subscribe(
-				user => {
-					if (user) {
-						this.user = user;
-						this.themeService.switchTheme(user.preferredTheme);
-					}
-				}
-			);
-		}
 	}
 }
