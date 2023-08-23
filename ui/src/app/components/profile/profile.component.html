@@ -1,19 +1,19 @@
-<ng-container *ngIf="user">
+<ng-container *ngIf="curUser">
 	<p-overlayPanel #profilePanel>
 		<ng-template pTemplate="content">
 			<div class="grid" style="width: 30rem">
 				<div class="col">
 					<p>
 						Name:<br/>
-						{{user.firstName}} {{user.lastName}}
+						{{curUser.firstName}} {{curUser.lastName}}
 					</p>
 					<p>
 						Privileges:<br/>
-						{{user.privileges!.join(', ')}}
+						{{curUser.privileges!.join(', ')}}
 					</p>
 					<p>
 						Theme:<br/>
-						<p-selectButton *ngIf="user" [options]="themeOptions"
+						<p-selectButton [options]="themeOptions"
 						                [ngModel]="currentTheme()"
 						                (ngModelChange)="currentTheme.set($event)"
 						                (onOptionClick)="changeTheme(currentTheme())"/>

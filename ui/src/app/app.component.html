@@ -20,7 +20,7 @@
 		<app-profile [user]="user" [currentTheme]="currentTheme" (logoutEvent)="logout()"/>
 	</div>
 
-	<p-toolbar *ngIf="user">
+	<p-toolbar *ngIf="curUser">
 		<div class="p-toolbar-group-start">
 		<span class="p-buttonset">
 			<p-button routerLink="/dashboard" label="Dashboard"></p-button>
@@ -31,5 +31,5 @@
 
 	<router-outlet></router-outlet>
 
-	<app-messages *ngIf="user"></app-messages>
+	<app-messages *ngIf="curUser"></app-messages>
 </div>

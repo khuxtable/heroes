@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
 	title = 'Tour of Heroes';
 
 	// Current user
-	user: User | null = null;
+	user: WritableSignal<User | null> = signal(null);
 
 	// Current theme
 	currentTheme: WritableSignal<string> = signal('Light');
@@ -42,16 +42,16 @@ export class AppComponent implements OnInit {
 	            private themeService: ThemeService) {
 		// Ask for the currently logged in user. Load user and theme
 		authService.getLoggedInName.subscribe(user => {
-			this.user = user;
+			this.user.set(user);
 			var theme: string;
-			if (this.user) {
-				theme = this.user.preferredTheme ? this.user.preferredTheme : "Light";
+			if (this.curUser) {
+				theme = this.curUser ? this.curUser.preferredTheme : 'Light';
 				this.currentTheme.set(theme);
 			} else {
 				theme = "Login";
 			}
-			if (this.user?.preferredTheme) {
-				this.currentTheme.set(this.user.preferredTheme);
+			if (this.curUser?.preferredTheme) {
+				this.currentTheme.set(this.curUser.preferredTheme);
 			}
 			this.themeService.switchTheme(theme);
 		});
@@ -61,14 +61,18 @@ export class AppComponent implements OnInit {
 		this.getUser();
 	}
 
+	get curUser() : User | null {
+		return this.user();
+	}
+
 	getUser(): void {
 		const curUser = this.authService.userValue;
 		if (curUser == null) {
-			this.user = null;
+			this.user.set(null);
 		} else {
-			this.user = curUser;
-			if (this.user?.preferredTheme) {
-				this.currentTheme.set(this.user.preferredTheme);
+			this.user.set(curUser);
+			if (this.curUser?.preferredTheme) {
+				this.currentTheme.set(this.curUser.preferredTheme);
 			}
 			this.themeService.switchTheme(this.currentTheme());
 		}
@@ -80,7 +84,7 @@ export class AppComponent implements OnInit {
 	logout(): void {
 		// Switch to login theme and clear user.
 		this.themeService.switchTheme("Login");
-		this.user = null;
+		this.user.set(null);
 		this.authService.logout();
 	}
 }
