@@ -38,7 +38,7 @@ export class ProfileComponent {
 			this.userService.updateTheme(this.curUser.id, theme).subscribe(
 				user => {
 					if (user) {
-						this.user.set(user); // TODO Emit something to parent
+						this.user.set(user);
 						this.themeService.switchTheme(user.preferredTheme);
 					}
 				}
