@@ -4,11 +4,11 @@ import { ThemeService } from "@appServices/theme.service";
 import { UserService } from "@appServices/user.service";
 
 @Component({
-	selector: 'app-profile',
-	templateUrl: './profile.component.html',
-	styleUrls: ['./profile.component.scss']
+	selector: 'app-user-profile',
+	templateUrl: './user-profile.component.html',
+	styleUrls: ['./user-profile.component.scss']
 })
-export class ProfileComponent {
+export class UserProfileComponent {
 	@Input({required: true}) user: WritableSignal<User | null> = signal(null);
 	@Input({required: true}) currentTheme!: WritableSignal<string>;
 	@Output() logoutEvent = new EventEmitter<string>();
