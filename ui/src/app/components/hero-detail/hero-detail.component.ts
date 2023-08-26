@@ -27,7 +27,7 @@ import { AuthService } from '@appServices/auth.service';
  * or creation of a new hero.
  */
 @Component({
-	selector: 'app-hero-detail',
+	selector: 'toh-hero-detail',
 	templateUrl: './hero-detail.component.html',
 	styleUrls: ['./hero-detail.component.scss']
 })

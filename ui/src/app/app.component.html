@@ -17,7 +17,7 @@
 	<div style="display: flex; justify-content: space-between">
 		<div style="font-size: 2em; font-weight: bold; vertical-align: middle;">{{title}}</div>
 
-		<app-user-profile [user]="user" [currentTheme]="currentTheme" (logoutEvent)="logout()"/>
+		<toh-user-profile [user]="user" [currentTheme]="currentTheme" (logoutEvent)="logout()"/>
 	</div>
 
 	<p-toolbar *ngIf="curUser">
@@ -29,7 +29,7 @@
 		</div>
 	</p-toolbar>
 
-	<router-outlet></router-outlet>
+	<router-outlet/>
 
-	<app-messages *ngIf="curUser"></app-messages>
+	<toh-messages *ngIf="curUser"/>
 </div>

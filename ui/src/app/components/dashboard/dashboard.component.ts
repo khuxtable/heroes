@@ -25,7 +25,7 @@ import { HeroService } from '@appServices/hero.service';
  * Displays the top five rated heroes, and allows searching by name.
  */
 @Component({
-	selector: 'app-dashboard',
+	selector: 'toh-dashboard',
 	templateUrl: './dashboard.component.html',
 	styleUrls: ['./dashboard.component.scss']
 })

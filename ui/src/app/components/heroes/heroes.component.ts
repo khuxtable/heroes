@@ -29,7 +29,7 @@ import { AuthService } from '@appServices/auth.service';
  * Has a button to add a new hero, and the ability to edit and delete heroes.
  */
 @Component({
-	selector: 'app-heroes',
+	selector: 'toh-heroes',
 	templateUrl: './heroes.component.html',
 	styleUrls: ['./heroes.component.scss']
 })

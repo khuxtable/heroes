@@ -4,7 +4,7 @@ import { ThemeService } from "@appServices/theme.service";
 import { UserService } from "@appServices/user.service";
 
 @Component({
-	selector: 'app-user-profile',
+	selector: 'toh-user-profile',
 	templateUrl: './user-profile.component.html',
 	styleUrls: ['./user-profile.component.scss']
 })

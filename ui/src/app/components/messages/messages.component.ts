@@ -22,7 +22,7 @@ import { MessageService } from '@appServices/message.service';
  * The message component. Displays messages from the message service.
  */
 @Component({
-	selector: 'app-messages',
+	selector: 'toh-messages',
 	templateUrl: './messages.component.html',
 	styleUrls: ['./messages.component.scss']
 })

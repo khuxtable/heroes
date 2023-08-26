@@ -32,7 +32,7 @@ import { HeroService } from '@appServices/hero.service';
  * page for that hero.
  */
 @Component({
-	selector: 'app-hero-search',
+	selector: 'toh-hero-search',
 	templateUrl: './hero-search.component.html',
 	styleUrls: ['./hero-search.component.scss']
 })
