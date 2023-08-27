@@ -80,63 +80,7 @@ public class ProcessFilter implements Specification<HeroDO> {
 							operator = md.getOperator();
 						}
 
-						UIFilterMatchMode matchMode = md.getMatchMode();
-						if (matchMode == null) {
-							// TODO Ought to check data type and set operator.
-							matchMode = UIFilterMatchMode.contains;
-						}
-
-						Object value = md.getValue();
-
-						switch (md.getMatchMode()) {
-						case after:
-							break;
-						case before:
-							break;
-						case between:
-							break;
-						case contains:
-							inner.add(cb.like(cb.lower(root.get(key)), "%" + value.toString().toLowerCase() + "%"));
-							break;
-						case dateAfter:
-							break;
-						case dateBefore:
-							break;
-						case dateIs:
-							break;
-						case dateIsNot:
-							break;
-						case endsWith:
-							inner.add(cb.like(cb.lower(root.get(key)), "%" + value.toString().toLowerCase()));
-							break;
-						case equals:
-							inner.add(cb.equal(cb.lower(root.get(key)), value.toString().toLowerCase()));
-							break;
-						case gt:
-							break;
-						case gte:
-							break;
-						case in:
-							break;
-						case is:
-							break;
-						case isNot:
-							break;
-						case lt:
-							break;
-						case lte:
-							break;
-						case notContains:
-							break;
-						case notEquals:
-							inner.add(cb.notEqual(cb.lower(root.get(key)), value.toString().toLowerCase()));
-							break;
-						case startsWith:
-							inner.add(cb.like(cb.lower(root.get(key)), value.toString().toLowerCase() + "%"));
-							break;
-						default:
-							break;
-						}
+						inner.add(getPredicate(root, cb, md, key, md.getValue()));
 					}
 
 					if (!inner.isEmpty()) {
@@ -154,5 +98,44 @@ public class ProcessFilter implements Specification<HeroDO> {
 			}
 		}
 		return null;
+	}
+
+	private static Predicate getPredicate(Root<HeroDO> root, CriteriaBuilder cb, UIFilterData md, String key, Object value) {
+		return switch (getMatchMode(md)) {
+			// Needs date conversion
+			case after -> cb.greaterThan(root.get(key), value.toString());
+			// Needs date conversion
+			case before -> cb.lessThan(root.get(key), value.toString());
+			// Bogus -- where do I get both operands?
+			case between -> cb.equal(root.get(key), value.toString());
+			case contains -> cb.like(cb.lower(root.get(key)), "%" + value.toString().toLowerCase() + "%");
+			// Needs date conversion
+			case dateAfter -> cb.greaterThan(root.get(key), value.toString());
+			// Needs date conversion
+			case dateBefore -> cb.lessThan(root.get(key), value.toString());
+			// Needs date conversion
+			case dateIs -> cb.equal(root.get(key), value.toString());
+			// Needs date conversion
+			case dateIsNot -> cb.notEqual(root.get(key), value.toString());
+			case endsWith -> cb.like(cb.lower(root.get(key)), "%" + value.toString().toLowerCase());
+			case equals -> cb.equal(cb.lower(root.get(key)), value.toString().toLowerCase());
+			case gt -> cb.greaterThan(cb.lower(root.get(key)), value.toString().toLowerCase());
+			case gte -> cb.greaterThanOrEqualTo(cb.lower(root.get(key)), value.toString().toLowerCase());
+			// Bogus -- needs to be a list
+			case in -> cb.equal(cb.lower(root.get(key)), value.toString().toLowerCase());
+			case is -> cb.equal(cb.lower(root.get(key)), value.toString().toLowerCase());
+			case isNot -> cb.notEqual(cb.lower(root.get(key)), value.toString().toLowerCase());
+			case lt -> cb.lessThan(cb.lower(root.get(key)), value.toString().toLowerCase());
+			case lte -> cb.lessThanOrEqualTo(cb.lower(root.get(key)), value.toString().toLowerCase());
+			case notContains -> cb.notLike(cb.lower(root.get(key)), "%" + value.toString().toLowerCase() + "%");
+			case notEquals -> cb.notEqual(cb.lower(root.get(key)), value.toString().toLowerCase());
+			case startsWith -> cb.like(cb.lower(root.get(key)), value.toString().toLowerCase() + "%");
+			default -> throw new RuntimeException("Unknown matchmode: " + md.getMatchMode());
+		};
+	}
+
+	private static UIFilterMatchMode getMatchMode(UIFilterData md) {
+		// TODO Ought to check data type and set operator.
+		return md.getMatchMode() == null ? UIFilterMatchMode.contains : md.getMatchMode();
 	}
 }
