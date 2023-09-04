@@ -25,8 +25,8 @@ import org.springframework.stereotype.Component;
 import org.kathrynhuxtable.heroes.service.bean.Hero;
 import org.kathrynhuxtable.heroes.service.bean.HeroFilterResult;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter;
-import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterMatchMode;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterData;
+import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterMatchMode;
 import org.kathrynhuxtable.heroes.service.persistence.HeroDAO;
 import org.kathrynhuxtable.heroes.service.persistence.domain.HeroDO;
 
@@ -120,11 +120,11 @@ public class HeroService {
 	 * Delete a Hero object.
 	 *
 	 * @param id the id value to delete.
-	 * @return
+	 * @return the Hero that was deleted.
 	 */
 	public Hero delete(long id) {
 		Optional<HeroDO> found = heroDao.findById(id);
-        found.ifPresent(heroDO -> heroDao.delete(heroDO));
+        found.ifPresent(heroDao::delete);
 		return found.map(this::toHero).orElse(null);
 	}
 
@@ -148,8 +148,14 @@ public class HeroService {
 		if (heroDO == null) {
 			return null;
 		} else {
-			return Hero.builder().id(heroDO.getId()).name(heroDO.getName()).power(heroDO.getPower())
-					.alterEgo(heroDO.getAlterEgo()).rating(heroDO.getRating()).build();
+			return Hero.builder()
+					.id(heroDO.getId())
+					.name(heroDO.getName())
+					.power(heroDO.getPower())
+					.alterEgo(heroDO.getAlterEgo())
+					.rating(heroDO.getRating())
+					.powerDate(heroDO.getPowerDate())
+					.build();
 		}
 	}
 
@@ -169,6 +175,7 @@ public class HeroService {
 			heroDO.setPower(hero.getPower());
 			heroDO.setAlterEgo(hero.getAlterEgo());
 			heroDO.setRating(hero.getRating());
+			heroDO.setPowerDate(hero.getPowerDate());
 			return heroDO;
 		}
 	}

@@ -15,14 +15,13 @@
  */
 
 import { Component, ViewChild } from '@angular/core';
-import { Table } from 'primeng/table';
-import { TableLazyLoadEvent } from 'primeng/table';
 import { Router } from '@angular/router';
 
 import { Hero } from '@appModel/hero';
 import { UIFilter } from '@appModel/ui.filter';
-import { HeroService } from '@appServices/hero.service';
 import { AuthService } from '@appServices/auth.service';
+import { HeroService } from '@appServices/hero.service';
+import { Table, TableLazyLoadEvent } from 'primeng/table';
 
 /**
  * The heroes component. Displays a paginated table of heroes, supporting sorting and filtering.

@@ -14,6 +14,7 @@
  * the License.
  */
 
+import { FilterMetadata } from "primeng/api";
 import { TableLazyLoadEvent } from 'primeng/table';
 
 import { Hero } from '@appModel/hero';
@@ -72,18 +73,19 @@ export class UIFilter {
 		}
 
 		if (event.filters) {
-			var mf: {
-				[s: string]: UIFilterData[];
-			} = {};
-
+			this.filters = {};
 			for (var key in event.filters) {
-				var value = event.filters[key];
-				if (value) {
-					mf[key] = !Array.isArray(value) ? [value] : value;
+				var filter = event.filters[key];
+				if (filter) {
+					var mdList: FilterMetadata[] = Array.isArray(filter) ? filter : [filter];
+					var uiFilter = mdList
+						.filter(md => md.value)
+						.map(md => new UIFilterData(md));
+					if (uiFilter.length > 0) {
+						this.filters[key] = uiFilter;
+					}
 				}
 			}
-
-			this.filters = mf;
 		}
 	}
 }
@@ -101,7 +103,7 @@ export interface UIFilterSort {
  * Represents data for filtering a data set.
  * @group Interface
  */
-export interface UIFilterData {
+export class UIFilterData {
 	/**
 	 * The value used for filtering.
 	 */
@@ -116,6 +118,22 @@ export interface UIFilterData {
 	 * The operator for filtering.
 	 */
 	operator?: string;
+
+	constructor(md: FilterMetadata) {
+		this.value = md.value;
+		this.operator = md.operator;
+		var matchMode = md.matchMode;
+		if (matchMode == 'after' || matchMode == 'dateAfter') {
+			matchMode = 'gt';
+		} else if (matchMode == 'before' || matchMode == 'dateBefore') {
+			matchMode = 'lt';
+		} else if (matchMode == 'is' || matchMode == 'dateIs') {
+			matchMode = 'equals';
+		} else if (matchMode == 'isNot' || matchMode == 'dateIsNot') {
+			matchMode = 'notEquals';
+		}
+		this.matchMode = matchMode;
+	}
 }
 
 /**

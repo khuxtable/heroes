@@ -15,6 +15,8 @@
  */
 package org.kathrynhuxtable.heroes.service.bean;
 
+import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,4 +36,5 @@ public class Hero {
 	private String power;
 	private String alterEgo;
 	private Integer rating;
+	private Date powerDate;
 }

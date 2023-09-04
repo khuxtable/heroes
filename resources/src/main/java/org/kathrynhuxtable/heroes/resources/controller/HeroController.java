@@ -73,6 +73,7 @@ public class HeroController {
 				hero.setPower(newHero.getPower());
 				hero.setAlterEgo(newHero.getAlterEgo());
 				hero.setRating(newHero.getRating());
+				hero.setPowerDate(newHero.getPowerDate());
 				hero = heroService.update(hero);
 			}
 		}

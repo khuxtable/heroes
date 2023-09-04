@@ -73,8 +73,12 @@ export class HeroService {
 		// For now, assume that a hero with the specified `id` always exists.
 		// Error handling will be added in the next step of the tutorial.
 		const url = `${this.serviceUrl}/${id}`;
-		return this.http.get<Hero>(url).pipe(
-			tap(_ => this.log(`fetched hero id=${id}`)),
+		return this.http.get<any>(url).pipe(
+			tap(h => {
+				this.log(`fetched hero id=${id}`);
+				h.powerDate = new Date(h.powerDate);
+				return h;
+			}),
 			catchError(this.handleError<Hero>(`getHero id=${id}`))
 		);
 	}
@@ -85,6 +89,7 @@ export class HeroService {
 	 * @param hero the Hero to update.
 	 */
 	updateHero(hero: Hero): Observable<any> {
+		this.log('hero:' + JSON.stringify(hero));
 		return this.http.put(this.serviceUrl, hero, this.httpOptions).pipe(
 			tap(_ => this.log(`updated hero id=${hero.id}`)),
 			catchError(this.handleError<any>('updateHero'))

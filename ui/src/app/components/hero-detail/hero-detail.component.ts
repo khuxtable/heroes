@@ -21,6 +21,7 @@ import { Location } from '@angular/common';
 import { Hero } from '@appModel/hero';
 import { HeroService } from '@appServices/hero.service';
 import { AuthService } from '@appServices/auth.service';
+import { MessageService } from "@appServices/message.service";
 
 /**
  * Display the details for a particular hero. Conditionally allows editing,
@@ -48,7 +49,8 @@ export class HeroDetailComponent {
 		private route: ActivatedRoute,
 		private heroService: HeroService,
 		private authService: AuthService,
-		private location: Location
+		private location: Location,
+		private messageService: MessageService
 	) {
 	}
 
@@ -63,7 +65,7 @@ export class HeroDetailComponent {
 	getHero(): void {
 		let idParam = this.route.snapshot.paramMap.get('id');
 		if (!idParam) {
-			this.hero = {id: 0, name: '', power: '', rating: 0};
+			this.hero = {id: 0, name: '', power: '', powerDate: undefined, rating: 0};
 		} else {
 			const id = Number(idParam);
 			this.heroService.getHero(id)
@@ -87,6 +89,7 @@ export class HeroDetailComponent {
 	 */
 	save(): void {
 		if (this.hero) {
+			this.log('hero: ' + JSON.stringify(this.hero));
 			if (this.hero.id == 0) {
 				this.heroService.addHero(this.hero)
 					.subscribe(() => this.goBack());
@@ -102,5 +105,10 @@ export class HeroDetailComponent {
 	 */
 	goBack(): void {
 		this.location.back();
+	}
+
+	/** Log a HeroService message with the MessageService */
+	private log(message: string) {
+		this.messageService.add(`hero-detail: ${message}`);
 	}
 }

@@ -31,6 +31,7 @@ import { LoginComponent } from '@appComponents/login/login.component';
 import { MessagesComponent } from '@appComponents/messages/messages.component';
 import { AvatarModule } from "primeng/avatar";
 import { ButtonModule } from 'primeng/button';
+import { CalendarModule } from 'primeng/calendar';
 import { DataViewModule } from 'primeng/dataview';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
@@ -63,6 +64,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 		HttpClientModule,
 		ToolbarModule,
 		ButtonModule,
+		CalendarModule,
 		DataViewModule,
 		TableModule,
 		InputTextModule,

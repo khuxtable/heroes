@@ -24,6 +24,7 @@ export class Hero {
 		public name: string,
 		public power: string,
 		public alterEgo?: string,
-		public rating?: number) {
+		public rating?: number,
+		public powerDate?: Date) {
 	}
 }

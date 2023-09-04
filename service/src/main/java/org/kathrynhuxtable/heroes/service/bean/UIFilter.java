@@ -74,11 +74,10 @@ public class UIFilter {
 	}
 
 	public enum UIFilterMatchMode {
-		startsWith, contains, notContains, endsWith, equals, notEquals, in, lt, lte, gt, gte, between, is, isNot,
-		before, after, dateIs, dateIsNot, dateBefore, dateAfter;
+		startsWith, contains, notContains, endsWith, equals, notEquals, in, lt, lte, gt, gte, between
 	}
 
 	public enum UIFilterOperator {
-		and, or;
+		and, or
 	}
 }

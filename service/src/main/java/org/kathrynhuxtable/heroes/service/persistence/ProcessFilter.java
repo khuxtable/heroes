@@ -16,22 +16,21 @@
 package org.kathrynhuxtable.heroes.service.persistence;
 
 import java.io.Serial;
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.lang.NonNull;
 
 import org.kathrynhuxtable.heroes.service.bean.UIFilter;
-import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterMatchMode;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterData;
+import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterMatchMode;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterOperator;
 import org.kathrynhuxtable.heroes.service.persistence.domain.HeroDO;
 
@@ -44,98 +43,132 @@ public class ProcessFilter implements Specification<HeroDO> {
 	@Serial
 	private static final long serialVersionUID = 1L;
 
-	// Map transfer object fields to domain object fields.
-	// There is no good reason these should ever vary, but let's be paranoid.
-	private final Map<String, String> nameMap = new HashMap<>() {
-		@Serial
-		private static final long serialVersionUID = 1L;
-
-		{
-			put("name", "name");
-			put("power", "power");
-			put("alterEgo", "alterEgo");
-		}
-	};
-
-	private final UIFilter filter;
-
-	// This implementation is very incomplete, but does match String values using contains.
-	@Override
-	public Predicate toPredicate(Root<HeroDO> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
-		List<Predicate> outer = new ArrayList<>();
-		if (filter.getFilters() != null && !filter.getFilters().isEmpty()) {
-			for (Entry<String, List<UIFilterData>> entry : filter.getFilters().entrySet()) {
-				String key;
-				if ("global".equals(entry.getKey())) {
-					key = "name";
-				} else {
-					key = nameMap.get(entry.getKey());
-				}
-
-				if (key != null) {
-					List<Predicate> inner = new ArrayList<>();
-					UIFilterOperator operator = null;
-					for (UIFilterData md : entry.getValue()) {
-						if (md.getOperator() != null) {
-							operator = md.getOperator();
-						}
-
-						inner.add(getPredicate(root, cb, md, key, md.getValue()));
-					}
-
-					if (!inner.isEmpty()) {
-						if (operator == null || operator == UIFilterOperator.or) {
-							outer.add(cb.or(inner.toArray(new Predicate[inner.size()])));
-						} else {
-							outer.add(cb.and(inner.toArray(new Predicate[inner.size()])));
-						}
-					}
-				}
-			}
-
-			if (!outer.isEmpty()) {
-				return cb.and(outer.toArray(new Predicate[outer.size()]));
-			}
-		}
-		return null;
+	public enum DataType {
+		text, numeric, date
 	}
 
-	private static Predicate getPredicate(Root<HeroDO> root, CriteriaBuilder cb, UIFilterData md, String key, Object value) {
-		return switch (getMatchMode(md)) {
-			// Needs date conversion
-			case after -> cb.greaterThan(root.get(key), value.toString());
-			// Needs date conversion
-			case before -> cb.lessThan(root.get(key), value.toString());
-			// Bogus -- where do I get both operands?
-			case between -> cb.equal(root.get(key), value.toString());
-			case contains -> cb.like(cb.lower(root.get(key)), "%" + value.toString().toLowerCase() + "%");
-			// Needs date conversion
-			case dateAfter -> cb.greaterThan(root.get(key), value.toString());
-			// Needs date conversion
-			case dateBefore -> cb.lessThan(root.get(key), value.toString());
-			// Needs date conversion
-			case dateIs -> cb.equal(root.get(key), value.toString());
-			// Needs date conversion
-			case dateIsNot -> cb.notEqual(root.get(key), value.toString());
-			case endsWith -> cb.like(cb.lower(root.get(key)), "%" + value.toString().toLowerCase());
-			case equals -> cb.equal(cb.lower(root.get(key)), value.toString().toLowerCase());
-			case gt -> cb.greaterThan(cb.lower(root.get(key)), value.toString().toLowerCase());
-			case gte -> cb.greaterThanOrEqualTo(cb.lower(root.get(key)), value.toString().toLowerCase());
-			// Bogus -- needs to be a list
-			case in -> cb.equal(cb.lower(root.get(key)), value.toString().toLowerCase());
-			case is -> cb.equal(cb.lower(root.get(key)), value.toString().toLowerCase());
-			case isNot -> cb.notEqual(cb.lower(root.get(key)), value.toString().toLowerCase());
-			case lt -> cb.lessThan(cb.lower(root.get(key)), value.toString().toLowerCase());
-			case lte -> cb.lessThanOrEqualTo(cb.lower(root.get(key)), value.toString().toLowerCase());
-			case notContains -> cb.notLike(cb.lower(root.get(key)), "%" + value.toString().toLowerCase() + "%");
-			case notEquals -> cb.notEqual(cb.lower(root.get(key)), value.toString().toLowerCase());
-			case startsWith -> cb.like(cb.lower(root.get(key)), value.toString().toLowerCase() + "%");
-			default -> throw new RuntimeException("Unknown matchmode: " + md.getMatchMode());
+	@AllArgsConstructor
+	public static class FieldDescriptor {
+		public final String fieldName;
+		public final DataType dataType;
+		public final boolean global;
+	}
+
+	/**
+	 * The filter for which to generate a predicate.
+	 */
+	private final UIFilter filter;
+
+	/**
+	 * Map transfer object fields to domain object fields.
+	 * There is no good reason these should ever vary, but let's be paranoid.
+	 */
+	private final Map<String, FieldDescriptor> nameMap;
+
+	@Override
+	public Predicate toPredicate(@NonNull Root<HeroDO> root, @NonNull CriteriaQuery<?> cq, @NonNull CriteriaBuilder cb) {
+		if (filter.getFilters() == null) {
+			return null;
+		}
+
+		List<Predicate> outer = new ArrayList<>();
+		for (Entry<String, List<UIFilterData>> entry : filter.getFilters().entrySet()) {
+			Predicate inner = buildFieldPredicate(root, cb, entry);
+			if (inner != null) {
+				outer.add(inner);
+			}
+		}
+
+		if (outer.isEmpty()) {
+			return null;
+		} else {
+			return cb.and(outer.toArray(new Predicate[0]));
+		}
+	}
+
+	private Predicate buildFieldPredicate(Root<HeroDO> root, CriteriaBuilder cb, Entry<String, List<UIFilterData>> entry) {
+		List<Predicate> inner = new ArrayList<>();
+		UIFilterOperator operator = null;
+
+		for (UIFilterData md : entry.getValue()) {
+			if (md.getOperator() != null) {
+				operator = md.getOperator();
+			}
+
+			if ("global".equals(entry.getKey())) {
+				List<Predicate> globals = nameMap.values().stream()
+						.filter(nm -> nm.global)
+						.map(nm -> getPredicate(root, cb, nameMap.get(nm.fieldName), md))
+						.toList();
+				inner.add(cb.or(globals.toArray(new Predicate[0])));
+			} else {
+				inner.add(getPredicate(root, cb, nameMap.get(entry.getKey()), md));
+			}
+		}
+
+		if (inner.isEmpty()) {
+			return null;
+		} else if (operator == null || operator == UIFilterOperator.or) {
+			return cb.or(inner.toArray(new Predicate[0]));
+		} else {
+			return cb.and(inner.toArray(new Predicate[0]));
+		}
+	}
+
+	private static Predicate getPredicate(Root<HeroDO> root, CriteriaBuilder cb,
+	                                      FieldDescriptor fieldDescriptor, UIFilterData md) {
+		return switch (fieldDescriptor.dataType) {
+			case text -> getPredicate(
+					cb,
+					getMatchMode(md, fieldDescriptor),
+					cb.lower(root.get(fieldDescriptor.fieldName)),
+					((String) md.getValue()).toLowerCase());
+			case numeric -> md.getValue() instanceof Integer ?
+					getPredicate(
+							cb,
+							getMatchMode(md, fieldDescriptor),
+							root.get(fieldDescriptor.fieldName),
+							(Integer) md.getValue()) :
+					getPredicate(
+							cb,
+							getMatchMode(md, fieldDescriptor),
+							root.get(fieldDescriptor.fieldName),
+							(Double) md.getValue());
+			case date -> getPredicate(
+					cb,
+					getMatchMode(md, fieldDescriptor),
+					root.get(fieldDescriptor.fieldName),
+					Date.from(Instant.parse((String) md.getValue())));
 		};
 	}
 
-	private static UIFilterMatchMode getMatchMode(UIFilterData md) {
-		// TODO Ought to check data type and set operator.
-		return md.getMatchMode() == null ? UIFilterMatchMode.contains : md.getMatchMode();
+	private static <T extends Comparable<T>> Predicate getPredicate(CriteriaBuilder cb, UIFilterMatchMode matchMode,
+	                                                                Expression<T> fieldExpression, T value) {
+		// The in and between match modes are not yet implemented.
+		// The PrimeNG table lazy loader doesn't seem to generate them.
+		return switch (matchMode) {
+			case contains -> cb.like((Expression<String>) fieldExpression, "%" + value + "%");
+			case notContains -> cb.notLike((Expression<String>) fieldExpression, "%" + value + "%");
+			case startsWith -> cb.like((Expression<String>) fieldExpression, value + "%");
+			case endsWith -> cb.like((Expression<String>) fieldExpression, "%" + value);
+			case equals -> cb.equal(fieldExpression, value);
+			case gt -> cb.greaterThan(fieldExpression, value);
+			case gte -> cb.greaterThanOrEqualTo(fieldExpression, value);
+			case lt -> cb.lessThan(fieldExpression, value);
+			case lte -> cb.lessThanOrEqualTo(fieldExpression, value);
+			case notEquals -> cb.notEqual(fieldExpression, value);
+			default -> throw new RuntimeException("Invalid matchmode: " + matchMode);
+		};
+	}
+
+	private static UIFilterMatchMode getMatchMode(UIFilterData md, FieldDescriptor fieldDescriptor) {
+		UIFilterMatchMode matchMode = md.getMatchMode();
+		if (matchMode == null) {
+			matchMode = switch (fieldDescriptor.dataType) {
+				case text -> UIFilterMatchMode.contains;
+				case numeric, date -> UIFilterMatchMode.equals;
+			};
+		}
+		return matchMode;
 	}
 }

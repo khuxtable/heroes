@@ -18,7 +18,7 @@
 		<h2>{{hero.name | uppercase}} Details</h2>
 		<table *ngIf="editable">
 			<tr>
-				<div>ID: {{hero.id}}</div>
+				<td>ID: {{hero.id}}</td>
 			<tr>
 			<tr>
 				<td style="text-align:right"><label for="hero-name">Hero Name:</label></td>
@@ -43,11 +43,18 @@
 				</td>
 			</tr>
 			<tr>
+				<td style="text-align:right"><label >Power Date:</label></td>
+				<td>
+					<!--<p-calendar id="hero-powerDate" [(ngModel)]="hero.powerDate" [showIcon]="true"
+					            dateFormat="yy-mm-dd">
+						</p-calendar>-->
+				</td>
+			</tr>
+			<tr>
 				<td style="text-align:right"><label for="rating">Rating:</label></td>
 				<td>
 					<p-rating id="rating" pInputText [(ngModel)]="hero.rating" [stars]="5"
-					          name="rating" #rating="ngModel"
-					          placeholder="Rating"/>
+					          name="rating" #rating="ngModel"/>
 				</td>
 			</tr>
 		</table>
@@ -67,6 +74,10 @@
 			<tr>
 				<td style="text-align: right;"><label>Power:&nbsp;</label></td>
 				<td><span>{{hero.power}}</span></td>
+			</tr>
+			<tr>
+				<td style="text-align: right;"><label>Power Date:&nbsp;</label></td>
+				<td><span>{{hero.powerDate | date:'yyyy-MM-dd'}}</span></td>
 			</tr>
 			<tr>
 				<td style="text-align: right;"><label>Rating:&nbsp;</label></td>

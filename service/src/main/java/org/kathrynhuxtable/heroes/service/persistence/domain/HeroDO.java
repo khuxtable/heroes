@@ -15,6 +15,8 @@
  */
 package org.kathrynhuxtable.heroes.service.persistence.domain;
 
+import java.util.Date;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,4 +53,7 @@ public class HeroDO {
 
     @Column(name = "RATING")
     private Integer rating;
+
+    @Column(name = "POWER_DATE")
+    private Date powerDate;
 }
