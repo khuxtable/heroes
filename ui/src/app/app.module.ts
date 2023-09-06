@@ -15,20 +15,21 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from '@app/app-routing.module';
 import { AppComponent } from '@app/app.component';
-import { UserProfileComponent } from '@appComponents/user-profile/user-profile.component';
 import { DashboardComponent } from '@appComponents/dashboard/dashboard.component';
 import { HeroDetailComponent } from '@appComponents/hero-detail/hero-detail.component';
 import { HeroSearchComponent } from '@appComponents/hero-search/hero-search.component';
 import { HeroesComponent } from '@appComponents/heroes/heroes.component';
 import { LoginComponent } from '@appComponents/login/login.component';
 import { MessagesComponent } from '@appComponents/messages/messages.component';
+import { UserProfileComponent } from '@appComponents/user-profile/user-profile.component';
+import { JsonDateInterceptor } from "@appInterceptors/json-date-interceptor";
 import { AvatarModule } from "primeng/avatar";
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
@@ -76,9 +77,10 @@ import { ToolbarModule } from 'primeng/toolbar';
 		OverlayPanelModule,
 	],
 	providers: [
-//		[
-//			{ provide: HTTP_INTERCEPTORS, useClass: XhrHeaderInterceptor, multi:true }
-//		]
+		[
+			{provide: HTTP_INTERCEPTORS, useClass: JsonDateInterceptor, multi: true},
+//			{provide: HTTP_INTERCEPTORS, useClass: XhrHeaderInterceptor, multi:true }
+		]
 	],
 	bootstrap: [AppComponent]
 })

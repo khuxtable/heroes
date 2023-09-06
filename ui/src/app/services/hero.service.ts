@@ -76,7 +76,6 @@ export class HeroService {
 		return this.http.get<any>(url).pipe(
 			tap(h => {
 				this.log(`fetched hero id=${id}`);
-				h.powerDate = new Date(h.powerDate);
 				return h;
 			}),
 			catchError(this.handleError<Hero>(`getHero id=${id}`))
