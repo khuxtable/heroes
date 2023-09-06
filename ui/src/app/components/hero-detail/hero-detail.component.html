@@ -46,11 +46,11 @@
 				<td style="text-align:right"><label>Power Date:</label></td>
 				<td>
 					<p-calendar [showIcon]="true"
-					            [defaultDate]="initialDate"
-					            (onSelect)="powerDateChanged($event)"
+					            [(ngModel)]="hero.powerDate"
+					            #powerDate="ngModel"
+					            name="powerDate"
 					            dateFormat="yy-mm-dd">
 					</p-calendar><br/>
-					{{hero.powerDate}} / {{initialDate  }}
 				</td>
 			</tr>
 			<tr>

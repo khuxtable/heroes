@@ -36,7 +36,6 @@ export class HeroDetailComponent {
 
 	hero: Hero | undefined;
 	editable: boolean = false;
-	initialDate : Date = new Date();
 
 	// Initial list of powers. The control allows free text, but these are presented as options.
 	powers = [
@@ -76,10 +75,7 @@ export class HeroDetailComponent {
 		} else {
 			const id = Number(idParam);
 			this.heroService.getHero(id)
-				.subscribe(hero => {
-					this.hero = hero;
-					this.initialDate = hero.powerDate ? hero.powerDate : new Date();
-				});
+				.subscribe(hero => this.hero = hero);
 		}
 	}
 
