@@ -24,7 +24,7 @@
 				<td style="text-align:right"><label for="hero-name">Hero Name:</label></td>
 				<td>
 					<input id="hero-name" pInputText required class="p-inputtext-sm" [(ngModel)]="hero.name"
-					       name="name" #name="ngModel"
+					       name="name"
 					       placeholder="Name"/>
 				</td>
 			</tr>
@@ -32,14 +32,14 @@
 				<td style="text-align:right"><label for="alter-ego">Alter Ego:</label></td>
 				<td>
 					<input id="alter-ego" pInputText class="p-inputtext-sm" [(ngModel)]="hero.alterEgo"
-					       name="alterEgo" #alterEgo="ngModel"
+					       name="alterEgo"
 					       placeholder="Alter Ego"/>
 				</td>
 			<tr>
 				<td style="text-align:right"><label for="hero-power">Power:</label></td>
 				<td>
 					<p-dropdown id="hero-power" [options]="powers" [editable]="true" [(ngModel)]="hero.power"
-					            name="power" #power="ngModel" placeholder="Power"/>
+					            name="power"  placeholder="Power"/>
 				</td>
 			</tr>
 			<tr>
@@ -47,7 +47,6 @@
 				<td>
 					<p-calendar [showIcon]="true"
 					            [(ngModel)]="hero.powerDate"
-					            #powerDate="ngModel"
 					            name="powerDate"
 					            dateFormat="yy-mm-dd">
 					</p-calendar><br/>
@@ -57,7 +56,7 @@
 				<td style="text-align:right"><label for="rating">Rating:</label></td>
 				<td>
 					<p-rating id="rating" pInputText [(ngModel)]="hero.rating" [stars]="5"
-					          name="rating" #rating="ngModel"/>
+					          name="rating"/>
 				</td>
 			</tr>
 		</table>
