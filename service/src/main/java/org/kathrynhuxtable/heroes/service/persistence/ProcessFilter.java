@@ -16,15 +16,15 @@
 package org.kathrynhuxtable.heroes.service.persistence;
 
 import java.io.Serial;
+import java.lang.reflect.Field;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.time.temporal.Temporal;
+import java.util.*;
 import java.util.Map.Entry;
 
 import jakarta.persistence.criteria.*;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.NonNull;
 
@@ -32,13 +32,12 @@ import org.kathrynhuxtable.heroes.service.bean.UIFilter;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterData;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterMatchMode;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterOperator;
-import org.kathrynhuxtable.heroes.service.persistence.domain.HeroDO;
 
 /**
  * Specification class to process the UIFilter object an produce a JPA predicate.
  */
-@AllArgsConstructor
-public class ProcessFilter implements Specification<HeroDO> {
+@Slf4j
+public class ProcessFilter<T> implements Specification<T> {
 
 	@Serial
 	private static final long serialVersionUID = 1L;
@@ -63,10 +62,34 @@ public class ProcessFilter implements Specification<HeroDO> {
 	 * Map transfer object fields to domain object fields.
 	 * There is no good reason these should ever vary, but let's be paranoid.
 	 */
-	private final Map<String, FieldDescriptor> nameMap;
+	private final Map<String, FieldDescriptor> nameMap = new HashMap<>();
+
+	public ProcessFilter(Class<T> clazz, UIFilter filter) {
+		this.filter = filter;
+		buildNameMap(clazz);
+	}
+
+	private void buildNameMap(Class<T> clazz) {
+		for (Field f : clazz.getDeclaredFields()) {
+			if (f.isAnnotationPresent(UIFilterDescriptor.class)) {
+				DataType dataType;
+				Class<?> fClass = f.getType();
+				if (Number.class.isAssignableFrom(fClass)) {
+					dataType = DataType.numeric;
+				} else if (Date.class.isAssignableFrom(fClass) || java.sql.Date.class.isAssignableFrom(fClass)
+						|| Calendar.class.isAssignableFrom(fClass) || Temporal.class.isAssignableFrom(fClass)) {
+					dataType = DataType.date;
+				} else {
+					dataType = DataType.text;
+				}
+				UIFilterDescriptor fd = f.getAnnotation(UIFilterDescriptor.class);
+				nameMap.put(f.getName(), new FieldDescriptor(fd.name().isEmpty() ? f.getName() : fd.name(), dataType, fd.global()));
+			}
+		}
+	}
 
 	@Override
-	public Predicate toPredicate(@NonNull Root<HeroDO> root, @NonNull CriteriaQuery<?> cq, @NonNull CriteriaBuilder cb) {
+	public Predicate toPredicate(@NonNull Root<T> root, @NonNull CriteriaQuery<?> cq, @NonNull CriteriaBuilder cb) {
 		if (filter.getFilters() == null) {
 			return null;
 		}
@@ -86,7 +109,7 @@ public class ProcessFilter implements Specification<HeroDO> {
 		}
 	}
 
-	private Predicate buildFieldPredicate(Root<HeroDO> root, CriteriaBuilder cb, Entry<String, List<UIFilterData>> entry) {
+	private Predicate buildFieldPredicate(Root<T> root, CriteriaBuilder cb, Entry<String, List<UIFilterData>> entry) {
 		List<Predicate> inner = new ArrayList<>();
 		UIFilterOperator operator = null;
 
@@ -115,8 +138,8 @@ public class ProcessFilter implements Specification<HeroDO> {
 		}
 	}
 
-	private static Predicate getPredicate(Root<HeroDO> root, CriteriaBuilder cb,
-	                                      FieldDescriptor fieldDescriptor, UIFilterData md) {
+	private Predicate getPredicate(Root<T> root, CriteriaBuilder cb,
+	                               FieldDescriptor fieldDescriptor, UIFilterData md) {
 		return switch (fieldDescriptor.dataType) {
 			case text -> getPredicate(
 					cb,
@@ -142,8 +165,8 @@ public class ProcessFilter implements Specification<HeroDO> {
 		};
 	}
 
-	private static <T extends Comparable<T>> Predicate getPredicate(CriteriaBuilder cb, UIFilterMatchMode matchMode,
-	                                                                Expression<T> fieldExpression, T value) {
+	private static <FT extends Comparable<FT>> Predicate getPredicate(CriteriaBuilder cb, UIFilterMatchMode matchMode,
+	                                                                  Expression<FT> fieldExpression, FT value) {
 		// The in and between match modes are not yet implemented.
 		// The PrimeNG table lazy loader doesn't seem to generate them.
 		return switch (matchMode) {

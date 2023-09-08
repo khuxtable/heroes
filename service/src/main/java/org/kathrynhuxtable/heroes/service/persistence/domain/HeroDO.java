@@ -24,6 +24,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Indexed;
 
+import org.kathrynhuxtable.heroes.service.persistence.UIFilterDescriptor;
+
 /**
  * The Hero object in the database.
  */
@@ -42,18 +44,23 @@ public class HeroDO {
     @Column(name = "ID")
     private Long id;
 
+    @UIFilterDescriptor(global = true)
     @Column(name = "NAME", columnDefinition = "VARCHAR(128)")
     private String name;
 
+    @UIFilterDescriptor(global = true)
     @Column(name = "POWER", columnDefinition = "VARCHAR(128)")
     private String power;
 
+    @UIFilterDescriptor(global = true)
     @Column(name = "ALTER_EGO", columnDefinition = "VARCHAR(128)")
     private String alterEgo;
 
+    @UIFilterDescriptor
     @Column(name = "RATING")
     private Integer rating;
 
+    @UIFilterDescriptor
     @Column(name = "POWER_DATE")
     private Date powerDate;
 }
