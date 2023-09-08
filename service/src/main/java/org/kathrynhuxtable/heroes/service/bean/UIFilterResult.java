@@ -24,7 +24,7 @@ import lombok.Data;
  * The total records is necessary for pagination.
  */
 @Data
-public class HeroFilterResult {
-	private List<Hero> heroes;
+public class UIFilterResult<T> {
+	private List<T> records;
 	private int totalRecords;
 }

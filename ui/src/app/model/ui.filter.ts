@@ -17,8 +17,6 @@
 import { FilterMetadata } from "primeng/api";
 import { TableLazyLoadEvent } from 'primeng/table';
 
-import { Hero } from '@appModel/hero';
-
 /**
  * Simplified data from the PrimeNG filtering.
  */
@@ -139,7 +137,7 @@ export class UIFilterData {
 /**
  * Result contains the data and record count (for pagination)
  */
-export interface UIFilterResult {
-	heroes: Hero[];
+export interface UIFilterResult<T> {
+	records: T[];
 	totalRecords: number;
 }

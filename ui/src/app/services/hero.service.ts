@@ -42,12 +42,12 @@ export class HeroService {
 	 * in sorted order.
 	 *
 	 * @param filter the filter, containing the filter, pagination, and sorting information.
-	 * @return an Observable<UIFilterResult>, which contains the Heroes, and a total count.
+	 * @return an Observable<UIFilterResult<Hero>>, which contains the Heroes, and a total count.
 	 */
-	getHeroesLazy(filter: UIFilter): Observable<UIFilterResult> {
-		return this.http.post<UIFilterResult>(this.serviceUrl + "/filter", filter, this.httpOptions).pipe(
+	getHeroesLazy(filter: UIFilter): Observable<UIFilterResult<Hero>> {
+		return this.http.post<UIFilterResult<Hero>>(this.serviceUrl + "/filter", filter, this.httpOptions).pipe(
 			tap(_ => this.log('fetched heroes')),
-			catchError(this.handleError<UIFilterResult>('getHeroes', {heroes: [], totalRecords: 0}))
+			catchError(this.handleError<UIFilterResult<Hero>>('getHeroes', {records: [], totalRecords: 0}))
 		);
 	}
 

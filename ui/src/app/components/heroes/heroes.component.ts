@@ -72,7 +72,7 @@ export class HeroesComponent {
 
 		setTimeout(() => {
 			this.heroService.getHeroesLazy(new UIFilter(event)).subscribe(res => {
-				this.heroes = res.heroes;
+				this.heroes = res.records;
 				this.totalRecords = res.totalRecords;
 				this.loading = false;
 			})

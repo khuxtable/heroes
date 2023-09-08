@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.*;
 
 import org.kathrynhuxtable.heroes.service.HeroService;
 import org.kathrynhuxtable.heroes.service.bean.Hero;
-import org.kathrynhuxtable.heroes.service.bean.HeroFilterResult;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter;
+import org.kathrynhuxtable.heroes.service.bean.UIFilterResult;
 
 /**
  * Hero Service.
@@ -54,7 +54,7 @@ public class HeroController {
 	}
 
 	@PostMapping(path = "/filter", produces = "application/json")
-	public @ResponseBody HeroFilterResult filterFind(@RequestBody UIFilter filter) {
+	public @ResponseBody UIFilterResult<Hero> filterFind(@RequestBody UIFilter filter) {
 		return heroService.find(filter);
 	}
 

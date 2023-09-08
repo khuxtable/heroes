@@ -23,10 +23,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import org.kathrynhuxtable.heroes.service.bean.Hero;
-import org.kathrynhuxtable.heroes.service.bean.HeroFilterResult;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterData;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterMatchMode;
+import org.kathrynhuxtable.heroes.service.bean.UIFilterResult;
 import org.kathrynhuxtable.heroes.service.persistence.HeroDAO;
 import org.kathrynhuxtable.heroes.service.persistence.domain.HeroDO;
 
@@ -46,13 +46,13 @@ public class HeroService {
 	 * @param filter the UIFilter from the client.
 	 * @return the HeroFilterResult.
 	 */
-	public HeroFilterResult find(UIFilter filter) {
+	public UIFilterResult<Hero> find(UIFilter filter) {
 		log.info("Filter: " + filter.toString());
 		long totalRecords = heroDao.countByFilter(filter);
 		List<HeroDO> heroes = heroDao.findByFilter(filter);
 
-		HeroFilterResult result = new HeroFilterResult();
-		result.setHeroes(toHeroes(heroes));
+		UIFilterResult<Hero> result = new UIFilterResult<>();
+		result.setRecords(toHeroes(heroes));
 		result.setTotalRecords((int) totalRecords);
 		return result;
 	}
