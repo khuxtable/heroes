@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.kathrynhuxtable.heroes.service.persistence;
+package org.kathrynhuxtable.heroes.service.persistence.filter;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

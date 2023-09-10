@@ -24,7 +24,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Indexed;
 
-import org.kathrynhuxtable.heroes.service.persistence.UIFilterDescriptor;
+import org.kathrynhuxtable.heroes.service.persistence.filter.UIFilterDescriptor;
 
 /**
  * The Hero object in the database.

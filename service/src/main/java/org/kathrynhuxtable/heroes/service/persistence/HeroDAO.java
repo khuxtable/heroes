@@ -30,13 +30,15 @@ import org.springframework.stereotype.Repository;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterSort;
 import org.kathrynhuxtable.heroes.service.persistence.domain.HeroDO;
+import org.kathrynhuxtable.heroes.service.persistence.filter.ProcessFilter;
+import org.kathrynhuxtable.heroes.service.persistence.filter.UIFilterService;
 
 /**
  * The Hero DAO. Provides some convenience methods using custom predicates generated
  * by Specification classes.
  */
 @Repository
-public interface HeroDAO extends JpaRepository<HeroDO, Long>, JpaSpecificationExecutor<HeroDO> {
+public interface HeroDAO extends JpaRepository<HeroDO, Long>, JpaSpecificationExecutor<HeroDO>, UIFilterService {
 
 	/**
 	 * Find by filter. Supports pagination, sorting, and filtering on values.
@@ -59,7 +61,7 @@ public interface HeroDAO extends JpaRepository<HeroDO, Long>, JpaSpecificationEx
 		}
 
 		// Create the filter predicate.
-		ProcessFilter<HeroDO> process = new ProcessFilter<>(HeroDO.class, filter);
+		ProcessFilter<HeroDO> process = new ProcessFilter<>(getDescriptorMap(HeroDO.class), filter);
 
 		// Find the rows, paginating if requested.
 		if (filter.getRows() == null || filter.getRows() == 0) {
@@ -95,6 +97,6 @@ public interface HeroDAO extends JpaRepository<HeroDO, Long>, JpaSpecificationEx
 	 * @return the number of rows matched by the filter criteria.
 	 */
 	default long countByFilter(UIFilter filter) {
-		return count(new ProcessFilter<>(HeroDO.class, filter));
+		return count(new ProcessFilter<>(getDescriptorMap(HeroDO.class), filter));
 	}
 }

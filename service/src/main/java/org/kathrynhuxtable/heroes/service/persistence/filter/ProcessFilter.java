@@ -13,13 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.kathrynhuxtable.heroes.service.persistence;
+package org.kathrynhuxtable.heroes.service.persistence.filter;
 
 import java.io.Serial;
-import java.lang.reflect.Field;
 import java.time.Instant;
-import java.time.temporal.Temporal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import jakarta.persistence.criteria.*;
@@ -28,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.NonNull;
 
+import org.kathrynhuxtable.heroes.service.persistence.filter.FieldDescriptor;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterData;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterMatchMode;
@@ -37,56 +39,22 @@ import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterOperator;
  * Specification class to process the UIFilter object an produce a JPA predicate.
  */
 @Slf4j
+@AllArgsConstructor
 public class ProcessFilter<T> implements Specification<T> {
 
 	@Serial
 	private static final long serialVersionUID = 1L;
 
-	public enum DataType {
-		text, numeric, date
-	}
-
-	@AllArgsConstructor
-	public static class FieldDescriptor {
-		public final String fieldName;
-		public final DataType dataType;
-		public final boolean global;
-	}
+	/**
+	 * Map transfer object fields to domain object fields.
+	 * There is no good reason these should ever vary, but let's be paranoid.
+	 */
+	private final Map<String, FieldDescriptor> nameMap;
 
 	/**
 	 * The filter for which to generate a predicate.
 	 */
 	private final UIFilter filter;
-
-	/**
-	 * Map transfer object fields to domain object fields.
-	 * There is no good reason these should ever vary, but let's be paranoid.
-	 */
-	private final Map<String, FieldDescriptor> nameMap = new HashMap<>();
-
-	public ProcessFilter(Class<T> clazz, UIFilter filter) {
-		this.filter = filter;
-		buildNameMap(clazz);
-	}
-
-	private void buildNameMap(Class<T> clazz) {
-		for (Field f : clazz.getDeclaredFields()) {
-			if (f.isAnnotationPresent(UIFilterDescriptor.class)) {
-				DataType dataType;
-				Class<?> fClass = f.getType();
-				if (Number.class.isAssignableFrom(fClass)) {
-					dataType = DataType.numeric;
-				} else if (Date.class.isAssignableFrom(fClass) || java.sql.Date.class.isAssignableFrom(fClass)
-						|| Calendar.class.isAssignableFrom(fClass) || Temporal.class.isAssignableFrom(fClass)) {
-					dataType = DataType.date;
-				} else {
-					dataType = DataType.text;
-				}
-				UIFilterDescriptor fd = f.getAnnotation(UIFilterDescriptor.class);
-				nameMap.put(f.getName(), new FieldDescriptor(fd.name().isEmpty() ? f.getName() : fd.name(), dataType, fd.global()));
-			}
-		}
-	}
 
 	@Override
 	public Predicate toPredicate(@NonNull Root<T> root, @NonNull CriteriaQuery<?> cq, @NonNull CriteriaBuilder cb) {
