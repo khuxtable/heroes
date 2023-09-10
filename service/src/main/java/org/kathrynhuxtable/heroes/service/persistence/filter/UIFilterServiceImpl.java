@@ -13,46 +13,38 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package org.kathrynhuxtable.heroes.service.persistence.filter;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class UIFilterServiceImpl implements UIFilterService {
 
 	Map<Class<?>, Map<String, FieldDescriptor>> classMap = new HashMap<>();
 
-	/**
-	 * Get the map of FieldDescriptor objects by filter field name.
-	 *
-	 * @param clazz the domain class to get
-	 * @return a Map mapping filter field names to FieldDescriptor objects.
-	 */
 	@Override
 	public Map<String, FieldDescriptor> getDescriptorMap(Class<?> clazz) {
-		if (!classMap.containsKey(clazz)) {
-			classMap.put(clazz, registerClass(clazz));
-		}
-		return classMap.get(clazz);
+		return classMap.computeIfAbsent(clazz, k -> registerClass(clazz));
 	}
 
+	// Process annotations for clazz, creating the descriptor map.
 	private Map<String, FieldDescriptor> registerClass(Class<?> clazz) {
 		Map<String, FieldDescriptor> map = new HashMap<>();
 
 		for (Field field : clazz.getDeclaredFields()) {
-			UIFilterDescriptor fieldDescriptor = field.getAnnotation(UIFilterDescriptor.class);
-			if (fieldDescriptor != null) {
-				String name = fieldDescriptor.name().isEmpty() ? field.getName() : fieldDescriptor.name();
+			UIFilterDescriptor filterDescriptor = field.getAnnotation(UIFilterDescriptor.class);
+			if (filterDescriptor != null) {
+				String name = filterDescriptor.name().isEmpty() ? field.getName() : filterDescriptor.name();
 				map.put(name,
-						new FieldDescriptor(
-								field.getName(),
-								DataType.getDataType(field.getType()),
-								fieldDescriptor.global()));
+						FieldDescriptor.builder()
+								.fieldName(field.getName())
+								.dataType(DataType.getDataType(field.getType()))
+								.global(filterDescriptor.global())
+								.build());
 			}
 		}
 

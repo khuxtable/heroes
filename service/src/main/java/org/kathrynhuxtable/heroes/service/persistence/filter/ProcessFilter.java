@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.NonNull;
 
-import org.kathrynhuxtable.heroes.service.persistence.filter.FieldDescriptor;
+import org.kathrynhuxtable.heroes.service.persistence.filter.UIFilterService.FieldDescriptor;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterData;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterMatchMode;
@@ -49,7 +49,7 @@ public class ProcessFilter<T> implements Specification<T> {
 	 * Map transfer object fields to domain object fields.
 	 * There is no good reason these should ever vary, but let's be paranoid.
 	 */
-	private final Map<String, FieldDescriptor> nameMap;
+	private final Map<String, FieldDescriptor> descriptorMap;
 
 	/**
 	 * The filter for which to generate a predicate.
@@ -87,13 +87,13 @@ public class ProcessFilter<T> implements Specification<T> {
 			}
 
 			if ("global".equals(entry.getKey())) {
-				List<Predicate> globals = nameMap.values().stream()
+				List<Predicate> globals = descriptorMap.values().stream()
 						.filter(nm -> nm.global)
-						.map(nm -> getPredicate(root, cb, nameMap.get(nm.fieldName), md))
+						.map(nm -> getPredicate(root, cb, descriptorMap.get(nm.fieldName), md))
 						.toList();
 				inner.add(cb.or(globals.toArray(new Predicate[0])));
 			} else {
-				inner.add(getPredicate(root, cb, nameMap.get(entry.getKey()), md));
+				inner.add(getPredicate(root, cb, descriptorMap.get(entry.getKey()), md));
 			}
 		}
 
