@@ -29,7 +29,6 @@ import lombok.Builder;
  */
 public interface UIFilterService {
 
-
 	/**
 	 * Retrieve the descriptor map for a class, processing its annotations if necessary.
 	 *
@@ -37,6 +36,17 @@ public interface UIFilterService {
 	 * @return a Map mapping the filter field names to their FieldDescriptor objects.
 	 */
 	Map<String, FieldDescriptor> getDescriptorMap(Class<?> clazz);
+
+	/**
+	 * Contains the domain field name, the filter data type,
+	 * and whether this field should be included in global searches.
+	 */
+	@Builder
+	class FieldDescriptor {
+		public final String fieldName;
+		public final DataType dataType;
+		public final boolean global;
+	}
 
 	/**
 	 * Represents the three data types that need different handling in filters.
@@ -60,16 +70,5 @@ public interface UIFilterService {
 				return text;
 			}
 		}
-	}
-
-	/**
-	 * Contains the domain field name, the filter data type,
-	 * and whether this field should be included in global searches.
-	 */
-	@Builder
-	class FieldDescriptor {
-		public final String fieldName;
-		public final DataType dataType;
-		public final boolean global;
 	}
 }
