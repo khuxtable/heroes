@@ -27,14 +27,14 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface UIFilterDescriptor {
 	/**
-	 * The filter field name. Defaults to the annotated field name.
+	 * The filter field name. Defaults to the annotated field name during annotation processing.
 	 *
 	 * @return the filter field name
 	 */
 	String name() default "";
 
 	/**
-	 * Is the field included in global filter.
+	 * Is the field included in global filter. Defaults to false.
 	 *
 	 * @return {@literal true} if the field is included in the global filter
 	 */
