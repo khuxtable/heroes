@@ -133,6 +133,7 @@ public class ProcessFilter<T> implements Specification<T> {
 		};
 	}
 
+	@SuppressWarnings("unchecked")
 	private static <FT extends Comparable<FT>> Predicate getPredicate(CriteriaBuilder cb, UIFilterMatchMode matchMode,
 	                                                                  Expression<FT> fieldExpression, FT value) {
 		// The in and between match modes are not yet implemented.
