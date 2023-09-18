@@ -15,39 +15,66 @@
  */
 package org.kathrynhuxtable.heroes.service.persistence.filter;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Component;
 
-@Component
-public class UIFilterServiceImpl implements UIFilterService {
+import org.kathrynhuxtable.heroes.service.bean.UIFilter;
+import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterSort;
 
-	Map<Class<?>, Map<String, FieldDescriptor>> classMap = new HashMap<>();
+@Component
+public class UIFilterServiceImpl<T> implements UIFilterService<T> {
 
 	@Override
-	public Map<String, FieldDescriptor> getDescriptorMap(Class<?> clazz) {
-		return classMap.computeIfAbsent(clazz, k -> registerClass(clazz));
+	public List<T> findByFilterPaginated(UIFilter filter,
+	                                     String defaultField,
+	                                     DescriptorMap descriptorMap,
+	                                     JpaSpecificationExecutor<T> dao) {
+		// Create JPA sort criteria.
+		Sort sort = buildSort(filter, defaultField, descriptorMap);
+
+		// Create the filter predicate.
+		ProcessFilter<T> process = new ProcessFilter<>(descriptorMap, filter);
+
+		// Find the rows, paginating if requested.
+		if (filter.getRows() == null || filter.getRows() == 0) {
+			return dao.findAll(process, sort);
+		} else {
+			int rows = filter.getRows();
+			int first = filter.getFirst() == null ? 0 : filter.getFirst();
+			int page = first / rows;
+			Page<T> pageable = dao.findAll(process, PageRequest.of(page, rows, sort));
+			return pageable.getContent();
+		}
 	}
 
-	// Process annotations for clazz, creating the descriptor map.
-	private Map<String, FieldDescriptor> registerClass(Class<?> clazz) {
-		Map<String, FieldDescriptor> map = new HashMap<>();
-
-		for (Field field : clazz.getDeclaredFields()) {
-			UIFilterDescriptor filterDescriptor = field.getAnnotation(UIFilterDescriptor.class);
-			if (filterDescriptor != null) {
-				String name = filterDescriptor.name().isEmpty() ? field.getName() : filterDescriptor.name();
-				map.put(name,
-						FieldDescriptor.builder()
-								.fieldName(field.getName())
-								.dataType(DataType.getDataType(field.getType()))
-								.global(filterDescriptor.global())
-								.build());
+	@Override
+	public Sort buildSort(UIFilter filter,
+	                      String defaultField,
+	                      DescriptorMap descriptorMap) {
+		// Create JPA sort criteria. Sort on id by default.
+		if (filter.getSortFields() == null || filter.getSortFields().isEmpty()) {
+			if (defaultField != null && !defaultField.isBlank() && descriptorMap.get(defaultField) != null) {
+				return Sort.by(Sort.Direction.ASC, descriptorMap.get(defaultField).fieldName);
+			} else {
+				return Sort.unsorted();
 			}
+		} else {
+			List<Order> orders = new ArrayList<>();
+			for (UIFilterSort sortField : filter.getSortFields()) {
+				Direction direction = sortField.getOrder() > 0 ? Sort.Direction.ASC : Sort.Direction.DESC;
+				if (descriptorMap.get(sortField.getField()) != null) {
+					orders.add(new Order(direction, descriptorMap.get(sortField.getField()).fieldName));
+				}
+			}
+			return Sort.by(orders);
 		}
-
-		return map;
 	}
 }

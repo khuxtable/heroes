@@ -15,27 +15,28 @@
  */
 package org.kathrynhuxtable.heroes.service.persistence.filter;
 
-import java.time.temporal.Temporal;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
 
 import lombok.Builder;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+import org.kathrynhuxtable.heroes.service.bean.UIFilter;
 
 /**
- * Provide annotation processing and retrieval for the UIFilterDescriptor annotation.
+ * Provide common methods for the UIFilterDescriptor annotation.
  * <br/>
  * This specifies how filter fields are mapped to domain fields.
  */
-public interface UIFilterService {
+public interface UIFilterService<T> {
 
 	/**
-	 * Retrieve the descriptor map for a class, processing its annotations if necessary.
-	 *
-	 * @param clazz the domain class to retrieve.
-	 * @return a Map mapping the filter field names to their FieldDescriptor objects.
+	 * Represents the three data types that need different handling in filters.
 	 */
-	Map<String, FieldDescriptor> getDescriptorMap(Class<?> clazz);
+	enum DataType {
+		text, numeric, date;
+	}
 
 	/**
 	 * Contains the domain field name, the filter data type,
@@ -49,26 +50,35 @@ public interface UIFilterService {
 	}
 
 	/**
-	 * Represents the three data types that need different handling in filters.
+	 * Map to map filter fields from the UI into JPA fields, along with their filter data type,
+	 * and whether the field is included in a global search.
 	 */
-	enum DataType {
-		text, numeric, date;
-
-		/**
-		 * Given a Java class, return the DataTYpe.
-		 *
-		 * @param clazz the class of a domain field.
-		 * @return the DataType corresponding to the class.
-		 */
-		public static DataType getDataType(Class<?> clazz) {
-			if (Number.class.isAssignableFrom(clazz)) {
-				return numeric;
-			} else if (Date.class.isAssignableFrom(clazz) || java.sql.Date.class.isAssignableFrom(clazz)
-					|| Calendar.class.isAssignableFrom(clazz) || Temporal.class.isAssignableFrom(clazz)) {
-				return date;
-			} else {
-				return text;
-			}
-		}
+	class DescriptorMap extends HashMap<String, FieldDescriptor> {
 	}
+
+	/**
+	 * Find by filter. Supports pagination, sorting, and filtering on values.
+	 *
+	 * @param filter        the UIFilter object.
+	 * @param defaultField  optional default field to sort by.
+	 * @param descriptorMap descriptor map
+	 * @param dao           the associated DAO object.
+	 * @return a List of matching domain records.
+	 */
+	List<T> findByFilterPaginated(UIFilter filter,
+	                              String defaultField,
+	                              DescriptorMap descriptorMap,
+	                              JpaSpecificationExecutor<T> dao);
+
+	/**
+	 * Build a JPA sort.
+	 *
+	 * @param filter        the UIFilter object.
+	 * @param defaultField  optional default field to sort by.
+	 * @param descriptorMap descriptor map
+	 * @return a Sort object representing the requested sort order.
+	 */
+	Sort buildSort(UIFilter filter,
+	               String defaultField,
+	               DescriptorMap descriptorMap);
 }

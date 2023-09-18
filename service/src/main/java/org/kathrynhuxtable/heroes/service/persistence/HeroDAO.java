@@ -15,20 +15,16 @@
  */
 package org.kathrynhuxtable.heroes.service.persistence;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import org.kathrynhuxtable.heroes.service.bean.UIFilter;
-import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterSort;
 import org.kathrynhuxtable.heroes.service.persistence.domain.HeroDO;
 import org.kathrynhuxtable.heroes.service.persistence.filter.ProcessFilter;
 import org.kathrynhuxtable.heroes.service.persistence.filter.UIFilterService;
@@ -38,7 +34,27 @@ import org.kathrynhuxtable.heroes.service.persistence.filter.UIFilterService;
  * by Specification classes.
  */
 @Repository
-public interface HeroDAO extends JpaRepository<HeroDO, Long>, JpaSpecificationExecutor<HeroDO>, UIFilterService {
+public interface HeroDAO extends JpaRepository<HeroDO, Long>, JpaSpecificationExecutor<HeroDO>, UIFilterService<HeroDO> {
+
+	// Map UI field to JPA field properties.
+	DescriptorMap descriptorMap = new DescriptorMap() {{
+		put("name", FieldDescriptor.builder().fieldName("name").dataType(DataType.text).global(true).build());
+		put("power", FieldDescriptor.builder().fieldName("power").dataType(DataType.text).global(true).build());
+		put("alterEgo", FieldDescriptor.builder().fieldName("alterEgo").dataType(DataType.text).global(true).build());
+		put("rating", FieldDescriptor.builder().fieldName("rating").dataType(DataType.numeric).build());
+		put("powerDate", FieldDescriptor.builder().fieldName("powerDate").dataType(DataType.date).build());
+	}};
+
+	/**
+	 * Return the number of rows matched by filter criteria without paginating.
+	 * This is needed for a UI to know how many pages are available.
+	 *
+	 * @param filter the UIFilter object.
+	 * @return the number of rows matched by the filter criteria.
+	 */
+	default long countByFilter(UIFilter filter) {
+		return count(new ProcessFilter<>(descriptorMap, filter));
+	}
 
 	/**
 	 * Find by filter. Supports pagination, sorting, and filtering on values.
@@ -47,32 +63,7 @@ public interface HeroDAO extends JpaRepository<HeroDO, Long>, JpaSpecificationEx
 	 * @return a List of matching HeroDO records.
 	 */
 	default List<HeroDO> findByFilter(UIFilter filter) {
-		// Create JPA sort criteria. Sort on id by default.
-		Sort sort;
-		if (filter.getSortFields() == null || filter.getSortFields().isEmpty()) {
-			sort = Sort.by(Sort.Direction.ASC, "id");
-		} else {
-			List<Order> orders = new ArrayList<>();
-			for (UIFilterSort sortField : filter.getSortFields()) {
-				Direction direction = sortField.getOrder() > 0 ? Sort.Direction.ASC : Sort.Direction.DESC;
-				orders.add(new Order(direction, sortField.getField()));
-			}
-			sort = Sort.by(orders);
-		}
-
-		// Create the filter predicate.
-		ProcessFilter<HeroDO> process = new ProcessFilter<>(getDescriptorMap(HeroDO.class), filter);
-
-		// Find the rows, paginating if requested.
-		if (filter.getRows() == null || filter.getRows() == 0) {
-			return findAll(process, sort);
-		} else {
-			int rows = filter.getRows();
-			int first = filter.getFirst() == null ? 0 : filter.getFirst();
-			int page = first / rows;
-			Page<HeroDO> pageable = findAll(process, PageRequest.of(page, rows, sort));
-			return pageable.getContent();
-		}
+		return findByFilterPaginated(filter, "id", descriptorMap, this);
 	}
 
 	/**
@@ -87,16 +78,5 @@ public interface HeroDAO extends JpaRepository<HeroDO, Long>, JpaSpecificationEx
 
 		Page<HeroDO> pageable = findAll(goodRating, PageRequest.of(0, count, sort));
 		return pageable.getContent();
-	}
-
-	/**
-	 * Return the number of rows matched by filter criteria without paginating.
-	 * This is needed for a UI to know how many pages are available.
-	 *
-	 * @param filter the UIFilter object.
-	 * @return the number of rows matched by the filter criteria.
-	 */
-	default long countByFilter(UIFilter filter) {
-		return count(new ProcessFilter<>(getDescriptorMap(HeroDO.class), filter));
 	}
 }
