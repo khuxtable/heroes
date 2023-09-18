@@ -33,10 +33,17 @@ import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterSort;
 public class UIFilterServiceImpl<T> implements UIFilterService<T> {
 
 	@Override
-	public List<T> findByFilterPaginated(UIFilter filter,
-	                                     String defaultField,
-	                                     DescriptorMap descriptorMap,
-	                                     JpaSpecificationExecutor<T> dao) {
+	public long countByFilter(UIFilter filter,
+	                          DescriptorMap descriptorMap,
+	                          JpaSpecificationExecutor<T> dao) {
+		return dao.count(new ProcessFilter<>(descriptorMap, filter));
+	}
+
+	@Override
+	public List<T> findByFilter(UIFilter filter,
+	                            String defaultField,
+	                            DescriptorMap descriptorMap,
+	                            JpaSpecificationExecutor<T> dao) {
 		// Create JPA sort criteria.
 		Sort sort = buildSort(filter, defaultField, descriptorMap);
 

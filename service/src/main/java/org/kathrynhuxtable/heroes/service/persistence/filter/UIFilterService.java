@@ -35,7 +35,7 @@ public interface UIFilterService<T> {
 	 * Represents the three data types that need different handling in filters.
 	 */
 	enum DataType {
-		text, numeric, date;
+		text, numeric, date
 	}
 
 	/**
@@ -57,18 +57,31 @@ public interface UIFilterService<T> {
 	}
 
 	/**
+	 * Return the number of rows matched by filter criteria without paginating.
+	 * This is needed for a UI to know how many pages are available.
+	 *
+	 * @param filter        the UIFilter object.
+	 * @param descriptorMap descriptor map.
+	 * @param dao           the associated DAO object.
+	 * @return the number of rows matched by the filter criteria.
+	 */
+	long countByFilter(UIFilter filter,
+	                   DescriptorMap descriptorMap,
+	                   JpaSpecificationExecutor<T> dao);
+
+	/**
 	 * Find by filter. Supports pagination, sorting, and filtering on values.
 	 *
 	 * @param filter        the UIFilter object.
 	 * @param defaultField  optional default field to sort by.
-	 * @param descriptorMap descriptor map
+	 * @param descriptorMap descriptor map.
 	 * @param dao           the associated DAO object.
 	 * @return a List of matching domain records.
 	 */
-	List<T> findByFilterPaginated(UIFilter filter,
-	                              String defaultField,
-	                              DescriptorMap descriptorMap,
-	                              JpaSpecificationExecutor<T> dao);
+	List<T> findByFilter(UIFilter filter,
+	                     String defaultField,
+	                     DescriptorMap descriptorMap,
+	                     JpaSpecificationExecutor<T> dao);
 
 	/**
 	 * Build a JPA sort.

@@ -15,7 +15,7 @@
  */
 package org.kathrynhuxtable.heroes.service.persistence;
 
-import java.util.*;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,7 +26,6 @@ import org.springframework.stereotype.Repository;
 
 import org.kathrynhuxtable.heroes.service.bean.UIFilter;
 import org.kathrynhuxtable.heroes.service.persistence.domain.HeroDO;
-import org.kathrynhuxtable.heroes.service.persistence.filter.ProcessFilter;
 import org.kathrynhuxtable.heroes.service.persistence.filter.UIFilterService;
 
 /**
@@ -53,7 +52,7 @@ public interface HeroDAO extends JpaRepository<HeroDO, Long>, JpaSpecificationEx
 	 * @return the number of rows matched by the filter criteria.
 	 */
 	default long countByFilter(UIFilter filter) {
-		return count(new ProcessFilter<>(descriptorMap, filter));
+		return countByFilter(filter, descriptorMap, this);
 	}
 
 	/**
@@ -63,7 +62,7 @@ public interface HeroDAO extends JpaRepository<HeroDO, Long>, JpaSpecificationEx
 	 * @return a List of matching HeroDO records.
 	 */
 	default List<HeroDO> findByFilter(UIFilter filter) {
-		return findByFilterPaginated(filter, "id", descriptorMap, this);
+		return findByFilter(filter, "id", descriptorMap, this);
 	}
 
 	/**
