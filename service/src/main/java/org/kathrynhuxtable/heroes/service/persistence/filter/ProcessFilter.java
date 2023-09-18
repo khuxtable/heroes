@@ -20,7 +20,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import jakarta.persistence.criteria.*;
@@ -29,11 +28,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.NonNull;
 
-import org.kathrynhuxtable.heroes.service.persistence.filter.UIFilterService.FieldDescriptor;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterData;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterMatchMode;
 import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterOperator;
+import org.kathrynhuxtable.heroes.service.persistence.filter.UIFilterService.DescriptorMap;
+import org.kathrynhuxtable.heroes.service.persistence.filter.UIFilterService.FieldDescriptor;
 
 /**
  * Specification class to process the UIFilter object an produce a JPA predicate.
@@ -49,7 +49,7 @@ public class ProcessFilter<T> implements Specification<T> {
 	 * Map transfer object fields to domain object fields.
 	 * There is no good reason these should ever vary, but let's be paranoid.
 	 */
-	private final Map<String, FieldDescriptor> descriptorMap;
+	private final DescriptorMap descriptorMap;
 
 	/**
 	 * The filter for which to generate a predicate.
