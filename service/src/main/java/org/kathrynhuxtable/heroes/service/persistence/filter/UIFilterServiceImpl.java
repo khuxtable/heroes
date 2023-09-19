@@ -37,7 +37,7 @@ public class UIFilterServiceImpl<T> implements UIFilterService<T> {
 	public long countByFilter(@NonNull UIFilter filter,
 	                          @NonNull DescriptorMap descriptorMap,
 	                          @NonNull JpaSpecificationExecutor<T> dao) {
-		return dao.count(new ProcessFilter<>(filter, descriptorMap));
+		return dao.count(new FilterSpecification<>(filter, descriptorMap));
 	}
 
 	@Override
@@ -49,16 +49,16 @@ public class UIFilterServiceImpl<T> implements UIFilterService<T> {
 		Sort sort = buildSort(filter, defaultField, descriptorMap);
 
 		// Create the filter predicate.
-		ProcessFilter<T> process = new ProcessFilter<>(filter, descriptorMap);
+		FilterSpecification<T> filterSpecification = new FilterSpecification<>(filter, descriptorMap);
 
 		// Find the rows, paginating if requested.
 		if (filter.getRows() == null || filter.getRows() == 0) {
-			return dao.findAll(process, sort);
+			return dao.findAll(filterSpecification, sort);
 		} else {
 			int rows = filter.getRows();
 			int first = filter.getFirst() == null ? 0 : filter.getFirst();
 			int page = first / rows;
-			Page<T> pageable = dao.findAll(process, PageRequest.of(page, rows, sort));
+			Page<T> pageable = dao.findAll(filterSpecification, PageRequest.of(page, rows, sort));
 			return pageable.getContent();
 		}
 	}

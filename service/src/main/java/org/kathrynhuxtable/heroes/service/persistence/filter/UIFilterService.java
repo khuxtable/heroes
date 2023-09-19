@@ -27,26 +27,46 @@ import org.kathrynhuxtable.heroes.service.bean.UIFilter;
 
 /**
  * Provide common methods for the UIFilterDescriptor annotation.
- * <br/>
- * This specifies how filter fields are mapped to domain fields.
+ * <p>
+ * Defines the DescriptorMap, specifying how filter fields are mapped to domain fields.
+ * </p>
  */
 public interface UIFilterService<T> {
 
 	/**
 	 * Represents the three data types that need different handling in filters.
+	 * <dl>
+	 * <dt>text</dt>
+	 * <dd>Used for String values. Default matchMode is "contains".</dd>
+	 * <dt>numeric</dt>
+	 * <dd>Used for Integer and Double values. Default matchMode is "equals".</dd>
+	 * <dt>date</dt>
+	 * <dd>Used for Date, and Calendar values. Default matchMode is "equals".</dd>
+	 * </dl>
 	 */
 	enum DataType {
 		text, numeric, date
 	}
 
 	/**
-	 * Contains the domain attribute name, the filter data type,
+	 * Contains the domain object attribute name, the filter data type,
 	 * and whether this field should be included in global searches.
 	 */
 	@Builder
 	class FieldDescriptor {
+		/**
+		 * The domain object attribute name.
+		 */
 		public final String attributeName;
+
+		/**
+		 * The filter data type, used for constructing predicates.
+		 */
 		public final DataType dataType;
+
+		/**
+		 * {@code true} if this field should be included in global searches.
+		 */
 		public final boolean global;
 	}
 

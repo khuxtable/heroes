@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import jakarta.persistence.criteria.*;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.NonNull;
@@ -39,8 +38,7 @@ import org.kathrynhuxtable.heroes.service.persistence.filter.UIFilterService.Fie
  * Specification class to process the UIFilter object an produce a JPA predicate.
  */
 @Slf4j
-@AllArgsConstructor
-public class ProcessFilter<T> implements Specification<T> {
+public class FilterSpecification<T> implements Specification<T> {
 
 	@Serial
 	private static final long serialVersionUID = 1L;
@@ -55,6 +53,17 @@ public class ProcessFilter<T> implements Specification<T> {
 	 * and whether they are included in global searches.
 	 */
 	private final DescriptorMap descriptorMap;
+
+	/**
+	 * Construct a FilterSpecification, which constructs a JPA Predicate matching a UIFilter.
+	 *
+	 * @param filter        the UIFilter from the UI.
+	 * @param descriptorMap the DescriptorMap, mapping the filter fields to domain objects and types.
+	 */
+	public FilterSpecification(@NonNull UIFilter filter, @NonNull DescriptorMap descriptorMap) {
+		this.filter = filter;
+		this.descriptorMap = descriptorMap;
+	}
 
 	@Override
 	public Predicate toPredicate(@NonNull Root<T> root, @NonNull CriteriaQuery<?> cq, @NonNull CriteriaBuilder cb) {
