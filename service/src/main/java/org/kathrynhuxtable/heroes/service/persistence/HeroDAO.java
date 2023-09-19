@@ -37,11 +37,11 @@ public interface HeroDAO extends JpaRepository<HeroDO, Long>, JpaSpecificationEx
 
 	// Map UI field to JPA field properties.
 	DescriptorMap descriptorMap = new DescriptorMap() {{
-		put("name", FieldDescriptor.builder().fieldName("name").dataType(DataType.text).global(true).build());
-		put("power", FieldDescriptor.builder().fieldName("power").dataType(DataType.text).global(true).build());
-		put("alterEgo", FieldDescriptor.builder().fieldName("alterEgo").dataType(DataType.text).global(true).build());
-		put("rating", FieldDescriptor.builder().fieldName("rating").dataType(DataType.numeric).build());
-		put("powerDate", FieldDescriptor.builder().fieldName("powerDate").dataType(DataType.date).build());
+		put("name", FieldDescriptor.builder().attributeName("name").dataType(DataType.text).global(true).build());
+		put("power", FieldDescriptor.builder().attributeName("power").dataType(DataType.text).global(true).build());
+		put("alterEgo", FieldDescriptor.builder().attributeName("alterEgo").dataType(DataType.text).global(true).build());
+		put("rating", FieldDescriptor.builder().attributeName("rating").dataType(DataType.numeric).build());
+		put("powerDate", FieldDescriptor.builder().attributeName("powerDate").dataType(DataType.date).build());
 	}};
 
 	/**

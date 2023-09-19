@@ -24,6 +24,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import org.kathrynhuxtable.heroes.service.bean.UIFilter;
@@ -33,22 +34,22 @@ import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterSort;
 public class UIFilterServiceImpl<T> implements UIFilterService<T> {
 
 	@Override
-	public long countByFilter(UIFilter filter,
-	                          DescriptorMap descriptorMap,
-	                          JpaSpecificationExecutor<T> dao) {
-		return dao.count(new ProcessFilter<>(descriptorMap, filter));
+	public long countByFilter(@NonNull UIFilter filter,
+	                          @NonNull DescriptorMap descriptorMap,
+	                          @NonNull JpaSpecificationExecutor<T> dao) {
+		return dao.count(new ProcessFilter<>(filter, descriptorMap));
 	}
 
 	@Override
-	public List<T> findByFilter(UIFilter filter,
+	public List<T> findByFilter(@NonNull UIFilter filter,
 	                            String defaultField,
-	                            DescriptorMap descriptorMap,
-	                            JpaSpecificationExecutor<T> dao) {
+	                            @NonNull DescriptorMap descriptorMap,
+	                            @NonNull JpaSpecificationExecutor<T> dao) {
 		// Create JPA sort criteria.
 		Sort sort = buildSort(filter, defaultField, descriptorMap);
 
 		// Create the filter predicate.
-		ProcessFilter<T> process = new ProcessFilter<>(descriptorMap, filter);
+		ProcessFilter<T> process = new ProcessFilter<>(filter, descriptorMap);
 
 		// Find the rows, paginating if requested.
 		if (filter.getRows() == null || filter.getRows() == 0) {
@@ -63,13 +64,13 @@ public class UIFilterServiceImpl<T> implements UIFilterService<T> {
 	}
 
 	@Override
-	public Sort buildSort(UIFilter filter,
+	public Sort buildSort(@NonNull UIFilter filter,
 	                      String defaultField,
-	                      DescriptorMap descriptorMap) {
+	                      @NonNull DescriptorMap descriptorMap) {
 		// Create JPA sort criteria. Sort on id by default.
 		if (filter.getSortFields() == null || filter.getSortFields().isEmpty()) {
 			if (defaultField != null && !defaultField.isBlank() && descriptorMap.get(defaultField) != null) {
-				return Sort.by(Sort.Direction.ASC, descriptorMap.get(defaultField).fieldName);
+				return Sort.by(Sort.Direction.ASC, descriptorMap.get(defaultField).attributeName);
 			} else {
 				return Sort.unsorted();
 			}
@@ -78,7 +79,7 @@ public class UIFilterServiceImpl<T> implements UIFilterService<T> {
 			for (UIFilterSort sortField : filter.getSortFields()) {
 				Direction direction = sortField.getOrder() > 0 ? Sort.Direction.ASC : Sort.Direction.DESC;
 				if (descriptorMap.get(sortField.getField()) != null) {
-					orders.add(new Order(direction, descriptorMap.get(sortField.getField()).fieldName));
+					orders.add(new Order(direction, descriptorMap.get(sortField.getField()).attributeName));
 				}
 			}
 			return Sort.by(orders);

@@ -46,15 +46,15 @@ public class ProcessFilter<T> implements Specification<T> {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Map transfer object fields to domain object fields.
-	 * There is no good reason these should ever vary, but let's be paranoid.
-	 */
-	private final DescriptorMap descriptorMap;
-
-	/**
 	 * The filter for which to generate a predicate.
 	 */
 	private final UIFilter filter;
+
+	/**
+	 * Map transfer object fields to domain object fields, along with their data type,
+	 * and whether they are included in global searches.
+	 */
+	private final DescriptorMap descriptorMap;
 
 	@Override
 	public Predicate toPredicate(@NonNull Root<T> root, @NonNull CriteriaQuery<?> cq, @NonNull CriteriaBuilder cb) {
@@ -81,19 +81,19 @@ public class ProcessFilter<T> implements Specification<T> {
 		List<Predicate> inner = new ArrayList<>();
 		UIFilterOperator operator = null;
 
-		for (UIFilterData md : entry.getValue()) {
-			if (md.getOperator() != null) {
-				operator = md.getOperator();
+		for (UIFilterData filterData : entry.getValue()) {
+			if (filterData.getOperator() != null) {
+				operator = filterData.getOperator();
 			}
 
 			if ("global".equals(entry.getKey())) {
 				List<Predicate> globals = descriptorMap.values().stream()
-						.filter(nm -> nm.global)
-						.map(nm -> getPredicate(root, cb, descriptorMap.get(nm.fieldName), md))
+						.filter(fd -> fd.global)
+						.map(fd -> getPredicate(root, cb, descriptorMap.get(fd.attributeName), filterData))
 						.toList();
 				inner.add(cb.or(globals.toArray(new Predicate[0])));
 			} else {
-				inner.add(getPredicate(root, cb, descriptorMap.get(entry.getKey()), md));
+				inner.add(getPredicate(root, cb, descriptorMap.get(entry.getKey()), filterData));
 			}
 		}
 
@@ -107,29 +107,29 @@ public class ProcessFilter<T> implements Specification<T> {
 	}
 
 	private Predicate getPredicate(Root<T> root, CriteriaBuilder cb,
-	                               FieldDescriptor fieldDescriptor, UIFilterData md) {
+	                               FieldDescriptor fieldDescriptor, UIFilterData filterData) {
 		return switch (fieldDescriptor.dataType) {
 			case text -> getPredicate(
 					cb,
-					getMatchMode(md, fieldDescriptor),
-					cb.lower(root.get(fieldDescriptor.fieldName)),
-					((String) md.getValue()).toLowerCase());
-			case numeric -> md.getValue() instanceof Integer ?
+					getMatchMode(filterData, fieldDescriptor),
+					cb.lower(root.get(fieldDescriptor.attributeName)),
+					((String) filterData.getValue()).toLowerCase());
+			case numeric -> filterData.getValue() instanceof Integer ?
 					getPredicate(
 							cb,
-							getMatchMode(md, fieldDescriptor),
-							root.get(fieldDescriptor.fieldName),
-							(Integer) md.getValue()) :
+							getMatchMode(filterData, fieldDescriptor),
+							root.get(fieldDescriptor.attributeName),
+							(Integer) filterData.getValue()) :
 					getPredicate(
 							cb,
-							getMatchMode(md, fieldDescriptor),
-							root.get(fieldDescriptor.fieldName),
-							(Double) md.getValue());
+							getMatchMode(filterData, fieldDescriptor),
+							root.get(fieldDescriptor.attributeName),
+							(Double) filterData.getValue());
 			case date -> getPredicate(
 					cb,
-					getMatchMode(md, fieldDescriptor),
-					root.get(fieldDescriptor.fieldName),
-					Date.from(Instant.parse((String) md.getValue())));
+					getMatchMode(filterData, fieldDescriptor),
+					root.get(fieldDescriptor.attributeName),
+					Date.from(Instant.parse((String) filterData.getValue())));
 		};
 	}
 
@@ -153,8 +153,8 @@ public class ProcessFilter<T> implements Specification<T> {
 		};
 	}
 
-	private static UIFilterMatchMode getMatchMode(UIFilterData md, FieldDescriptor fieldDescriptor) {
-		UIFilterMatchMode matchMode = md.getMatchMode();
+	private static UIFilterMatchMode getMatchMode(UIFilterData filterData, FieldDescriptor fieldDescriptor) {
+		UIFilterMatchMode matchMode = filterData.getMatchMode();
 		if (matchMode == null) {
 			matchMode = switch (fieldDescriptor.dataType) {
 				case text -> UIFilterMatchMode.contains;

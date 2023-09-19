@@ -21,6 +21,7 @@ import java.util.List;
 import lombok.Builder;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.lang.NonNull;
 
 import org.kathrynhuxtable.heroes.service.bean.UIFilter;
 
@@ -39,12 +40,12 @@ public interface UIFilterService<T> {
 	}
 
 	/**
-	 * Contains the domain field name, the filter data type,
+	 * Contains the domain attribute name, the filter data type,
 	 * and whether this field should be included in global searches.
 	 */
 	@Builder
 	class FieldDescriptor {
-		public final String fieldName;
+		public final String attributeName;
 		public final DataType dataType;
 		public final boolean global;
 	}
@@ -65,9 +66,9 @@ public interface UIFilterService<T> {
 	 * @param dao           the associated DAO object.
 	 * @return the number of rows matched by the filter criteria.
 	 */
-	long countByFilter(UIFilter filter,
-	                   DescriptorMap descriptorMap,
-	                   JpaSpecificationExecutor<T> dao);
+	long countByFilter(@NonNull UIFilter filter,
+	                   @NonNull DescriptorMap descriptorMap,
+	                   @NonNull JpaSpecificationExecutor<T> dao);
 
 	/**
 	 * Find by filter. Supports pagination, sorting, and filtering on values.
@@ -78,10 +79,10 @@ public interface UIFilterService<T> {
 	 * @param dao           the associated DAO object.
 	 * @return a List of matching domain records.
 	 */
-	List<T> findByFilter(UIFilter filter,
+	List<T> findByFilter(@NonNull UIFilter filter,
 	                     String defaultField,
-	                     DescriptorMap descriptorMap,
-	                     JpaSpecificationExecutor<T> dao);
+	                     @NonNull DescriptorMap descriptorMap,
+	                     @NonNull JpaSpecificationExecutor<T> dao);
 
 	/**
 	 * Build a JPA sort.
@@ -91,7 +92,7 @@ public interface UIFilterService<T> {
 	 * @param descriptorMap descriptor map
 	 * @return a Sort object representing the requested sort order.
 	 */
-	Sort buildSort(UIFilter filter,
+	Sort buildSort(@NonNull UIFilter filter,
 	               String defaultField,
-	               DescriptorMap descriptorMap);
+	               @NonNull DescriptorMap descriptorMap);
 }
