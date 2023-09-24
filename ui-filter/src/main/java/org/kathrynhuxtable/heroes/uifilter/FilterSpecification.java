@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.kathrynhuxtable.heroes.service.persistence.filter;
+package org.kathrynhuxtable.heroes.uifilter;
 
 import java.io.Serial;
 import java.time.Instant;
@@ -27,12 +27,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.NonNull;
 
-import org.kathrynhuxtable.heroes.service.bean.UIFilter;
-import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterData;
-import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterMatchMode;
-import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterOperator;
-import org.kathrynhuxtable.heroes.service.persistence.filter.UIFilterService.DescriptorMap;
-import org.kathrynhuxtable.heroes.service.persistence.filter.UIFilterService.FieldDescriptor;
+import org.kathrynhuxtable.heroes.uifilter.bean.UIFilter;
+import org.kathrynhuxtable.heroes.uifilter.bean.UIFilter.UIFilterData;
+import org.kathrynhuxtable.heroes.uifilter.bean.UIFilter.UIFilterMatchMode;
+import org.kathrynhuxtable.heroes.uifilter.bean.UIFilter.UIFilterOperator;
+import org.kathrynhuxtable.heroes.uifilter.UIFilterService.DescriptorMap;
+import org.kathrynhuxtable.heroes.uifilter.UIFilterService.FieldDescriptor;
+
 
 /**
  * Specification class to process the UIFilter object an produce a JPA predicate.
@@ -110,8 +111,10 @@ public class FilterSpecification<T> implements Specification<T> {
 			return null;
 		} else if (operator == null || operator == UIFilterOperator.or) {
 			return cb.or(inner.toArray(new Predicate[0]));
-		} else {
+		} else if (operator == UIFilterOperator.and) {
 			return cb.and(inner.toArray(new Predicate[0]));
+		} else {
+			return null;
 		}
 	}
 

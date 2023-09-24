@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.kathrynhuxtable.heroes.service.persistence.filter;
+package org.kathrynhuxtable.heroes.uifilter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +27,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
-import org.kathrynhuxtable.heroes.service.bean.UIFilter;
-import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterSort;
+import org.kathrynhuxtable.heroes.uifilter.bean.UIFilter;
+import org.kathrynhuxtable.heroes.uifilter.bean.UIFilter.UIFilterSort;
 
 @Component
 public class UIFilterServiceImpl<T> implements UIFilterService<T> {

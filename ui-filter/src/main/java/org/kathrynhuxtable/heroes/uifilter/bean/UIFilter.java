@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.kathrynhuxtable.heroes.service.bean;
+package org.kathrynhuxtable.heroes.uifilter.bean;
 
 import java.util.List;
 import java.util.Map;

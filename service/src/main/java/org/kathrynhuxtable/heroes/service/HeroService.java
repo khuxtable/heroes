@@ -23,12 +23,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import org.kathrynhuxtable.heroes.service.bean.Hero;
-import org.kathrynhuxtable.heroes.service.bean.UIFilter;
-import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterData;
-import org.kathrynhuxtable.heroes.service.bean.UIFilter.UIFilterMatchMode;
 import org.kathrynhuxtable.heroes.service.bean.UIFilterResult;
 import org.kathrynhuxtable.heroes.service.persistence.HeroDAO;
 import org.kathrynhuxtable.heroes.service.persistence.domain.HeroDO;
+import org.kathrynhuxtable.heroes.uifilter.bean.UIFilter;
+import org.kathrynhuxtable.heroes.uifilter.bean.UIFilter.UIFilterData;
+import org.kathrynhuxtable.heroes.uifilter.bean.UIFilter.UIFilterMatchMode;
 
 /**
  * The Hero service. Provides an API for searching, saving, updating, and deleting Hero objects.

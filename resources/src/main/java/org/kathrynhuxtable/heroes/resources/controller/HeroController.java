@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.*;
 
 import org.kathrynhuxtable.heroes.service.HeroService;
 import org.kathrynhuxtable.heroes.service.bean.Hero;
-import org.kathrynhuxtable.heroes.service.bean.UIFilter;
 import org.kathrynhuxtable.heroes.service.bean.UIFilterResult;
+import org.kathrynhuxtable.heroes.uifilter.bean.UIFilter;
 
 /**
  * Hero Service.

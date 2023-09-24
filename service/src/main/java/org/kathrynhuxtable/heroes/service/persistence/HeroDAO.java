@@ -24,9 +24,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import org.kathrynhuxtable.heroes.service.bean.UIFilter;
 import org.kathrynhuxtable.heroes.service.persistence.domain.HeroDO;
-import org.kathrynhuxtable.heroes.service.persistence.filter.UIFilterService;
+import org.kathrynhuxtable.heroes.uifilter.UIFilterService;
+import org.kathrynhuxtable.heroes.uifilter.bean.UIFilter;
 
 /**
  * The Hero DAO. Provides some convenience methods using custom predicates generated

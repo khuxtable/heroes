@@ -36,7 +36,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Slf4j
 @Configuration
 @ComponentScan(basePackages = {"org.kathrynhuxtable.heroes.resources", "org.kathrynhuxtable.heroes.service"})
-@EnableJpaRepositories("org.kathrynhuxtable.heroes.service.persistence")
+@EnableJpaRepositories({"org.kathrynhuxtable.heroes.service.persistence", "org.kathrynhuxtable.uifilter"})
 @EnableTransactionManagement
 public class ServiceConfig {
 
