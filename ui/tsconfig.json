@@ -43,6 +43,9 @@
 			],
 			"@environments/*": [
 				"src/environments/*"
+			],
+			"ui-filter": [
+				"dist/ui-filter"
 			]
 		}
 	},

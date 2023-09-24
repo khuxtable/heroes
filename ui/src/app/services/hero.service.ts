@@ -20,7 +20,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 
 import { Hero } from '@appModel/hero';
-import { UIFilter, UIFilterResult } from '@appModel/ui.filter';
+import { UIFilter, UIFilterResult } from 'ui-filter';
 import { MessageService } from '@appServices/message.service';
 
 @Injectable({

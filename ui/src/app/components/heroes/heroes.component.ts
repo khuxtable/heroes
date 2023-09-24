@@ -18,7 +18,7 @@ import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Hero } from '@appModel/hero';
-import { UIFilter } from '@appModel/ui.filter';
+import { UIFilter } from 'ui-filter';
 import { AuthService } from '@appServices/auth.service';
 import { HeroService } from '@appServices/hero.service';
 import { Table, TableLazyLoadEvent } from 'primeng/table';
