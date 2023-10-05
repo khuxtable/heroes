@@ -43,7 +43,7 @@ export class AppComponent implements OnInit {
 		// Ask for the currently logged in user. Load user and theme
 		authService.getLoggedInName.subscribe(user => {
 			this.user.set(user);
-			var theme: string;
+			let theme: string;
 			if (this.curUser) {
 				theme = this.curUser ? this.curUser.preferredTheme : 'Light';
 				this.currentTheme.set(theme);
@@ -61,7 +61,7 @@ export class AppComponent implements OnInit {
 		this.getUser();
 	}
 
-	get curUser() : User | null {
+	get curUser(): User | null {
 		return this.user();
 	}
 
