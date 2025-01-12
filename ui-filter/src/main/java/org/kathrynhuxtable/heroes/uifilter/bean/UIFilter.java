@@ -15,31 +15,42 @@
  */
 package org.kathrynhuxtable.heroes.uifilter.bean;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
+import lombok.Builder.Default;
 
 /**
  * A somewhat simplified filter data structure, holding the pagination information,
  * the sort information, and filtering criteria.
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UIFilter {
 
 	/**
 	 * The index of the first record to be loaded.
 	 */
-	Integer first;
+	@Default
+	Integer first = 0;
 
 	/**
 	 * The number of rows to load.
 	 */
-	Integer rows;
+	@Default
+	Integer rows = 0;
 
 	/**
 	 * The fields and orders to be used for sorting.
 	 */
+	@Singular
 	List<UIFilterSort> sortFields;
 
 	/**
@@ -47,37 +58,31 @@ public class UIFilter {
 	 * represent the field names, and the values represent the corresponding filter
 	 * metadata.
 	 */
+	@Singular
 	Map<String, List<UIFilterData>> filters;
 
-	@Data
-	public static class UIFilterSort {
-		String field;
-		Integer order;
-	}
+	/**
+	 * The name of the attribute supplied for a global search.
+	 */
+	String globalFieldName;
 
-	@Data
-	public static class UIFilterData {
-		/**
-		 * The value used for filtering.
-		 */
-		Object value;
+	public static class UIFilterBuilder {
 
-		/**
-		 * The match mode for filtering.
-		 */
-		UIFilterMatchMode matchMode;
+		public UIFilterBuilder addSortField(String field, int order) {
+			return this.sortField(new UIFilterSort(field, order));
+		}
 
-		/**
-		 * The operator for filtering.
-		 */
-		UIFilterOperator operator;
-	}
-
-	public enum UIFilterMatchMode {
-		startsWith, contains, notContains, endsWith, equals, notEquals, in, lt, lte, gt, gte, between
-	}
-
-	public enum UIFilterOperator {
-		and, or
+		public UIFilterBuilder addFilter(String filterKey, UIFilterData filterValue) {
+			if (this.filters$key == null) {
+				this.filters$key = new ArrayList<String>();
+				this.filters$value = new ArrayList<List<UIFilterData>>();
+			}
+			if (!this.filters$key.contains(filterKey)) {
+				this.filters$key.add(filterKey);
+				this.filters$value.add(new ArrayList<>());
+			}
+			this.filters$value.get(this.filters$key.indexOf(filterKey)).add(filterValue);
+			return this;
+		}
 	}
 }

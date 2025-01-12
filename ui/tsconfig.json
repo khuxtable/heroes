@@ -38,6 +38,9 @@
 			"@appServices/*": [
 				"src/app/services/*"
 			],
+			"@appState/*": [
+				"src/app/state/*"
+			],
 			"@appComponents/*": [
 				"src/app/components/*"
 			],
@@ -53,6 +56,7 @@
 		"enableI18nLegacyMessageIdFormat": false,
 		"strictInjectionParameters": true,
 		"strictInputAccessModifiers": true,
-		"strictTemplates": true
+		"strictTemplates": true,
+		"allowSyntheticDefaultImports": true
 	}
 }

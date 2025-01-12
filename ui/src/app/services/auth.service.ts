@@ -15,84 +15,54 @@
  */
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { EventEmitter, Injectable, Output } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from '@appModel/user';
 import { UserService } from "@appServices/user.service";
-import { BehaviorSubject, Observable, switchMap } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { concatMap } from 'rxjs/operators';
 
 @Injectable({
-	providedIn: 'root',
+  providedIn: 'root',
 })
 export class AuthService {
 
-	private serviceUrl = '/api/auth';  // URL to web api
+  private serviceUrl = '/api/auth';  // URL to web api
 
-	public username: any;
-	private userSubject: BehaviorSubject<User | null>;
-	public user: Observable<User | null>;
-	@Output() getLoggedInName: EventEmitter<any> = new EventEmitter();
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Accept': 'application/json'
+    })
+  };
 
-	httpOptions = {
-		headers: new HttpHeaders({
-			'Content-Type': 'application/x-www-form-urlencoded',
-			'Accept': 'application/json'
-		})
-	};
+  constructor(private router: Router,
+              private http: HttpClient,
+              private userService: UserService) {
+  }
 
-	constructor(private router: Router,
-	            private http: HttpClient,
-	            private userService: UserService) {
-		// Load the currently saved logged in user. Should really use a session cookie for this.
-		this.userSubject = new BehaviorSubject(JSON.parse(sessionStorage.getItem('user')!));
-		this.user = this.userSubject.asObservable();
-	}
-
-	/**
-	 * Return the logged in user.
-	 */
-	public get userValue() {
-		return this.userSubject.value;
-	}
-
-	/**
-	 * Present the login credentials to the authentication service on the server.
-	 * It will return the username if the credentials match a user, or {@code null} if not.
-	 * Then request the user profile from the user service.
-	 *
-	 * @param username the username.
-	 * @param password the password.
-	 * @return an <Observable<User | null> for the User profile logged in, or {@code null} if the
-	 *         login failed.
-	 */
-	login(username: string, password: string) {
-		const user$ = this.http.post<string>(`${this.serviceUrl}/login`,
-			`username=${username}&password=${password}`, this.httpOptions)
-			.pipe(tap(username => this.username = username),
-				switchMap(username => {
-					return this.userService.findByUsername(username);
-				}));
-
-		user$.subscribe(user => {
-			// store user details and basic auth credentials in local storage to keep
-			// user logged in between page refreshes
-			sessionStorage.setItem('user', JSON.stringify(user));
-			this.userSubject.next(user);
-			this.getLoggedInName.emit(user);
-			return user;
-		});
-
-		return this.user;
-	}
-
-	/**
-	 * Log the user out. Return to the login screen.
-	 */
-	logout() {
-		// remove user from local storage to log user out
-		sessionStorage.removeItem('user');
-		this.userSubject.next(null);
-		this.router.navigate(['/login']);
-	}
+  /**
+   * Present the login credentials to the authentication service on the server.
+   * It will return the username if the credentials match a user, or {@code null} if not.
+   * Then request the user profile from the user service.
+   *
+   * @param username the username.
+   * @param password the password.
+   * @return an <Observable<User | null> for the User profile logged in, or {@code null} if the
+   *         login failed.
+   */
+  login(username: string, password: string) {
+    return this.http.post<string>(`${this.serviceUrl}/login`,
+      `username=${username}&password=${password}`, this.httpOptions)
+      .pipe(concatMap(username => this.userService.findByUsername(username))
+      );
+  }
+  //
+  // /**
+  //  * Log the user out. Return to the login screen.
+  //  */
+  // logout() {
+  //   // remove user from local storage to log user out
+  //   sessionStorage.removeItem('user');
+  //   this.userSubject.next(null);
+  //   this.router.navigate(['/login']);
+  // }
 }

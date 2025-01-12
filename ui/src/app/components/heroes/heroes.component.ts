@@ -14,96 +14,92 @@
  * the License.
  */
 
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { AppState } from "@app/state/app.reducer";
+import { getPrivileges } from "@app/state/auth/auth.selector";
 
 import { Hero } from '@appModel/hero';
-import { UIFilter } from 'ui-filter';
 import { AuthService } from '@appServices/auth.service';
 import { HeroService } from '@appServices/hero.service';
+import { Store } from "@ngrx/store";
 import { Table, TableLazyLoadEvent } from 'primeng/table';
+import { UIFilter } from "../../../../projects/ui-filter/src/lib/uifilter";
 
 /**
  * The heroes component. Displays a paginated table of heroes, supporting sorting and filtering.
  * Has a button to add a new hero, and the ability to edit and delete heroes.
  */
 @Component({
-	selector: 'toh-heroes',
-	templateUrl: './heroes.component.html',
-	styleUrls: ['./heroes.component.scss']
+  selector: 'toh-heroes',
+  templateUrl: './heroes.component.html',
+  styleUrls: ['./heroes.component.scss']
 })
-export class HeroesComponent {
+export class HeroesComponent implements OnInit {
 
-	heroes: Hero[] = [];
-	selectedHeroes: Hero[] = [];
-	canAdd: boolean = false;
-	loading: boolean = true;
-	totalRecords: number = 0;
+  heroes: Hero[] = [];
+  selectedHeroes: Hero[] = [];
+  canAdd: boolean = false;
+  loading: boolean = true;
+  totalRecords: number = 0;
 
-	@ViewChild('dt')
-	dt: Table | undefined;
+  @ViewChild('dt')
+  dt: Table | undefined;
 
-	constructor(private router: Router,
-	            private heroService: HeroService,
-	            private authService: AuthService) {
-	}
+  constructor(private router: Router,
+              private heroService: HeroService,
+              private authService: AuthService,
+              private store$: Store<AppState>) {
+  }
 
-	ngOnInit(): void {
-		this.getUser();
-		this.loading = true;
-	}
+  ngOnInit(): void {
+    this.loading = true;
+    this.store$.select(getPrivileges).subscribe(
+      p => this.canAdd = p && !!p.find(v => v === 'ADMIN'));
+  }
 
-	/**
-	 * Convert HTML element to its value.
-	 * @param $event the event driving the filtering.
-	 * @param stringVal the value of the global filter text.
-	 */
-	applyFilterGlobal($event: any, stringVal: any) {
-		this.dt!.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
-	}
+  /**
+   * Convert HTML element to its value.
+   * @param $event the event driving the filtering.
+   * @param stringVal the value of the global filter text.
+   */
+  applyFilterGlobal($event: any, stringVal: any) {
+    this.dt!.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
+  }
 
-	/**
-	 * Respond to a sort, paginate, or filter event by "lazy loading" the heroes.
-	 *
-	 * @param event the event containing the selection data.
-	 */
-	loadHeroes(event: TableLazyLoadEvent) {
-		this.loading = true;
+  /**
+   * Respond to a sort, paginate, or filter event by "lazy loading" the heroes.
+   *
+   * @param event the event containing the selection data.
+   */
+  loadHeroes(event: TableLazyLoadEvent) {
+    this.loading = true;
 
-		setTimeout(() => {
-			this.heroService.getHeroesLazy(new UIFilter(event)).subscribe(res => {
-				this.heroes = res.records;
-				this.totalRecords = res.totalRecords;
-				this.loading = false;
-			})
-		}, 1000);
-	}
+    setTimeout(() => {
+      this.heroService.getHeroesLazy(new UIFilter(event))
+        .subscribe(res => {
+          this.heroes = res.records;
+          this.totalRecords = res.totalRecords;
+          this.loading = false;
+        })
+    }, 1000);
+  }
 
-	/**
-	 * Get the current user and set whether they can make changes.
-	 */
-	getUser(): void {
-		if (this.authService.userValue) {
-			this.canAdd = this.authService.userValue.privileges.includes('ADMIN');
-		} else {
-			this.canAdd = false;
-		}
-	}
+  /**
+   * Add a hero. Routes to the "detail" page with a blank hero loaded.
+   */
+  add(): void {
+    this.router.navigate(['/detail/new']);
+  }
 
-	/**
-	 * Add a hero. Routes to the "detail" page with a blank hero loaded.
-	 */
-	add(): void {
-		this.router.navigate(['/detail/new']);
-	}
+  /**
+   * Delete a hero.
+   *
+   * @param hero the hero to delete.
+   */
+  delete(hero: Hero): void {
+    this.heroes = this.heroes.filter(h => h !== hero);
+    this.heroService.deleteHero(hero.id).subscribe();
+  }
 
-	/**
-	 * Delete a hero.
-	 *
-	 * @param hero the hero to delete.
-	 */
-	delete(hero: Hero): void {
-		this.heroes = this.heroes.filter(h => h !== hero);
-		this.heroService.deleteHero(hero.id).subscribe();
-	}
 }

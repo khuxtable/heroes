@@ -27,8 +27,8 @@ import org.kathrynhuxtable.heroes.service.bean.UIFilterResult;
 import org.kathrynhuxtable.heroes.service.persistence.HeroDAO;
 import org.kathrynhuxtable.heroes.service.persistence.domain.HeroDO;
 import org.kathrynhuxtable.heroes.uifilter.bean.UIFilter;
-import org.kathrynhuxtable.heroes.uifilter.bean.UIFilter.UIFilterData;
-import org.kathrynhuxtable.heroes.uifilter.bean.UIFilter.UIFilterMatchMode;
+import org.kathrynhuxtable.heroes.uifilter.bean.UIFilterData;
+import org.kathrynhuxtable.heroes.uifilter.bean.UIFilterMatchMode;
 
 /**
  * The Hero service. Provides an API for searching, saving, updating, and deleting Hero objects.

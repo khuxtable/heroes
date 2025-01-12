@@ -20,7 +20,8 @@
 	         [showCurrentPageReport]="true" styleClass="p-datatable-striped" [lazy]="true"
 	         (onLazyLoad)="loadHeroes($event)"
 	         [globalFilterFields]="['name', 'alterEgo', 'power']"
-	         [loading]="loading" [totalRecords]="totalRecords">
+	         [loading]="loading" [totalRecords]="totalRecords"
+	         stateStorage="session" stateKey="heroes-state">
 		<ng-template pTemplate="caption">
 			<div class="flex align-items-center justify-content-between">
                 <span>

@@ -45,6 +45,7 @@ export class HeroService {
 	 * @return an Observable<UIFilterResult<Hero>>, which contains the Heroes, and a total count.
 	 */
 	getHeroesLazy(filter: UIFilter): Observable<UIFilterResult<Hero>> {
+		this.log(JSON.stringify(filter));
 		return this.http.post<UIFilterResult<Hero>>(this.serviceUrl + "/filter", filter, this.httpOptions).pipe(
 			tap(_ => this.log('fetched heroes')),
 			catchError(this.handleError<UIFilterResult<Hero>>('getHeroes', {records: [], totalRecords: 0}))

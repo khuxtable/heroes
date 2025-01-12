@@ -16,11 +16,7 @@
 package org.kathrynhuxtable.heroes.uifilter;
 
 import java.io.Serial;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map.Entry;
+import java.util.*;
 
 import jakarta.persistence.criteria.*;
 import lombok.extern.slf4j.Slf4j;
@@ -28,15 +24,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.NonNull;
 
 import org.kathrynhuxtable.heroes.uifilter.bean.UIFilter;
-import org.kathrynhuxtable.heroes.uifilter.bean.UIFilter.UIFilterData;
-import org.kathrynhuxtable.heroes.uifilter.bean.UIFilter.UIFilterMatchMode;
-import org.kathrynhuxtable.heroes.uifilter.bean.UIFilter.UIFilterOperator;
-import org.kathrynhuxtable.heroes.uifilter.UIFilterService.DescriptorMap;
-import org.kathrynhuxtable.heroes.uifilter.UIFilterService.FieldDescriptor;
+import org.kathrynhuxtable.heroes.uifilter.bean.UIFilterData;
+import org.kathrynhuxtable.heroes.uifilter.bean.UIFilterMatchMode;
+import org.kathrynhuxtable.heroes.uifilter.bean.UIFilterOperator;
 
 
 /**
- * Specification class to process the UIFilter object an produce a JPA predicate.
+ * Specification class to process the UIFilter object and produce a JPA predicate.
  */
 @Slf4j
 public class FilterSpecification<T> implements Specification<T> {
@@ -50,20 +44,37 @@ public class FilterSpecification<T> implements Specification<T> {
 	private final UIFilter filter;
 
 	/**
-	 * Map transfer object fields to domain object fields, along with their data type,
-	 * and whether they are included in global searches.
+	 * A Set of attributes to be included in global searches.
 	 */
-	private final DescriptorMap descriptorMap;
+	private final Set<String> globalAttributes = new HashSet<>();
 
 	/**
 	 * Construct a FilterSpecification, which constructs a JPA Predicate matching a UIFilter.
 	 *
-	 * @param filter        the UIFilter from the UI.
-	 * @param descriptorMap the DescriptorMap, mapping the filter fields to domain objects and types.
+	 * @param filter the UIFilter from the UI.
 	 */
-	public FilterSpecification(@NonNull UIFilter filter, @NonNull DescriptorMap descriptorMap) {
+	public FilterSpecification(@NonNull UIFilter filter) {
 		this.filter = filter;
-		this.descriptorMap = descriptorMap;
+	}
+
+	public FilterSpecification clearGlobalAttributes() {
+		globalAttributes.clear();
+		return this;
+	}
+
+	public FilterSpecification setGlobalAttributes(List<String> globalAttributes) {
+		this.globalAttributes.clear();
+		this.globalAttributes.addAll(globalAttributes);
+		return this;
+	}
+
+	public FilterSpecification setGlobalAttributes(String... attributes) {
+		return this.setGlobalAttributes(Arrays.asList(attributes));
+	}
+
+	public FilterSpecification addGlobalAttribute(String attribute) {
+		globalAttributes.add(attribute);
+		return this;
 	}
 
 	@Override
@@ -72,107 +83,143 @@ public class FilterSpecification<T> implements Specification<T> {
 			return null;
 		}
 
-		List<Predicate> outer = new ArrayList<>();
-		for (Entry<String, List<UIFilterData>> entry : filter.getFilters().entrySet()) {
-			Predicate inner = buildFieldPredicate(root, cb, entry);
-			if (inner != null) {
-				outer.add(inner);
-			}
-		}
+		Set<Root<?>> queryRoots = cq.getRoots();
 
-		if (outer.isEmpty()) {
-			return null;
-		} else {
-			return cb.and(outer.toArray(new Predicate[0]));
-		}
+		List<Predicate> outer = filter.getFilters().entrySet().stream()
+				.map(entry ->
+						buildFieldPredicate(queryRoots, cb, filter.getGlobalFieldName(), entry.getKey(), entry.getValue()))
+				.filter(Objects::nonNull)
+				.toList();
+
+		return outer.isEmpty() ? null : cb.and(outer.toArray(new Predicate[0]));
 	}
 
-	private Predicate buildFieldPredicate(Root<T> root, CriteriaBuilder cb, Entry<String, List<UIFilterData>> entry) {
+	private Predicate buildFieldPredicate(Set<Root<?>> queryRoots, CriteriaBuilder cb, String globalFieldName, String property,
+	                                      List<UIFilterData> filters) {
 		List<Predicate> inner = new ArrayList<>();
-		UIFilterOperator operator = null;
-
-		for (UIFilterData filterData : entry.getValue()) {
-			if (filterData.getOperator() != null) {
-				operator = filterData.getOperator();
-			}
-
-			if ("global".equals(entry.getKey())) {
-				List<Predicate> globals = descriptorMap.values().stream()
-						.filter(fd -> fd.global)
-						.map(fd -> getPredicate(root, cb, descriptorMap.get(fd.attributeName), filterData))
-						.toList();
-				inner.add(cb.or(globals.toArray(new Predicate[0])));
+		for (UIFilterData filterData : filters) {
+			if (property.equals(globalFieldName)) {
+				if (!globalAttributes.isEmpty()) {
+					inner.add(buildGlobalPredicate(queryRoots, cb, filterData));
+				}
 			} else {
-				inner.add(getPredicate(root, cb, descriptorMap.get(entry.getKey()), filterData));
+				inner.add(buildSimplePredicate(queryRoots, cb, property, filterData));
 			}
 		}
 
 		if (inner.isEmpty()) {
 			return null;
-		} else if (operator == null || operator == UIFilterOperator.or) {
-			return cb.or(inner.toArray(new Predicate[0]));
-		} else if (operator == UIFilterOperator.and) {
-			return cb.and(inner.toArray(new Predicate[0]));
 		} else {
-			return null;
+			UIFilterOperator operator = filters.stream()
+					.map(UIFilterData::getOperator)
+					.filter(Objects::nonNull)
+					.findFirst()
+					.orElse(UIFilterOperator.or);
+
+			return switch (operator) {
+				case and -> cb.and(inner.toArray(new Predicate[0]));
+				case or -> cb.or(inner.toArray(new Predicate[0]));
+			};
 		}
 	}
 
-	private Predicate getPredicate(Root<T> root, CriteriaBuilder cb,
-	                               FieldDescriptor fieldDescriptor, UIFilterData filterData) {
-		return switch (fieldDescriptor.dataType) {
-			case text -> getPredicate(
+	private Predicate buildGlobalPredicate(Set<Root<?>> queryRoots, CriteriaBuilder cb, UIFilterData filterData) {
+		List<Predicate> globals = globalAttributes.stream()
+				.map(attr -> buildSimplePredicate(queryRoots, cb, attr, filterData))
+				.toList();
+		return cb.or(globals.toArray(new Predicate[0]));
+	}
+
+	private Predicate buildSimplePredicate(Set<Root<?>> queryRoots, CriteriaBuilder cb,
+	                                       String attributeName, UIFilterData filterData) {
+		Path<?> path = getFieldPath(queryRoots, attributeName);
+		Class<?> javaType = path.getJavaType();
+
+		UIFilterMatchMode matchMode = filterData.getMatchMode();
+		if (matchMode == null) {
+			matchMode = javaType == String.class ? UIFilterMatchMode.contains : UIFilterMatchMode.equals;
+		}
+
+		if (javaType == String.class) {
+			return buildStringPredicate(
 					cb,
-					getMatchMode(filterData, fieldDescriptor),
-					cb.lower(root.get(fieldDescriptor.attributeName)),
+					matchMode,
+					(Path<String>) path,
 					((String) filterData.getValue()).toLowerCase());
-			case numeric -> filterData.getValue() instanceof Integer ?
-					getPredicate(
-							cb,
-							getMatchMode(filterData, fieldDescriptor),
-							root.get(fieldDescriptor.attributeName),
-							(Integer) filterData.getValue()) :
-					getPredicate(
-							cb,
-							getMatchMode(filterData, fieldDescriptor),
-							root.get(fieldDescriptor.attributeName),
-							(Double) filterData.getValue());
-			case date -> getPredicate(
+		} else if (Comparable.class.isAssignableFrom(javaType)) {
+			return getComparablePredicate(
 					cb,
-					getMatchMode(filterData, fieldDescriptor),
-					root.get(fieldDescriptor.attributeName),
-					Date.from(Instant.parse((String) filterData.getValue())));
+					matchMode,
+					(Path<Comparable>) path,
+					filterData.getValue());
+		} else {
+			return getObjectPredicate(
+					cb,
+					matchMode,
+					path,
+					filterData.getValue());
+		}
+	}
+
+	private Predicate buildStringPredicate(CriteriaBuilder cb, UIFilterMatchMode matchMode,
+	                                       Expression<String> fieldExpression, Object value) {
+		return switch (matchMode) {
+			case between -> cb.between(
+					cb.lower(fieldExpression),
+					((List<String>) value).get(0).toLowerCase(),
+					((List<String>) value).get(1).toLowerCase());
+			case contains -> cb.like(cb.lower(fieldExpression), "%" + ((String) value).toLowerCase() + "%");
+			case endsWith -> cb.like(cb.lower(fieldExpression), "%" + ((String) value).toLowerCase());
+			case equals -> cb.equal(cb.lower(fieldExpression), ((String) value).toLowerCase());
+			case gt -> cb.greaterThan(cb.lower(fieldExpression), ((String) value).toLowerCase());
+			case gte -> cb.greaterThanOrEqualTo(cb.lower(fieldExpression), ((String) value).toLowerCase());
+			case in -> cb.lower(fieldExpression).in((List<?>) value);
+			case lt -> cb.lessThan(cb.lower(fieldExpression), ((String) value).toLowerCase());
+			case lte -> cb.lessThanOrEqualTo(cb.lower(fieldExpression), ((String) value).toLowerCase());
+			case notContains -> cb.notLike(cb.lower(fieldExpression), "%" + ((String) value).toLowerCase() + "%");
+			case notEquals -> cb.notEqual(cb.lower(fieldExpression), ((String) value).toLowerCase());
+			case startsWith -> cb.like(cb.lower(fieldExpression), ((String) value).toLowerCase() + "%");
+			default -> throw new RuntimeException("Invalid matchmode: " + matchMode);
 		};
 	}
 
-	@SuppressWarnings("unchecked")
-	private static <FT extends Comparable<FT>> Predicate getPredicate(CriteriaBuilder cb, UIFilterMatchMode matchMode,
-	                                                                  Expression<FT> fieldExpression, FT value) {
-		// The in and between match modes are not yet implemented.
-		// The PrimeNG table lazy loader doesn't seem to generate them.
+	private <FT extends Comparable<FT>> Predicate getComparablePredicate(CriteriaBuilder cb, UIFilterMatchMode matchMode,
+	                                                                     Expression<FT> fieldExpression, Object value) {
 		return switch (matchMode) {
-			case contains -> cb.like((Expression<String>) fieldExpression, "%" + value + "%");
-			case notContains -> cb.notLike((Expression<String>) fieldExpression, "%" + value + "%");
-			case startsWith -> cb.like((Expression<String>) fieldExpression, value + "%");
-			case endsWith -> cb.like((Expression<String>) fieldExpression, "%" + value);
+			case between -> cb.between(fieldExpression, ((List<FT>) value).get(0), ((List<FT>) value).get(1));
 			case equals -> cb.equal(fieldExpression, value);
-			case gt -> cb.greaterThan(fieldExpression, value);
-			case gte -> cb.greaterThanOrEqualTo(fieldExpression, value);
-			case lt -> cb.lessThan(fieldExpression, value);
-			case lte -> cb.lessThanOrEqualTo(fieldExpression, value);
+			case gt -> cb.greaterThan(fieldExpression, (FT) value);
+			case gte -> cb.greaterThanOrEqualTo(fieldExpression, (FT) value);
+			case in -> fieldExpression.in((List<FT>) value);
+			case lt -> cb.lessThan(fieldExpression, (FT) value);
+			case lte -> cb.lessThanOrEqualTo(fieldExpression, (FT) value);
 			case notEquals -> cb.notEqual(fieldExpression, value);
 			default -> throw new RuntimeException("Invalid matchmode: " + matchMode);
 		};
 	}
 
-	private static UIFilterMatchMode getMatchMode(UIFilterData filterData, FieldDescriptor fieldDescriptor) {
-		UIFilterMatchMode matchMode = filterData.getMatchMode();
-		if (matchMode == null) {
-			matchMode = switch (fieldDescriptor.dataType) {
-				case text -> UIFilterMatchMode.contains;
-				case numeric, date -> UIFilterMatchMode.equals;
-			};
-		}
-		return matchMode;
+	private Predicate getObjectPredicate(CriteriaBuilder cb, UIFilterMatchMode matchMode,
+	                                     Expression<?> fieldExpression, Object value) {
+		return switch (matchMode) {
+			case equals -> cb.equal(fieldExpression, value);
+			case in -> fieldExpression.in((List<?>) value);
+			case notEquals -> cb.notEqual(fieldExpression, value);
+			default -> throw new RuntimeException("Invalid matchmode: " + matchMode);
+		};
+	}
+
+	private Path<?> getFieldPath(Set<Root<?>> queryRoots, String fieldName) {
+		// Need to handle joins.
+		return queryRoots.stream()
+				.map(root -> {
+					try {
+						return root.get(fieldName);
+					} catch (IllegalArgumentException e) {
+						return null;
+					}
+				})
+				.filter(Objects::nonNull)
+				.findFirst()
+				.orElse(null);
 	}
 }

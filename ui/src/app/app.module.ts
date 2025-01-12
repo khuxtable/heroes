@@ -22,6 +22,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from '@app/app-routing.module';
 import { AppComponent } from '@app/app.component';
+import * as AppStore from "@app/state/app.reducer";
+import { AuthEffects } from "@app/state/auth/auth.effects";
+import { HeroesEffects } from "@app/state/heroes/heroes.effects";
 import { DashboardComponent } from '@appComponents/dashboard/dashboard.component';
 import { HeroDetailComponent } from '@appComponents/hero-detail/hero-detail.component';
 import { HeroSearchComponent } from '@appComponents/hero-search/hero-search.component';
@@ -78,9 +81,20 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 		SelectButtonModule,
 		AvatarModule,
 		OverlayPanelModule,
-		StoreModule.forRoot({}, {}),
-		EffectsModule.forRoot([]),
-		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
+		StoreModule.forRoot(AppStore.appReducer, {
+			runtimeChecks: {
+				strictStateImmutability: true,
+				strictActionImmutability: true,
+				strictActionSerializability: true,
+				strictStateSerializability: true
+			}
+		}),
+		EffectsModule.forRoot([AuthEffects, HeroesEffects]),
+		StoreDevtoolsModule.instrument({
+			name: 'Heroes App DevTools',
+			maxAge: 25,
+			logOnly: !isDevMode()
+		}),
 	],
 	providers: [
 		[

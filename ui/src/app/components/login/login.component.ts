@@ -17,51 +17,69 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup } from '@angular/forms';
+import { AppState } from "@app/state/app.reducer";
+import { logInUser } from "@app/state/auth/auth.actions";
+import { getErrMessage, getUser } from "@app/state/auth/auth.selector";
+import { User } from "@appModel/user";
 
 import { AuthService } from '@appServices/auth.service';
+import { Store } from "@ngrx/store";
+import { Observable, of } from "rxjs";
 
 /**
  * The login component. Displays the login request and handles the user login.
  */
 @Component({
-	selector: 'toh-login',
-	templateUrl: './login.component.html',
-	styleUrls: ['./login.component.scss']
+  selector: 'toh-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-	authData = {username: '', password: ''};
-	loginForm!: FormGroup;
-	error = '';
+  authData = { username: '', password: '' };
+  error$: Observable<string> = of('');
+  loggedInUser$: Observable<User | null> = of(null);
 
-	constructor(
-		private route: ActivatedRoute,
-		private router: Router,
-		private authService: AuthService
-	) {
-		// redirect to home if already logged in
-		if (this.authService.userValue) {
-			this.router.navigate(['/']);
-		} else {
-			this.authService.getLoggedInName.emit(null);
-		}
-	}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private authService: AuthService,
+    private store$: Store<AppState>
+  ) {
+  }
 
-	ngOnInit() {
-	}
+  ngOnInit() {
+    this.loggedInUser$ = this.store$.select(getUser);
+    this.error$ = this.store$.select(getErrMessage);
 
-	/**
-	 * Validate the credentials with the authentication service.
-	 */
-	onSubmit() {
-		this.error = 'Invalid login';
-		this.authService.login(this.authData.username, this.authData.password)
-			.subscribe(() => {
-				if (this.authService.userValue) {
-					this.error = "";
-					// get return url from route parameters or default to '/'
-					const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '';
-					this.router.navigate([returnUrl]);
-				}
-			});
-	}
+    this.loggedInUser$.subscribe(user => {
+      if (user != null) {
+        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '';
+        this.router.navigate([returnUrl]);
+      }
+    });
+
+    // redirect to home if already logged in
+    // if (this.authService.userValue) {
+    //   this.router.navigate(['/']);
+    // } else {
+    //   this.authService.getLoggedInName.emit(null);
+    // }
+  }
+
+  /**
+   * Validate the credentials with the authentication service.
+   */
+  onSubmit() {
+    console.log("login in");
+    this.store$.dispatch(logInUser({ username: this.authData.username, password: this.authData.password }));
+    // this.authService.login(this.authData.username, this.authData.password)
+    //   .subscribe(() => {
+    //     if (this.authService.userValue) {
+    //       this.error = "";
+    //       // get return url from route parameters or default to '/'
+    //       const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '';
+    //       this.router.navigate([returnUrl]);
+    //     }
+    //   });
+  }
 }

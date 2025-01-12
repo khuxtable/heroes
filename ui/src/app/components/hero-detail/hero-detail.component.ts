@@ -17,11 +17,14 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { AppState } from "@app/state/app.reducer";
+import { getPrivileges } from "@app/state/auth/auth.selector";
 
 import { Hero } from '@appModel/hero';
 import { HeroService } from '@appServices/hero.service';
 import { AuthService } from '@appServices/auth.service';
 import { MessageService } from "@appServices/message.service";
+import { Store } from "@ngrx/store";
 
 /**
  * Display the details for a particular hero. Conditionally allows editing,
@@ -49,6 +52,7 @@ export class HeroDetailComponent {
 		private route: ActivatedRoute,
 		private heroService: HeroService,
 		private authService: AuthService,
+		private store$: Store<AppState>,
 		private location: Location,
 		private messageService: MessageService
 	) {
@@ -83,11 +87,9 @@ export class HeroDetailComponent {
 	 * Load the current user and determine whether they can make changes.
 	 */
 	getUser(): void {
-		if (this.authService.userValue) {
-			this.editable = this.authService.userValue.privileges.includes('ADMIN');
-		} else {
-			this.editable = false;
-		}
+		this.store$.select(getPrivileges).subscribe(
+			p => this.editable = p && !!p.find(v => v === 'ADMIN')
+		);
 	}
 
 	/**

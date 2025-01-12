@@ -15,9 +15,13 @@
  */
 
 import { Component, OnInit, signal, WritableSignal } from '@angular/core';
+import { AppState } from "@app/state/app.reducer";
+import { getUser } from "@app/state/auth/auth.selector";
 import { User } from '@appModel/user';
 import { AuthService } from '@appServices/auth.service';
+import * as AuthAction from '@app/state/auth/auth.actions';
 import { ThemeService } from "@appServices/theme.service";
+import { Store } from "@ngrx/store";
 
 /**
  * The main app component. Displays a theme selection and the logged in user,
@@ -39,9 +43,13 @@ export class AppComponent implements OnInit {
 	currentTheme: WritableSignal<string> = signal('Light');
 
 	constructor(private authService: AuthService,
+							private store$: Store<AppState>,
 	            private themeService: ThemeService) {
 		// Ask for the currently logged in user. Load user and theme
-		authService.getLoggedInName.subscribe(user => {
+	}
+
+	ngOnInit(): void {
+		this.store$.select(getUser).subscribe(user => {
 			this.user.set(user);
 			let theme: string;
 			if (this.curUser) {
@@ -57,25 +65,8 @@ export class AppComponent implements OnInit {
 		});
 	}
 
-	ngOnInit(): void {
-		this.getUser();
-	}
-
 	get curUser(): User | null {
 		return this.user();
-	}
-
-	getUser(): void {
-		const curUser = this.authService.userValue;
-		if (curUser == null) {
-			this.user.set(null);
-		} else {
-			this.user.set(curUser);
-			if (this.curUser?.preferredTheme) {
-				this.currentTheme.set(this.curUser.preferredTheme);
-			}
-			this.themeService.switchTheme(this.currentTheme());
-		}
 	}
 
 	/**
@@ -84,7 +75,6 @@ export class AppComponent implements OnInit {
 	logout(): void {
 		// Switch to login theme and clear user.
 		this.themeService.switchTheme("Login");
-		this.user.set(null);
-		this.authService.logout();
+		this.store$.dispatch(AuthAction.logOutUser());
 	}
 }

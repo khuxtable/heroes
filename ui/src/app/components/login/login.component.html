@@ -43,7 +43,7 @@
 							<p-button styleClass="p-button-sm" (click)="onSubmit()">Login</p-button>
 						</td>
 					</tr>
-					<tr *ngIf="error">
+					<tr *ngIf="error$ | async as error">
 						<td colspan="2">{{error}}</td>
 					</tr>
 				</table>

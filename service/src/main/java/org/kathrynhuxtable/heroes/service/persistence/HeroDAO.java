@@ -35,15 +35,6 @@ import org.kathrynhuxtable.heroes.uifilter.bean.UIFilter;
 @Repository
 public interface HeroDAO extends JpaRepository<HeroDO, Long>, JpaSpecificationExecutor<HeroDO>, UIFilterService<HeroDO> {
 
-	// Map UI field to JPA field properties.
-	DescriptorMap descriptorMap = new DescriptorMap() {{
-		put("name", FieldDescriptor.builder().attributeName("name").dataType(DataType.text).global(true).build());
-		put("power", FieldDescriptor.builder().attributeName("power").dataType(DataType.text).global(true).build());
-		put("alterEgo", FieldDescriptor.builder().attributeName("alterEgo").dataType(DataType.text).global(true).build());
-		put("rating", FieldDescriptor.builder().attributeName("rating").dataType(DataType.numeric).build());
-		put("powerDate", FieldDescriptor.builder().attributeName("powerDate").dataType(DataType.date).build());
-	}};
-
 	/**
 	 * Return the number of rows matched by filter criteria without paginating.
 	 * This is needed for a UI to know how many pages are available.
@@ -52,7 +43,7 @@ public interface HeroDAO extends JpaRepository<HeroDO, Long>, JpaSpecificationEx
 	 * @return the number of rows matched by the filter criteria.
 	 */
 	default long countByFilter(UIFilter filter) {
-		return countByFilter(filter, descriptorMap, this);
+		return countByFilter(filter, this);
 	}
 
 	/**
@@ -62,7 +53,7 @@ public interface HeroDAO extends JpaRepository<HeroDO, Long>, JpaSpecificationEx
 	 * @return a List of matching HeroDO records.
 	 */
 	default List<HeroDO> findByFilter(UIFilter filter) {
-		return findByFilter(filter, "id", descriptorMap, this);
+		return findByFilter(filter, "id", this);
 	}
 
 	/**

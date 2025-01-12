@@ -15,15 +15,15 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-
-import { Subject, ReplaySubject } from 'rxjs';
-
-import {
-	debounceTime, distinctUntilChanged, switchMap
-} from 'rxjs/operators';
+import { AppState } from "@app/state/app.reducer";
+import { loadSearchResults, setSearchTerms } from "@app/state/heroes/heroes.actions";
+import { getErrorMessage, getHeroes, getSearchTerms } from "@app/state/heroes/heroes.selector";
 
 import { Hero } from '@appModel/hero';
 import { HeroService } from '@appServices/hero.service';
+import { Store } from "@ngrx/store";
+
+import { Observable, of } from 'rxjs';
 
 /**
  * The hero search component. Displays a text search box and displays a list of
@@ -37,32 +37,26 @@ import { HeroService } from '@appServices/hero.service';
 	styleUrls: ['./hero-search.component.scss']
 })
 export class HeroSearchComponent implements OnInit {
-	heroes$: ReplaySubject<Hero[]> = new ReplaySubject(1);
+	heroes$: Observable<Hero[]>;
 	heroes: Hero[] = [];
 	selectedHero: Hero | null = null;
-	private searchTerms = new Subject<string>();
+	searchTerms$: Observable<string>;
+	errMessage$: Observable<string>;
 
-	constructor(private heroService: HeroService) {
-		this.heroes$.next([]);
-		this.heroes$.subscribe(heroes => this.heroes = heroes);
-	}
-
-	// Push a search term into the observable stream.
-	search(term: string): void {
-		this.searchTerms.next(term);
+	constructor(private heroService: HeroService, private store$ : Store<AppState>) {
+		this.searchTerms$ = of('');
+		this.heroes$ = of([]);
+		this.errMessage$ = of('');
 	}
 
 	ngOnInit(): void {
-		this.heroes$.next([]);
-		this.searchTerms.pipe(
-			// wait 300ms after each keystroke before considering the term
-			debounceTime(300),
+		this.searchTerms$ = this.store$.select(getSearchTerms);
+		this.heroes$ = this.store$.select(getHeroes);
+		this.errMessage$ = this.store$.select(getErrorMessage);
+	}
 
-			// ignore new term if same as previous term
-			distinctUntilChanged(),
-
-			// switch to new search observable each time the term changes
-			switchMap((term: string) => this.heroService.searchHeroes(term))
-		).subscribe(heroes => this.heroes$.next(heroes));
+	search(searchTerms: string) {
+		this.store$.dispatch(setSearchTerms({ searchTerms }));
+		this.store$.dispatch(loadSearchResults({ searchTerms }));
 	}
 }
